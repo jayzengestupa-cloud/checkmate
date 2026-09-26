@@ -1,0 +1,1257 @@
+/* =========================================
+   CHECKMATE ADMIN HOME
+   admin_home.css
+   ========================================= */
+
+
+/* =========================================
+   1. BASIC RESET
+   ========================================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    min-height: 100%;
+}
+
+body {
+    min-height: 100vh;
+
+    background: #0d1013;
+    color: #d9dde1;
+
+    font-family: Arial, Helvetica, sans-serif;
+
+    font-size: 14px;
+}
+
+
+/* =========================================
+   2. SIDEBAR
+   ========================================= */
+
+.sidebar {
+    position: fixed;
+
+    top: 0;
+    left: 0;
+
+    width: 235px;
+    height: 100vh;
+
+    background: #111519;
+
+    border-right: 1px solid #292f34;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    z-index: 100;
+}
+
+
+/* Sidebar scrollbar */
+
+.sidebar::-webkit-scrollbar {
+    width: 5px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+    background: #292f34;
+    border-radius: 10px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+    background: #3a4148;
+}
+
+
+/* =========================================
+   3. LOGO
+   ========================================= */
+
+.logo {
+    height: 82px;
+
+    display: flex;
+    align-items: center;
+
+    padding: 0 30px;
+
+    color: #d2aa60;
+
+    font-family: Georgia, "Times New Roman", serif;
+
+    font-size: 20px;
+    font-weight: bold;
+
+    letter-spacing: 1.5px;
+}
+
+.logo span {
+    margin-right: 10px;
+
+    font-size: 25px;
+
+    color: #d2aa60;
+}
+
+
+/* =========================================
+   4. ADMINISTRATION LABEL
+   ========================================= */
+
+.admin-label {
+    padding: 0 30px;
+
+    margin-bottom: 28px;
+
+    color: #7f8992;
+
+    font-size: 10px;
+
+    letter-spacing: 2px;
+
+    text-transform: uppercase;
+}
+
+
+/* =========================================
+   5. SIDEBAR SECTIONS
+   ========================================= */
+
+.sidebar-section {
+    margin-bottom: 28px;
+}
+
+.sidebar-title {
+    padding: 0 30px;
+
+    margin-bottom: 10px;
+
+    color: #67717a;
+
+    font-size: 11px;
+
+    letter-spacing: 2px;
+
+    text-transform: uppercase;
+}
+
+
+/* =========================================
+   6. SIDEBAR MENU
+   ========================================= */
+
+.sidebar-menu {
+    margin: 0;
+    padding: 0;
+
+    list-style: none;
+}
+
+.sidebar-menu li {
+    margin: 2px 12px;
+
+    padding: 0;
+
+    list-style: none;
+}
+
+.sidebar-menu li::marker {
+    display: none;
+
+    content: "";
+}
+
+.sidebar-menu a {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+
+    width: 100%;
+    min-height: 42px;
+
+    padding: 0 18px;
+
+    color: #89929a;
+
+    background: transparent;
+
+    border: none;
+
+    border-radius: 5px;
+
+    text-decoration: none;
+
+    font-family: Arial, Helvetica, sans-serif;
+
+    font-size: 14px;
+    font-weight: normal;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease;
+}
+
+.sidebar-menu a:hover {
+    background: #171c21;
+
+    color: #d7dce0;
+}
+
+.sidebar-menu a.active {
+    background: #1a2025;
+
+    color: #e2e5e8;
+}
+
+
+/* Active menu line */
+
+.sidebar-menu a.active::before {
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+    top: 11px;
+
+    width: 2px;
+    height: 20px;
+
+    background: #d2aa60;
+}
+
+
+/* =========================================
+   7. SIDEBAR ICONS
+   ========================================= */
+
+.menu-icon {
+    width: 25px;
+
+    margin-right: 5px;
+
+    color: #77818a;
+
+    font-size: 13px;
+
+    text-align: center;
+
+    flex-shrink: 0;
+}
+
+.sidebar-menu a.active .menu-icon {
+    color: #d2aa60;
+}
+
+
+/* =========================================
+   8. MENU COUNTS
+   ========================================= */
+
+.menu-count {
+    margin-left: auto;
+
+    color: #d2aa60;
+
+    font-size: 11px;
+}
+
+.menu-dot {
+    width: 5px;
+    height: 5px;
+
+    margin-left: auto;
+
+    background: #d2aa60;
+
+    border-radius: 50%;
+
+    flex-shrink: 0;
+}
+
+
+/* =========================================
+   9. SIDEBAR ADMIN ACCOUNT
+   ========================================= */
+
+.sidebar-account {
+    margin: 15px 12px 25px;
+
+    padding: 15px;
+
+    border-top: 1px solid #252b30;
+}
+
+.sidebar-account-user {
+    display: flex;
+    align-items: center;
+}
+
+.sidebar-account-avatar {
+    width: 32px;
+    height: 32px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-right: 10px;
+
+    background: #252b30;
+
+    color: #d2aa60;
+
+    border-radius: 50%;
+
+    font-family: Georgia, "Times New Roman", serif;
+
+    font-size: 13px;
+}
+
+.sidebar-account-info strong {
+    display: block;
+
+    color: #d9dde1;
+
+    font-size: 13px;
+
+    font-weight: normal;
+}
+
+.sidebar-account-info span {
+    display: block;
+
+    margin-top: 3px;
+
+    color: #68727b;
+
+    font-size: 11px;
+}
+
+
+/* =========================================
+   10. MAIN
+   ========================================= */
+
+.main {
+    min-height: 100vh;
+
+    margin-left: 235px;
+
+    background: #0d1013;
+}
+
+
+/* =========================================
+   11. TOP BAR
+   ========================================= */
+
+.topbar {
+    height: 70px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 40px;
+
+    background: #0d1013;
+
+    border-bottom: 1px solid #242a2f;
+}
+
+.topbar-left {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 4px;
+}
+
+.topbar-label {
+    color: #707a83;
+
+    font-size: 10px;
+
+    letter-spacing: 2px;
+
+    text-transform: uppercase;
+}
+
+.topbar-title {
+    color: #dfe3e6;
+
+    font-family: Georgia, "Times New Roman", serif;
+
+    font-size: 16px;
+}
+
+
+/* =========================================
+   12. TOPBAR RIGHT
+   ========================================= */
+
+.topbar-right {
+    display: flex;
+    align-items: center;
+
+    gap: 20px;
+}
+
+.notification {
+    position: relative;
+
+    width: 32px;
+    height: 32px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: transparent;
+
+    color: #8a949d;
+
+    border: none;
+
+    cursor: pointer;
+
+    font-size: 15px;
+}
+
+.notification:hover {
+    color: #d2aa60;
+}
+
+.notification-count {
+    position: absolute;
+
+    top: 1px;
+    right: 0;
+
+    min-width: 14px;
+    height: 14px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #d2aa60;
+
+    color: #111519;
+
+    border-radius: 50%;
+
+    font-size: 9px;
+
+    font-weight: bold;
+}
+
+
+/* =========================================
+   13. TOPBAR USER
+   ========================================= */
+
+.topbar-user {
+    width: 32px;
+    height: 32px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #252b30;
+
+    color: #d2aa60;
+
+    border: 1px solid #343b41;
+
+    border-radius: 50%;
+
+    font-family: Georgia, "Times New Roman", serif;
+
+    font-size: 13px;
+
+    cursor: pointer;
+}
+
+.topbar-user:hover {
+    background: #2b3238;
+
+    border-color: #d2aa60;
+}
+
+
+/* =========================================
+   14. CONTENT
+   ========================================= */
+
+.content {
+    width: 100%;
+
+    max-width: 1080px;
+
+    margin: 0 auto;
+
+    padding: 38px 40px 50px;
+}
+
+
+/* =========================================
+   15. WELCOME
+   ========================================= */
+
+.welcome {
+    margin-bottom: 30px;
+}
+
+.welcome-label {
+    margin-bottom: 8px;
+
+    color: #6e7881;
+
+    font-size: 11px;
+
+    letter-spacing: 2px;
+
+    text-transform: uppercase;
+}
+
+.welcome-title {
+    color: #e1e4e7;
+
+    font-family: Georgia, "Times New Roman", serif;
+
+    font-size: 30px;
+
+    font-weight: normal;
+}
+
+.welcome-text {
+    margin-top: 7px;
+
+    color: #6e7780;
+
+    font-size: 13px;
+}
+
+
+/* =========================================
+   16. NOTICE
+   ========================================= */
+
+.notice {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 17px 20px;
+
+    margin-bottom: 30px;
+
+    background: #12171b;
+
+    border: 1px solid #302f29;
+
+    border-left: 2px solid #d2aa60;
+
+    border-radius: 5px;
+}
+
+.notice-left {
+    display: flex;
+    align-items: center;
+
+    gap: 13px;
+}
+
+.notice-icon {
+    color: #d2aa60;
+
+    font-size: 17px;
+}
+
+.notice-title {
+    color: #d6dade;
+
+    font-size: 13px;
+}
+
+.notice-text {
+    margin-top: 4px;
+
+    color: #69737b;
+
+    font-size: 11px;
+}
+
+.notice-button {
+    padding: 7px 13px;
+
+    background: transparent;
+
+    color: #c79d55;
+
+    border: 1px solid #5a4930;
+
+    border-radius: 4px;
+
+    font-size: 11px;
+
+    cursor: pointer;
+}
+
+.notice-button:hover {
+    background: #211d17;
+
+    border-color: #d2aa60;
+}
+
+
+/* =========================================
+   17. SECTION HEADING
+   ========================================= */
+
+.section-heading {
+    margin-bottom: 13px;
+}
+
+.section-label {
+    color: #64707a;
+
+    font-size: 10px;
+
+    letter-spacing: 2px;
+
+    text-transform: uppercase;
+}
+
+.section-title {
+    margin-top: 5px;
+
+    color: #dfe2e5;
+
+    font-family: Georgia, "Times New Roman", serif;
+
+    font-size: 19px;
+
+    font-weight: normal;
+}
+
+
+/* =========================================
+   18. OVERVIEW GRID
+   ========================================= */
+
+.overview-grid {
+    display: grid;
+
+    grid-template-columns: repeat(4, 1fr);
+
+    gap: 10px;
+
+    margin-bottom: 35px;
+}
+
+.overview-card {
+    padding: 18px;
+
+    background: #11161a;
+
+    border: 1px solid #292f34;
+
+    border-radius: 5px;
+
+    transition:
+        border-color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.overview-card:hover {
+    border-color: #3a4147;
+
+    transform: translateY(-2px);
+}
+
+.overview-card-label {
+    color: #68737c;
+
+    font-size: 10px;
+
+    letter-spacing: 1px;
+
+    text-transform: uppercase;
+}
+
+.overview-card-number {
+    margin-top: 10px;
+
+    color: #dfe2e5;
+
+    font-family: Georgia, "Times New Roman", serif;
+
+    font-size: 27px;
+}
+
+.overview-card-description {
+    margin-top: 5px;
+
+    color: #5f6971;
+
+    font-size: 10px;
+}
+
+
+/* =========================================
+   19. PANEL GRID
+   ========================================= */
+
+.panel-grid {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 12px;
+
+    margin-bottom: 32px;
+}
+
+.panel {
+    background: #11161a;
+
+    border: 1px solid #292f34;
+
+    border-radius: 5px;
+
+    overflow: hidden;
+}
+
+
+/* =========================================
+   20. PANEL HEADER
+   ========================================= */
+
+.panel-header {
+    height: 71px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 18px;
+
+    border-bottom: 1px solid #292f34;
+}
+
+.panel-label {
+    margin-bottom: 5px;
+
+    color: #68727b;
+
+    font-size: 10px;
+
+    letter-spacing: 2px;
+
+    text-transform: uppercase;
+}
+
+.panel-heading {
+    color: #dfe2e5;
+
+    font-family: Georgia, "Times New Roman", serif;
+
+    font-size: 17px;
+
+    font-weight: normal;
+}
+
+.panel-link {
+    color: #9b7740;
+
+    font-size: 10px;
+
+    text-decoration: none;
+}
+
+.panel-link:hover {
+    color: #d2aa60;
+}
+
+
+/* =========================================
+   21. LIST ROW
+   ========================================= */
+
+.list-row {
+    min-height: 65px;
+
+    display: flex;
+    align-items: center;
+
+    padding: 0 18px;
+
+    border-bottom: 1px solid #242a2f;
+
+    transition: background 0.2s ease;
+}
+
+.list-row:last-child {
+    border-bottom: none;
+}
+
+.list-row:hover {
+    background: #151a1e;
+}
+
+
+/* =========================================
+   22. LIST AVATAR
+   ========================================= */
+
+.list-avatar {
+    width: 30px;
+    height: 30px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-right: 12px;
+
+    background: #252b30;
+
+    color: #d2aa60;
+
+    border-radius: 50%;
+
+    font-family: Georgia, "Times New Roman", serif;
+
+    font-size: 12px;
+
+    flex-shrink: 0;
+}
+
+.list-info {
+    flex: 1;
+}
+
+.list-name {
+    color: #d5d9dc;
+
+    font-size: 12px;
+}
+
+.list-sub {
+    margin-top: 3px;
+
+    color: #606b74;
+
+    font-size: 10px;
+}
+
+
+/* =========================================
+   23. STATUS
+   ========================================= */
+
+.status {
+    padding: 4px 8px;
+
+    border-radius: 12px;
+
+    font-size: 9px;
+
+    white-space: nowrap;
+}
+
+.status.pending {
+    color: #c59b57;
+
+    border: 1px solid #56472f;
+}
+
+.status.verified {
+    color: #6d9b85;
+
+    border: 1px solid #31483d;
+}
+
+.status.new {
+    color: #c59b57;
+
+    border: 1px solid #56472f;
+}
+
+.status.done {
+    color: #6d9b85;
+
+    border: 1px solid #31483d;
+}
+
+
+/* =========================================
+   24. QUICK ACCESS
+   ========================================= */
+
+.quick-access {
+    margin-top: 5px;
+}
+
+.quick-grid {
+    display: grid;
+
+    grid-template-columns: repeat(4, 1fr);
+
+    gap: 10px;
+}
+
+.quick-card {
+    min-height: 76px;
+
+    display: flex;
+    align-items: center;
+
+    padding: 15px;
+
+    background: #11161a;
+
+    border: 1px solid #292f34;
+
+    border-radius: 5px;
+
+    cursor: pointer;
+
+    transition:
+        border-color 0.2s ease,
+        background 0.2s ease,
+        transform 0.2s ease;
+}
+
+.quick-card:hover {
+    background: #151a1e;
+
+    border-color: #3a4147;
+
+    transform: translateY(-2px);
+}
+
+.quick-icon {
+    width: 30px;
+    height: 30px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-right: 10px;
+
+    color: #d2aa60;
+
+    border: 1px solid #3a4147;
+
+    border-radius: 50%;
+
+    font-size: 13px;
+
+    flex-shrink: 0;
+}
+
+.quick-info {
+    flex: 1;
+}
+
+.quick-title {
+    color: #d6dade;
+
+    font-size: 12px;
+}
+
+.quick-description {
+    margin-top: 3px;
+
+    color: #606a73;
+
+    font-size: 10px;
+}
+
+.quick-arrow {
+    color: #65707a;
+
+    font-size: 13px;
+}
+
+
+/* =========================================
+   25. FOOTER
+   ========================================= */
+
+.footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-top: 40px;
+
+    padding: 22px 3px 5px;
+
+    border-top: 1px solid #292f34;
+}
+
+.footer-left {
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+}
+
+.footer-chess {
+    color: #d2aa60;
+
+    font-size: 21px;
+}
+
+.footer-title {
+    color: #9a7946;
+
+    font-family: Georgia, "Times New Roman", serif;
+
+    font-size: 12px;
+
+    letter-spacing: 1px;
+}
+
+.footer-subtitle {
+    margin-top: 4px;
+
+    color: #59636b;
+
+    font-size: 10px;
+}
+
+.footer-links {
+    display: flex;
+
+    gap: 18px;
+}
+
+.footer-links span {
+    color: #59636b;
+
+    font-size: 10px;
+}
+
+
+/* =========================================
+   26. TOAST
+   ========================================= */
+
+.toast {
+    position: fixed;
+
+    right: 25px;
+    bottom: 25px;
+
+    max-width: 300px;
+
+    padding: 12px 17px;
+
+    background: #181d21;
+
+    color: #d9dde1;
+
+    border: 1px solid #3a4147;
+
+    border-left: 2px solid #d2aa60;
+
+    border-radius: 4px;
+
+    font-size: 12px;
+
+    opacity: 0;
+
+    visibility: hidden;
+
+    transform: translateY(10px);
+
+    transition:
+        opacity 0.25s ease,
+        transform 0.25s ease,
+        visibility 0.25s ease;
+
+    z-index: 500;
+}
+
+.toast.show {
+    opacity: 1;
+
+    visibility: visible;
+
+    transform: translateY(0);
+}
+
+
+/* =========================================
+   27. TABLET
+   ========================================= */
+
+@media (max-width: 1050px) {
+
+    .overview-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .quick-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+
+/* =========================================
+   28. SMALLER SCREEN
+   ========================================= */
+
+@media (max-width: 900px) {
+
+    .sidebar {
+        width: 210px;
+    }
+
+    .main {
+        margin-left: 210px;
+    }
+
+    .content {
+        padding: 30px 25px 45px;
+    }
+
+    .topbar {
+        padding: 0 25px;
+    }
+
+    .panel-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+/* =========================================
+   29. MOBILE
+   ========================================= */
+
+@media (max-width: 700px) {
+
+    .sidebar {
+        width: 190px;
+
+        transform: translateX(-100%);
+
+        transition: transform 0.25s ease;
+    }
+
+    .main {
+        margin-left: 0;
+    }
+
+    .content {
+        padding: 25px 18px 40px;
+    }
+
+    .topbar {
+        padding: 0 18px;
+    }
+
+    .overview-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .quick-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .notice {
+        align-items: flex-start;
+
+        flex-direction: column;
+
+        gap: 15px;
+    }
+
+    .welcome-title {
+        font-size: 27px;
+    }
+
+    .welcome-text {
+        font-size: 12px;
+    }
+}
+
+
+/* =========================================
+   30. VERY SMALL SCREEN
+   ========================================= */
+
+@media (max-width: 500px) {
+
+    .overview-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .welcome-title {
+        font-size: 23px;
+    }
+
+    .topbar-title {
+        font-size: 14px;
+    }
+
+    .footer {
+        align-items: flex-start;
+
+        flex-direction: column;
+
+        gap: 15px;
+    }
+}
+
+
+/* =========================================
+   31. FINAL SIDEBAR SAFETY FIX
+   ========================================= */
+
+.sidebar-menu,
+.sidebar-menu ul {
+    margin: 0 !important;
+    padding: 0 !important;
+    list-style: none !important;
+}
+
+.sidebar-menu li {
+    list-style: none !important;
+}
+
+.sidebar-menu li::marker {
+    content: "" !important;
+}
+
+.sidebar-menu a {
+    text-decoration: none !important;
+}
+
+.sidebar-menu a:visited,
+.sidebar-menu a:link {
+    text-decoration: none !important;
+}

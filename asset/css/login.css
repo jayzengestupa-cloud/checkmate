@@ -1,0 +1,1015 @@
+/* =========================================
+   RESET
+========================================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+html {
+    font-size: 16px;
+}
+
+
+body {
+    min-height: 100vh;
+
+    background: #0c0f12;
+
+    color: #e5e3dc;
+
+    font-family: Arial, Helvetica, sans-serif;
+
+    overflow-x: hidden;
+}
+
+
+/* =========================================
+   PAGE
+========================================= */
+
+.login-page {
+    min-height: 100vh;
+
+    display: grid;
+
+    grid-template-columns: 1.05fr 0.95fr;
+}
+
+
+/* =========================================
+   LEFT SIDE
+========================================= */
+
+.left-side {
+    position: relative;
+
+    min-height: 100vh;
+
+    display: flex;
+
+    align-items: center;
+
+    padding: 70px 9%;
+
+    border-right: 1px solid #272c30;
+
+    background:
+        radial-gradient(
+            circle at 20% 45%,
+            rgba(210, 170, 96, 0.035),
+            transparent 35%
+        ),
+        #0c0f12;
+
+    overflow: hidden;
+}
+
+
+.left-content {
+    position: relative;
+
+    z-index: 2;
+
+    width: 100%;
+
+    max-width: 560px;
+}
+
+
+/* =========================================
+   LOGO
+========================================= */
+
+.logo {
+    display: flex;
+
+    align-items: center;
+
+    gap: 11px;
+
+    color: #d2aa60;
+
+    font-family: Georgia, "Times New Roman", serif;
+
+    font-size: 1.25rem;
+
+    font-weight: bold;
+
+    letter-spacing: 2.5px;
+
+    margin-bottom: 18px;
+}
+
+
+.logo-piece {
+    font-size: 1.65rem;
+}
+
+
+/* =========================================
+   GOLD LINE
+========================================= */
+
+.gold-line {
+    width: 48px;
+
+    height: 2px;
+
+    background: #c49b55;
+
+    margin-bottom: 70px;
+}
+
+
+/* =========================================
+   INTRO
+========================================= */
+
+.small-title {
+    color: #777c80;
+
+    font-size: 0.76rem;
+
+    letter-spacing: 2.7px;
+
+    margin-bottom: 17px;
+}
+
+
+.intro h1 {
+    font-family: Georgia, "Times New Roman", serif;
+
+    font-size: clamp(2.45rem, 4vw, 3.55rem);
+
+    font-weight: normal;
+
+    line-height: 1.15;
+
+    letter-spacing: -0.7px;
+
+    color: #e8e6df;
+}
+
+
+.intro h1 span {
+    display: block;
+
+    color: #c9a35d;
+
+    margin-top: 3px;
+}
+
+
+.description {
+    max-width: 490px;
+
+    margin-top: 26px;
+
+    color: #92969a;
+
+    font-size: 0.98rem;
+
+    line-height: 1.75;
+}
+
+
+/* =========================================
+   CHESS MESSAGE
+========================================= */
+
+.chess-message {
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+
+    margin-top: 55px;
+
+    padding-top: 22px;
+
+    border-top: 1px solid #292e33;
+
+    max-width: 420px;
+}
+
+
+.chess-symbol {
+    width: 42px;
+
+    height: 42px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border: 1px solid #383d42;
+
+    color: #c9a35d;
+
+    font-family: Georgia, serif;
+
+    font-size: 1.3rem;
+
+    border-radius: 50%;
+}
+
+
+.chess-message p {
+    color: #b8b8b4;
+
+    font-family: Georgia, "Times New Roman", serif;
+
+    font-size: 0.95rem;
+
+    margin-bottom: 4px;
+}
+
+
+.chess-message span {
+    color: #686e73;
+
+    font-size: 0.77rem;
+}
+
+
+/* =========================================
+   BACKGROUND CHESS PIECES
+========================================= */
+
+.background-chess {
+    position: fixed;
+
+    z-index: 0;
+
+    pointer-events: none;
+
+    user-select: none;
+
+    color: #ffffff;
+
+    opacity: 0.025;
+
+    font-family: Georgia, "Times New Roman", serif;
+}
+
+
+.chess-one {
+    left: 5%;
+
+    bottom: -35px;
+
+    font-size: 12rem;
+}
+
+
+.chess-two {
+    left: 42%;
+
+    top: 8%;
+
+    font-size: 6rem;
+}
+
+
+.chess-three {
+    right: 4%;
+
+    top: 16%;
+
+    font-size: 8rem;
+}
+
+
+.chess-four {
+    right: 37%;
+
+    bottom: 7%;
+
+    font-size: 6rem;
+}
+
+
+/* =========================================
+   RIGHT SIDE
+========================================= */
+
+.right-side {
+    position: relative;
+
+    min-height: 100vh;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 50px 8%;
+
+    background: #111519;
+}
+
+
+/* =========================================
+   LOGIN CONTAINER
+========================================= */
+
+.login-container {
+    width: 100%;
+
+    max-width: 430px;
+
+    position: relative;
+
+    z-index: 2;
+}
+
+
+/* =========================================
+   FORM HEADER
+========================================= */
+
+.form-header {
+    margin-bottom: 31px;
+}
+
+
+.welcome {
+    color: #c7a05b;
+
+    font-size: 0.72rem;
+
+    letter-spacing: 2.6px;
+
+    margin-bottom: 11px;
+}
+
+
+.form-header h2 {
+    color: #e9e7e1;
+
+    font-family: Georgia, "Times New Roman", serif;
+
+    font-size: 1.95rem;
+
+    font-weight: normal;
+
+    line-height: 1.25;
+
+    margin-bottom: 9px;
+}
+
+
+.subtitle {
+    color: #7d8388;
+
+    font-size: 0.87rem;
+
+    line-height: 1.5;
+}
+
+
+/* =========================================
+   ACCOUNT TYPE
+========================================= */
+
+.account-section {
+    margin-bottom: 29px;
+}
+
+
+.section-label {
+    color: #8d9296;
+
+    font-size: 0.71rem;
+
+    letter-spacing: 1.8px;
+
+    margin-bottom: 12px;
+}
+
+
+.account-options {
+    display: flex;
+
+    gap: 28px;
+
+    border-bottom: 1px solid #30353a;
+}
+
+
+.account-option {
+    position: relative;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    padding: 0 2px 12px;
+
+    border: none;
+
+    background: transparent;
+
+    color: #686e73;
+
+    cursor: pointer;
+
+    font-family: Arial, Helvetica, sans-serif;
+
+    font-size: 0.87rem;
+
+    transition: color 0.2s ease;
+}
+
+
+.account-option::after {
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+
+    right: 0;
+
+    bottom: -1px;
+
+    height: 2px;
+
+    background: #c9a35d;
+
+    transform: scaleX(0);
+
+    transform-origin: left;
+
+    transition: transform 0.25s ease;
+}
+
+
+.account-option:hover {
+    color: #b8b9b6;
+}
+
+
+.account-option.active {
+    color: #e1dfd8;
+}
+
+
+.account-option.active::after {
+    transform: scaleX(1);
+}
+
+
+.account-piece {
+    color: #a8844b;
+
+    font-family: Georgia, serif;
+
+    font-size: 1.1rem;
+}
+
+
+/* =========================================
+   FORM GROUP
+========================================= */
+
+.form-group {
+    margin-bottom: 23px;
+}
+
+
+.form-group label {
+    display: block;
+
+    color: #b7b9b7;
+
+    font-size: 0.84rem;
+
+    margin-bottom: 9px;
+}
+
+
+/* =========================================
+   INPUTS
+========================================= */
+
+.form-group input[type="text"],
+.form-group input[type="password"] {
+    width: 100%;
+
+    height: 48px;
+
+    padding: 0 14px;
+
+    border: 1px solid #30363b;
+
+    border-radius: 5px;
+
+    background: #0e1215;
+
+    color: #e6e5df;
+
+    font-family: Arial, Helvetica, sans-serif;
+
+    font-size: 0.88rem;
+
+    outline: none;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+.form-group input::placeholder {
+    color: #5e6469;
+}
+
+
+.form-group input:focus {
+    border-color: #a98246;
+
+    box-shadow: 0 0 0 2px rgba(201, 163, 93, 0.055);
+}
+
+
+/* =========================================
+   PASSWORD TOP
+========================================= */
+
+.password-top {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+}
+
+
+.password-top label {
+    margin-bottom: 9px;
+}
+
+
+.password-top a {
+    color: #777d81;
+
+    font-size: 0.73rem;
+
+    text-decoration: none;
+
+    margin-bottom: 9px;
+
+    transition: color 0.2s ease;
+}
+
+
+.password-top a:hover {
+    color: #c9a35d;
+}
+
+
+/* =========================================
+   PASSWORD BOX
+========================================= */
+
+.password-box {
+    position: relative;
+}
+
+
+.password-box input {
+    padding-right: 48px !important;
+}
+
+
+/* =========================================
+   PASSWORD EYE
+========================================= */
+
+.password-toggle {
+    position: absolute;
+
+    top: 50%;
+
+    right: 11px;
+
+    transform: translateY(-50%);
+
+    width: 30px;
+
+    height: 30px;
+
+    border: none;
+
+    background: transparent;
+
+    color: #747a7f;
+
+    cursor: pointer;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 0;
+
+    transition: color 0.2s ease;
+}
+
+
+.password-toggle:hover {
+    color: #c2c3bf;
+}
+
+
+.password-toggle svg {
+    width: 18px;
+
+    height: 18px;
+}
+
+
+.password-toggle .hidden {
+    display: none;
+}
+
+
+/* =========================================
+   REMEMBER ME
+========================================= */
+
+.remember-row {
+    margin-top: -2px;
+
+    margin-bottom: 22px;
+}
+
+
+.remember-row label {
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    color: #777d82;
+
+    font-size: 0.77rem;
+
+    cursor: pointer;
+}
+
+
+.remember-row input {
+    width: 14px;
+
+    height: 14px;
+
+    accent-color: #bd9450;
+
+    cursor: pointer;
+}
+
+
+/* =========================================
+   LOGIN BUTTON
+========================================= */
+
+.login-button {
+    position: relative;
+
+    width: 100%;
+
+    height: 48px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 11px;
+
+    border: 1px solid #c09a59;
+
+    border-radius: 5px;
+
+    background: #bd9551;
+
+    color: #111;
+
+    font-size: 0.86rem;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease;
+}
+
+
+.login-button:hover {
+    background: #d0a961;
+
+    border-color: #d0a961;
+
+    transform: translateY(-1px);
+}
+
+
+.login-button:active {
+    transform: translateY(0);
+}
+
+
+.arrow {
+    font-size: 1rem;
+
+    transition: transform 0.2s ease;
+}
+
+
+.login-button:hover .arrow {
+    transform: translateX(3px);
+}
+
+
+/* =========================================
+   REGISTER
+========================================= */
+
+.register {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 6px;
+
+    margin-top: 25px;
+
+    color: #6f7579;
+
+    font-size: 0.78rem;
+}
+
+
+.register a {
+    color: #c4a05c;
+
+    text-decoration: none;
+
+    transition: color 0.2s ease;
+}
+
+
+.register a:hover {
+    color: #dfbd7a;
+}
+
+
+/* =========================================
+   BOTTOM CHESS
+========================================= */
+
+.bottom-chess {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 9px;
+
+    margin-top: 43px;
+}
+
+
+.bottom-chess span {
+    color: #706b61;
+
+    opacity: 0.65;
+
+    font-family: Georgia, serif;
+
+    font-size: 0.9rem;
+}
+
+
+.bottom-chess div {
+    width: 42px;
+
+    height: 1px;
+
+    background: #30353a;
+}
+
+
+/* =========================================
+   FOOTER
+========================================= */
+
+.footer-text {
+    text-align: center;
+
+    margin-top: 13px;
+
+    color: #4f5559;
+
+    font-size: 0.63rem;
+
+    letter-spacing: 0.4px;
+}
+
+
+/* =========================================
+   TOAST
+========================================= */
+
+.toast {
+    position: fixed;
+
+    left: 50%;
+
+    bottom: 25px;
+
+    transform: translate(-50%, 15px);
+
+    padding: 11px 18px;
+
+    background: #191d21;
+
+    border: 1px solid #363c41;
+
+    border-radius: 5px;
+
+    color: #d9d9d5;
+
+    font-size: 0.78rem;
+
+    opacity: 0;
+
+    pointer-events: none;
+
+    z-index: 100;
+
+    transition:
+        opacity 0.25s ease,
+        transform 0.25s ease;
+}
+
+
+.toast.show {
+    opacity: 1;
+
+    transform: translate(-50%, 0);
+}
+
+
+/* =========================================
+   SMALL ANIMATION
+========================================= */
+
+.left-content {
+    animation: leftAppear 0.7s ease forwards;
+}
+
+
+.login-container {
+    animation: formAppear 0.7s ease 0.1s both;
+}
+
+
+@keyframes leftAppear {
+
+    from {
+        opacity: 0;
+
+        transform: translateX(-15px);
+    }
+
+    to {
+        opacity: 1;
+
+        transform: translateX(0);
+    }
+
+}
+
+
+@keyframes formAppear {
+
+    from {
+        opacity: 0;
+
+        transform: translateX(15px);
+    }
+
+    to {
+        opacity: 1;
+
+        transform: translateX(0);
+    }
+
+}
+
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 900px) {
+
+    .login-page {
+        grid-template-columns: 1fr;
+    }
+
+
+    .left-side {
+        min-height: auto;
+
+        padding: 55px 8%;
+
+        border-right: none;
+
+        border-bottom: 1px solid #272c30;
+    }
+
+
+    .gold-line {
+        margin-bottom: 40px;
+    }
+
+
+    .right-side {
+        min-height: auto;
+
+        padding: 55px 8%;
+    }
+
+
+    .background-chess {
+        display: none;
+    }
+
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 600px) {
+
+    .left-side {
+        padding: 40px 25px;
+    }
+
+
+    .right-side {
+        padding: 45px 25px;
+    }
+
+
+    .intro h1 {
+        font-size: 2.25rem;
+    }
+
+
+    .description {
+        font-size: 0.88rem;
+    }
+
+
+    .form-header h2 {
+        font-size: 1.7rem;
+    }
+
+
+    .account-options {
+        gap: 22px;
+    }
+
+
+    .bottom-chess {
+        margin-top: 35px;
+    }
+
+}
