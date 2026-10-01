@@ -6,7 +6,7 @@
 
     <title>CHECKMATE - Admin Dashboard</title>
 
-    <link rel="stylesheet" href="admin_home.css">
+    <link rel="stylesheet" href="../../asset/css/admin_home.css">
 </head>
 
 <body>
@@ -861,7 +861,7 @@
 
 
     <!-- JavaScript -->
-    <script src="admin_home.js"></script>
+    <script src="../../asset/js/admin_home.js"></script>
 
 </body>
 </html>

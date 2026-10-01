@@ -9,7 +9,7 @@
 
     <title>CHECKMATE - Student Home</title>
 
-    <link rel="stylesheet" href="student_home.css">
+    <link rel="stylesheet" href="../../asset/css/student_home.css">
 
 </head>
 
@@ -888,7 +888,7 @@
 
 <!-- JAVASCRIPT -->
 
-<script src="student_home.js"></script>
+<script src="../../asset/css/admin_home.js"></script>
 
 </body>
 
