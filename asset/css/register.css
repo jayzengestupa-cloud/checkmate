@@ -1,937 +1,298 @@
-/* =========================================
-   CHECKMATE REGISTER
-   register.css
-========================================= */
-
-
-/* =========================================
-   RESET
-========================================= */
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-
-html {
-    font-size: 16px;
-}
-
-
-body {
-    min-height: 100vh;
-
-    background: #0c0f12;
-
-    color: #e5e3dc;
-
-    font-family: Arial, Helvetica, sans-serif;
-
-    overflow-x: hidden;
-}
-
-
-/* =========================================
-   PAGE
-========================================= */
-
-.register-page {
-    min-height: 100vh;
-
-    display: grid;
-
-    grid-template-columns: 0.85fr 1.15fr;
-}
-
-
-/* =========================================
-   LEFT SIDE
-========================================= */
-
-.left-side {
-    position: relative;
-
-    min-height: 100vh;
-
-    display: flex;
-
-    align-items: center;
-
-    padding: 70px 9%;
-
-    border-right: 1px solid #272c30;
-
-    background:
-        radial-gradient(
-            circle at 20% 45%,
-            rgba(210, 170, 96, 0.035),
-            transparent 35%
-        ),
-        #0c0f12;
-
-    overflow: hidden;
-}
-
-
-.left-content {
-    position: relative;
-
-    z-index: 2;
-
-    width: 100%;
-
-    max-width: 500px;
-}
-
-
-/* =========================================
-   LOGO
-========================================= */
-
-.logo {
-    display: flex;
-
-    align-items: center;
-
-    gap: 11px;
-
-    color: #d2aa60;
-
-    font-family: Georgia, "Times New Roman", serif;
-
-    font-size: 1.25rem;
-
-    font-weight: bold;
-
-    letter-spacing: 2.5px;
-
-    margin-bottom: 18px;
-}
-
-
-.logo-piece {
-    font-size: 1.65rem;
-}
-
-
-/* =========================================
-   GOLD LINE
-========================================= */
-
-.gold-line {
-    width: 48px;
-
-    height: 2px;
-
-    background: #c49b55;
-
-    margin-bottom: 70px;
-}
-
-
-/* =========================================
-   INTRO
-========================================= */
-
-.small-title {
-    color: #777c80;
-
-    font-size: 0.76rem;
-
-    letter-spacing: 2.7px;
-
-    margin-bottom: 17px;
-}
-
-
-.intro h1 {
-    font-family: Georgia, "Times New Roman", serif;
-
-    font-size: clamp(2.35rem, 4vw, 3.4rem);
-
-    font-weight: normal;
-
-    line-height: 1.15;
-
-    letter-spacing: -0.7px;
-
-    color: #e8e6df;
-}
-
-
-.intro h1 span {
-    display: block;
-
-    color: #c9a35d;
-
-    margin-top: 3px;
-}
-
-
-.description {
-    max-width: 450px;
-
-    margin-top: 26px;
-
-    color: #92969a;
-
-    font-size: 0.96rem;
-
-    line-height: 1.75;
-}
-
-
-/* =========================================
-   CHESS MESSAGE
-========================================= */
-
-.chess-message {
-    display: flex;
-
-    align-items: center;
-
-    gap: 15px;
-
-    margin-top: 55px;
-
-    padding-top: 22px;
-
-    border-top: 1px solid #292e33;
-
-    max-width: 420px;
-}
-
-
-.chess-symbol {
-    width: 42px;
-
-    height: 42px;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    border: 1px solid #383d42;
-
-    color: #c9a35d;
-
-    font-family: Georgia, serif;
-
-    font-size: 1.3rem;
-
-    border-radius: 50%;
-}
-
-
-.chess-message p {
-    color: #b8b8b4;
-
-    font-family: Georgia, "Times New Roman", serif;
-
-    font-size: 0.95rem;
-
-    margin-bottom: 4px;
-}
-
-
-.chess-message span {
-    color: #686e73;
-
-    font-size: 0.77rem;
-}
-
-
-/* =========================================
-   BACKGROUND CHESS PIECES
-========================================= */
-
-.background-chess {
-    position: fixed;
-
-    z-index: 0;
-
-    pointer-events: none;
-
-    user-select: none;
-
-    color: #ffffff;
-
-    opacity: 0.025;
-
-    font-family: Georgia, "Times New Roman", serif;
-}
-
-
-.chess-one {
-    left: 5%;
-
-    bottom: -35px;
-
-    font-size: 12rem;
-}
-
-
-.chess-two {
-    left: 42%;
-
-    top: 8%;
-
-    font-size: 6rem;
-}
-
-
-.chess-three {
-    right: 4%;
-
-    top: 16%;
-
-    font-size: 8rem;
-}
-
-
-.chess-four {
-    right: 37%;
-
-    bottom: 7%;
-
-    font-size: 6rem;
-}
-
-
-/* =========================================
-   RIGHT SIDE
-========================================= */
-
-.right-side {
-    position: relative;
-
-    min-height: 100vh;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    padding: 50px 8%;
-
-    background: #111519;
-}
-
-
-/* =========================================
-   REGISTER CONTAINER
-========================================= */
-
-.register-container {
-    width: 100%;
-
-    max-width: 620px;
-
-    position: relative;
-
-    z-index: 2;
-}
-
-
-/* =========================================
-   FORM HEADER
-========================================= */
-
-.form-header {
-    margin-bottom: 28px;
-}
-
-
-.welcome {
-    color: #c7a05b;
-
-    font-size: 0.72rem;
-
-    letter-spacing: 2.6px;
-
-    margin-bottom: 11px;
-}
-
-
-.form-header h2 {
-    color: #e9e7e1;
-
-    font-family: Georgia, "Times New Roman", serif;
-
-    font-size: 1.95rem;
-
-    font-weight: normal;
-
-    line-height: 1.25;
-
-    margin-bottom: 9px;
-}
-
-
-.subtitle {
-    color: #7d8388;
-
-    font-size: 0.87rem;
-
-    line-height: 1.5;
-}
-
-
-/* =========================================
-   FORM
-========================================= */
-
-.register-form {
-    width: 100%;
-}
-
-
-.form-row {
-    display: grid;
-
-    grid-template-columns: 1fr 1fr;
-
-    gap: 18px;
-}
-
-
-.form-group {
-    margin-bottom: 20px;
-}
-
-
-.form-group label {
-    display: block;
-
-    color: #b7b9b7;
-
-    font-size: 0.84rem;
-
-    margin-bottom: 9px;
-}
-
-
-.form-group input,
-.form-group select {
-    width: 100%;
-
-    height: 47px;
-
-    padding: 0 14px;
-
-    border: 1px solid #30363b;
-
-    border-radius: 5px;
-
-    background: #0e1215;
-
-    color: #e6e5df;
-
-    font-family: Arial, Helvetica, sans-serif;
-
-    font-size: 0.88rem;
-
-    outline: none;
-
-    transition:
-        border-color 0.2s ease,
-        box-shadow 0.2s ease;
-}
-
-
-.form-group input::placeholder {
-    color: #5e6469;
-}
-
-
-.form-group input:focus,
-.form-group select:focus {
-    border-color: #a98246;
-
-    box-shadow: 0 0 0 2px rgba(201, 163, 93, 0.055);
-}
-
-
-.form-group select {
-    cursor: pointer;
-
-    appearance: auto;
-}
-
-
-/* =========================================
-   PASSWORD BOX
-========================================= */
-
-.password-box {
-    position: relative;
-}
-
-
-.password-box input {
-    padding-right: 48px;
-}
-
-
-/* =========================================
-   PASSWORD TOGGLE
-========================================= */
-
-.password-toggle {
-    position: absolute;
-
-    top: 50%;
-
-    right: 11px;
-
-    transform: translateY(-50%);
-
-    width: 30px;
-
-    height: 30px;
-
-    border: none;
-
-    background: transparent;
-
-    color: #747a7f;
-
-    cursor: pointer;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    padding: 0;
-
-    transition: color 0.2s ease;
-}
-
-
-.password-toggle:hover {
-    color: #c2c3bf;
-}
-
-
-.password-toggle svg {
-    width: 18px;
-
-    height: 18px;
-}
-
-
-.password-toggle .hidden {
-    display: none;
-}
-
-
-/* =========================================
-   FIELD MESSAGE
-========================================= */
-
-.field-message {
-    display: block;
-
-    margin-top: 6px;
-
-    color: #686e73;
-
-    font-size: 0.7rem;
-
-    line-height: 1.4;
-}
-
-
-/* =========================================
-   TERMS
-========================================= */
-
-.terms-row {
-    margin-top: 2px;
-
-    margin-bottom: 21px;
-}
-
-
-.terms-row label {
-    display: flex;
-
-    align-items: flex-start;
-
-    gap: 9px;
-
-    color: #777d82;
-
-    font-size: 0.76rem;
-
-    line-height: 1.5;
-
-    cursor: pointer;
-}
-
-
-.terms-row input {
-    width: 14px;
-
-    height: 14px;
-
-    margin-top: 2px;
-
-    accent-color: #bd9450;
-
-    cursor: pointer;
-}
-
-
-.terms-row a {
-    color: #c4a05c;
-
-    text-decoration: none;
-
-    transition: color 0.2s ease;
-}
-
-
-.terms-row a:hover {
-    color: #dfbd7a;
-}
-
-
-/* =========================================
-   REGISTER BUTTON
-========================================= */
-
-.register-button {
-    position: relative;
-
-    width: 100%;
-
-    height: 48px;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    gap: 11px;
-
-    border: 1px solid #c09a59;
-
-    border-radius: 5px;
-
-    background: #bd9551;
-
-    color: #111;
-
-    font-size: 0.86rem;
-
-    font-weight: bold;
-
-    cursor: pointer;
-
-    transition:
-        background 0.2s ease,
-        border-color 0.2s ease,
-        transform 0.2s ease;
-}
-
-
-.register-button:hover {
-    background: #d0a961;
-
-    border-color: #d0a961;
-
-    transform: translateY(-1px);
-}
-
-
-.register-button:active {
-    transform: translateY(0);
-}
-
-
-.arrow {
-    font-size: 1rem;
-
-    transition: transform 0.2s ease;
-}
-
-
-.register-button:hover .arrow {
-    transform: translateX(3px);
-}
-
-
-/* =========================================
-   LOGIN LINK
-========================================= */
-
-.login-link {
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    gap: 6px;
-
-    margin-top: 20px;
-
-    color: #6f7579;
-
-    font-size: 0.78rem;
-}
-
-
-.login-link a {
-    color: #c4a05c;
-
-    text-decoration: none;
-
-    transition: color 0.2s ease;
-}
-
-
-.login-link a:hover {
-    color: #dfbd7a;
-}
-
-
-/* =========================================
-   BOTTOM CHESS
-========================================= */
-
-.bottom-chess {
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    gap: 9px;
-
-    margin-top: 30px;
-}
-
-
-.bottom-chess span {
-    color: #706b61;
-
-    opacity: 0.65;
-
-    font-family: Georgia, serif;
-
-    font-size: 0.9rem;
-}
-
-
-.bottom-chess div {
-    width: 42px;
-
-    height: 1px;
-
-    background: #30353a;
-}
-
-
-/* =========================================
-   FOOTER
-========================================= */
-
-.footer-text {
-    text-align: center;
-
-    margin-top: 11px;
-
-    color: #4f5559;
-
-    font-size: 0.63rem;
-
-    letter-spacing: 0.4px;
-}
-
-
-/* =========================================
-   TOAST
-========================================= */
-
-.toast {
-    position: fixed;
-
-    left: 50%;
-
-    bottom: 25px;
-
-    transform: translate(-50%, 15px);
-
-    padding: 11px 18px;
-
-    background: #191d21;
-
-    border: 1px solid #363c41;
-
-    border-radius: 5px;
-
-    color: #d9d9d5;
-
-    font-size: 0.78rem;
-
-    opacity: 0;
-
-    pointer-events: none;
-
-    z-index: 100;
-
-    transition:
-        opacity 0.25s ease,
-        transform 0.25s ease;
-}
-
-
-.toast.show {
-    opacity: 1;
-
-    transform: translate(-50%, 0);
-}
-
-
-/* =========================================
-   SMALL ANIMATION
-========================================= */
-
-.left-content {
-    animation: leftAppear 0.7s ease forwards;
-}
-
-
-.register-container {
-    animation: formAppear 0.7s ease 0.1s both;
-}
-
-
-@keyframes leftAppear {
-
-    from {
-        opacity: 0;
-
-        transform: translateX(-15px);
+ /* ---------- colors (change the gold here and the whole page updates) ---------- */
+    :root {
+      --gold: #d9a94f;
+      --gold-light: #ecc272;   /* used for the button hover */
+      --bg: #0b0f12;
+      --card: #0d1216;
+      --field: #12181d;
+      --border: #263038;
+      --text: #f2f2f2;
+      --muted: #8c969e;
     }
-
-    to {
-        opacity: 1;
-
-        transform: translateX(0);
+ 
+    * {
+      box-sizing: border-box;
     }
-
-}
-
-
-@keyframes formAppear {
-
-    from {
-        opacity: 0;
-
-        transform: translateX(15px);
+ 
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Inter", Arial, sans-serif;
+      font-size: 13px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 16px;
     }
-
-    to {
-        opacity: 1;
-
-        transform: translateX(0);
+ 
+    /* ---------- logo at the top ---------- */
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: "Source Serif 4", Georgia, serif;
+      font-size: 22px;
+      letter-spacing: 4px;
+      color: var(--text);
     }
-
-}
-
-
-/* =========================================
-   TABLET
-========================================= */
-
-@media (max-width: 900px) {
-
-    .register-page {
-        grid-template-columns: 1fr;
+ 
+    .logo svg {
+      width: 26px;
+      height: 26px;
+      fill: var(--gold);
     }
-
-
-    .left-side {
-        min-height: auto;
-
-        padding: 55px 8%;
-
-        border-right: none;
-
-        border-bottom: 1px solid #272c30;
+ 
+    .logo-line {
+      width: 40px;
+      height: 2px;
+      background: var(--gold);
+      margin: 12px 0 28px;
     }
-
-
-    .gold-line {
-        margin-bottom: 40px;
+ 
+    /* ---------- the card ---------- */
+    .card {
+      width: 100%;
+      max-width: 460px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 32px 32px 28px;
     }
-
-
-    .right-side {
-        min-height: auto;
-
-        padding: 55px 8%;
+ 
+    .small-title {
+      text-align: center;
+      color: var(--gold);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      margin: 0 0 8px;
     }
-
-
-    .background-chess {
-        display: none;
+ 
+    h1 {
+      text-align: center;
+      font-family: "Source Serif 4", Georgia, serif;
+      font-size: 26px;
+      margin: 0 0 10px;
     }
-
-}
-
-
-/* =========================================
-   MOBILE
-========================================= */
-
-@media (max-width: 600px) {
-
-    .left-side {
-        padding: 40px 25px;
+ 
+    .subtitle {
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+      margin: 0 auto 22px;
+      max-width: 260px;
     }
-
-
-    .right-side {
-        padding: 45px 25px;
+ 
+    /* ---------- form fields ---------- */
+    .row {
+      display: flex;
+      gap: 14px;
     }
-
-
-    .intro h1 {
-        font-size: 2.25rem;
+ 
+    .field {
+      flex: 1;
+      margin-bottom: 14px;
+      min-width: 0;
     }
-
-
-    .description {
-        font-size: 0.88rem;
+ 
+    label {
+      display: block;
+      font-size: 12px;
+      font-weight: 500;
+      margin-bottom: 6px;
     }
-
-
-    .form-header h2 {
-        font-size: 1.7rem;
+ 
+    /* the box that holds the icon + the input */
+    .input-box {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--field);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0 10px;
+      height: 36px;
+      transition: border-color 0.2s;
     }
-
-
-    .form-row {
-        grid-template-columns: 1fr;
-
+ 
+    /* gold border when you click inside the box */
+    .input-box:focus-within {
+      border-color: var(--gold);
+    }
+ 
+    .input-box svg {
+      width: 14px;
+      height: 14px;
+      stroke: var(--muted);
+      fill: none;
+      stroke-width: 2;
+      flex-shrink: 0;
+    }
+ 
+    .input-box input,
+    .input-box select {
+      flex: 1;
+      min-width: 0;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 12px;
+    }
+ 
+    .input-box input::placeholder {
+      color: #5d676f;
+    }
+ 
+    /* dropdown options need their own background or they show up white */
+    .input-box select option {
+      background: var(--field);
+      color: var(--text);
+    }
+ 
+    /* the little eye button for showing the password */
+    .eye-btn {
+      background: none;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      display: flex;
+    }
+ 
+    .eye-btn:hover svg {
+      stroke: var(--gold);
+    }
+ 
+    /* ---------- checkbox ---------- */
+    .terms {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 4px 0 16px;
+      font-size: 11px;
+    }
+ 
+    .terms label {
+      margin: 0;
+      font-size: 11px;
+      font-weight: 400;
+      cursor: pointer;
+    }
+ 
+    /* hide the default checkbox and draw our own */
+    .terms input[type="checkbox"] {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 14px;
+      height: 14px;
+      border: 1px solid var(--muted);
+      border-radius: 3px;
+      background: transparent;
+      cursor: pointer;
+      position: relative;
+      flex-shrink: 0;
+    }
+ 
+    /* when the box is checked it turns GOLD */
+    .terms input[type="checkbox"]:checked {
+      background: var(--gold);
+      border-color: var(--gold);
+    }
+ 
+    /* the checkmark inside the box (dark so you can see it on the gold) */
+    .terms input[type="checkbox"]:checked::after {
+      content: "";
+      position: absolute;
+      left: 4px;
+      top: 1px;
+      width: 3px;
+      height: 7px;
+      border: solid #1a1204;
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg);
+    }
+ 
+    .terms input[type="checkbox"]:focus-visible {
+      outline: 2px solid var(--gold);
+      outline-offset: 2px;
+    }
+ 
+    a {
+      color: var(--gold);
+      font-weight: 600;
+      text-decoration: none;
+    }
+ 
+    a:hover {
+      text-decoration: underline;
+    }
+ 
+    /* ---------- the button ---------- */
+    .create-btn {
+      width: 100%;
+      height: 38px;
+      background: var(--gold);
+      color: #1a1204;
+      border: none;
+      border-radius: 6px;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+    }
+ 
+    /* HOVER: lighter gold, moves up a little and gets a glow */
+    .create-btn:hover {
+      background: var(--gold-light);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(217, 169, 79, 0.35);
+    }
+ 
+    /* pressed down */
+    .create-btn:active {
+      transform: translateY(0);
+      box-shadow: none;
+    }
+ 
+    .create-btn .arrow {
+      display: inline-block;
+      margin-left: 6px;
+      transition: transform 0.2s;
+    }
+ 
+    /* arrow slides to the right on hover */
+    .create-btn:hover .arrow {
+      transform: translateX(4px);
+    }
+ 
+    .signin-text {
+      text-align: center;
+      color: var(--muted);
+      font-size: 11px;
+      margin: 18px 0 0;
+    }
+ 
+    /* error message under the button */
+    .error {
+      color: #e5726b;
+      font-size: 11px;
+      text-align: center;
+      min-height: 14px;
+      margin: 10px 0 0;
+    }
+ 
+    /* on phones, stack the two-column rows */
+    @media (max-width: 480px) {
+      .row {
+        flex-direction: column;
         gap: 0;
+      }
+      .card {
+        padding: 24px 20px;
+      }
     }
-
-
-    .bottom-chess {
-        margin-top: 25px;
-    }
-
-}

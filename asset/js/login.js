@@ -42,7 +42,12 @@ const toast =
    DEFAULT ACCOUNT TYPE
 ========================================= */
 
-let accountType = "student";
+// the hidden input that gets sent to PHP
+const accountTypeInput =
+    document.getElementById("accountType");
+
+// start with whatever PHP put in the hidden input (student or admin)
+let accountType = accountTypeInput.value;
 
 
 /* =========================================
@@ -68,6 +73,10 @@ accountOptions.forEach(function(option) {
 
         /* Save account type */
         accountType = option.dataset.type;
+
+
+        /* Also save it in the hidden input so PHP receives it */
+        accountTypeInput.value = accountType;
 
 
         /* Small feedback */
@@ -162,7 +171,8 @@ function showToast(message) {
 loginForm.addEventListener("submit", function(event) {
 
 
-    /* Prevent page refresh */
+    /* Stop the form from sending for now.
+       We check the inputs first, then send it with loginForm.submit() below. */
     event.preventDefault();
 
 
@@ -207,41 +217,16 @@ loginForm.addEventListener("submit", function(event) {
 
 
     /* =====================================
-       TEMPORARY LOGIN
+       SEND TO PHP
 
-       This will later connect to PHP
-       and MySQL.
+       Both fields are filled in, so we
+       submit the form to login.php.
+       PHP checks the username, password
+       and account type, then redirects
+       to student_home.php or admin_home.php.
     ====================================== */
 
-    if (accountType === "student") {
-
-        showToast(
-            "Student login selected."
-        );
-
-
-        /*
-        Later:
-
-        window.location.href =
-            "student.html";
-        */
-
-    } else {
-
-        showToast(
-            "Admin login selected."
-        );
-
-
-        /*
-        Later:
-
-        window.location.href =
-            "admin.html";
-        */
-
-    }
+    loginForm.submit();
 
 });
 
@@ -284,3 +269,18 @@ registerLink.addEventListener("click", function(event) {
     */
 
 });
+
+
+/* =========================================
+   SHOW ERROR FROM PHP
+
+   If login.php found a problem (wrong
+   password, wrong account type, etc.)
+   it puts the message in data-message.
+========================================= */
+
+if (toast.dataset.message !== "") {
+
+    showToast(toast.dataset.message);
+
+}

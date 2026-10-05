@@ -1,18 +1,28 @@
-
 <?php
 
+ob_start();
 session_start();
 
 include "../../config/config.php";
 
 $message = "";
+$account_type = "student";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    $username = $_POST["username"];
-    $password = $_POST["password"];
+    // Get form values
+    $username = $_POST["student_id"] ?? "";
+    $password = $_POST["password"] ?? "";
 
-    $sql = "SELECT * FROM users WHERE username = ?";
+    // Get selected account type
+    if (($_POST["account_type"] ?? "") == "admin") {
+        $account_type = "admin";
+    } else {
+        $account_type = "student";
+    }
+
+    // Find the user
+    $sql = "SELECT * FROM users WHERE student_id = ?";
 
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("s", $username);
@@ -20,28 +30,43 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $result = $stmt->get_result();
 
+    // Check if user exists
     if ($result->num_rows == 1) {
 
         $user = $result->fetch_assoc();
 
-        if ($password == $user["password"]) {
+        // Get the role from database
+        $user_role = strtolower(trim($user["role"]));
 
-            $_SESSION["user_id"] = $user["user_id"];
-            $_SESSION["firstname"] = $user["firstname"];
-            $_SESSION["lastname"] = $user["lastname"];
-            $_SESSION["username"] = $user["username"];
-            $_SESSION["role"] = $user["role"];
+        // Check password
+        if (password_verify($password, $user["password"])) {
 
-            if ($user["role"] == "admin") {
+            // Check if selected account type matches database role
+            if ($user_role != $account_type) {
 
-                header("Location: admin_home.php");
-                exit();
+                $message = "This account is not a " . $account_type . " account.";
 
             } else {
 
-                header("Location: student_home.php");
-                exit();
+                // Save user information in session
+                $_SESSION["user_id"] = $user["user_id"];
+                $_SESSION["firstname"] = $user["firstname"];
+                $_SESSION["lastname"] = $user["lastname"];
+                $_SESSION["student_id"] = $user["student_id"];
+                $_SESSION["role"] = $user_role;
 
+                // Redirect based on role
+                if ($user_role == "admin") {
+
+                    header("Location: /checkmate/view/admin/admin_home.php");
+                    exit();
+
+                } elseif ($user_role == "student") {
+
+                    header("Location: /checkmate/view/student/student_home.php");
+                    exit();
+
+                }
             }
 
         } else {
@@ -52,7 +77,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     } else {
 
-        $message = "Username not found.";
+        $message = "Student ID not found.";
 
     }
 
@@ -232,7 +257,7 @@ $conn->close();
                         <!-- Student -->
                         <button
                             type="button"
-                            class="account-option active"
+                            class="account-option <?php if ($account_type == 'student') { echo 'active'; } ?>"
                             data-type="student">
 
                             <span class="account-piece">
@@ -249,7 +274,7 @@ $conn->close();
                         <!-- Admin -->
                         <button
                             type="button"
-                            class="account-option"
+                            class="account-option <?php if ($account_type == 'admin') { echo 'active'; } ?>"
                             data-type="admin">
 
                             <span class="account-piece">
@@ -273,23 +298,31 @@ $conn->close();
                      LOGIN FORM
                 ================================== -->
 
-                <form id="loginForm">
+                <form id="loginForm" method="post" action="login.php">
+
+                    <!-- Hidden input: JavaScript updates this when the user clicks Student or Admin -->
+                    <input
+                        type="hidden"
+                        id="accountType"
+                        name="account_type"
+                        value="<?php echo $account_type; ?>"
+                    >
 
 
                     <!-- Username -->
                     <div class="form-group">
 
                         <label for="username">
-                            Username or Email
+                            Student ID
                         </label>
 
 
                         <input
                             type="text"
                             id="username"
-                            name="username"
-                            placeholder="Enter your username or email"
-                            autocomplete="username"
+                            name="student_id"
+                            placeholder="Enter your Student ID"
+                            autocomplete="student_id"
                         >
 
                     </div>
@@ -438,8 +471,8 @@ $conn->close();
                         Don't have an account?
                     </span>
 
-                    <a href="#" id="registerLink">
-                        Create an account
+                    <a href="" id="registerLink">
+                       <a href="/checkmate/authentication/register.php?"> Create an account</a>
                     </a>
 
                 </div>
@@ -484,7 +517,8 @@ $conn->close();
          TOAST MESSAGE
     ========================================== -->
 
-    <div id="toast" class="toast"></div>
+    <!-- data-message holds the error from PHP (empty if no error). login.js shows it. -->
+    <div id="toast" class="toast" data-message="<?php echo htmlspecialchars($message); ?>"></div>
 
 
 
@@ -492,7 +526,7 @@ $conn->close();
          CONNECT JAVASCRIPT
     ========================================== -->
 
-    <script src="../../asset/css/login.js"></script>
+    <script src="../../asset/js/login.js"></script>
 
 
 </body>

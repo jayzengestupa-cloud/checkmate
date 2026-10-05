@@ -1,3 +1,10 @@
+<?php
+session_start();
+if (!isset($_SESSION["student_id"]) || $_SESSION["role"] != "student") {
+   header("Location: ../../authentication/Login/login.php");
+    exit();
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -153,49 +160,6 @@
     </div>
 
 
-
-    <!-- ACCOUNT -->
-
-    <div class="sidebar-section account-section">
-
-        <div class="section-title">
-            ACCOUNT
-        </div>
-
-
-        <a href="#"
-           class="menu-item"
-           data-page="profile">
-
-            <span class="menu-icon">
-                ○
-            </span>
-
-            <span>
-                Profile
-            </span>
-
-        </a>
-
-
-        <a href="#"
-           class="menu-item"
-           data-page="settings">
-
-            <span class="menu-icon">
-                ⚙
-            </span>
-
-            <span>
-                Settings
-            </span>
-
-        </a>
-
-    </div>
-
-
-
     <!-- USER ACCOUNT -->
 
     <div class="sidebar-user">
@@ -267,18 +231,17 @@
         <!-- RIGHT SIDE -->
 
         <div class="topbar-right">
-
+        
             <button class="help-button"
                     id="helpButton">
 
-                ?
 
             </button>
 
 
-            <div class="top-avatar">
-                S
-            </div>
+              <a href="../../authentication/Login/logout.php" style="color: #b08c4d; font-size: 12px; letter-spacing: 1.8px; font-weight: 700; margin-bottom: 11px; text-decoration: none;"
+              onclick="window.location.href = this.href";>LogOut</a> 
+         
 
         </div>
 
@@ -585,7 +548,7 @@
                     <!-- QUESTION 1 -->
 
                     <div class="question-item"
-                         data-question="hindi po ba makati kapag puno ng saging?">
+                         data-question="">
 
                         <div class="question-number">
                             ♟
@@ -595,14 +558,14 @@
                         <div class="question-content">
 
                             <div class="question-text">
-                                hindi po ba makati kapag puno ng saging?
+                                Umiinom ba ng tubig yung isda?
                             </div>
 
 
                             <div class="question-meta">
 
                                 <span>
-                                    ian henerasyon
+                                    Kapatid Ni Rene
                                 </span>
 
                                 <span>
@@ -673,7 +636,7 @@
                     <!-- QUESTION 3 -->
 
                     <div class="question-item"
-                         data-question="nag cha-chat gpt po kaya ang teacher?">
+                         data-question="">
 
                         <div class="question-number">
                             ♟
@@ -683,7 +646,7 @@
                         <div class="question-content">
 
                             <div class="question-text">
-                                nag cha-chat gpt po kaya ang teacher?
+                                Bat ba ginawa yung
                             </div>
 
 
@@ -888,7 +851,7 @@
 
 <!-- JAVASCRIPT -->
 
-<script src="../../asset/css/admin_home.js"></script>
+<script src="../../asset/js/admin_home.js"></script>
 
 </body>
 

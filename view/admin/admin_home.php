@@ -1,3 +1,13 @@
+<?php
+session_start();
+
+// if not logged in as admin, go to the login page
+if (!isset($_SESSION["user_id"]) || $_SESSION["role"] != "admin") {
+    header("Location: /checkmate/authentication/Login/login.php");
+    exit();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -134,30 +144,7 @@
 
         <div class="sidebar-section">
 
-            <div class="sidebar-title">
-                ACCOUNT
-            </div>
-
-            <ul class="sidebar-menu">
-
-                <li>
-                    <a href="#" data-page="profile">
-                        <span class="menu-icon">○</span>
-                        <span>Admin Profile</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="#" data-page="settings">
-                        <span class="menu-icon">⚙</span>
-                        <span>Settings</span>
-                    </a>
-                </li>
-
-            </ul>
-
-        </div>
-
+            
 
         <!-- =====================================
              ADMIN ACCOUNT
@@ -182,7 +169,7 @@
 
     </aside>
 
-
+    
 
     <!-- =========================================
          MAIN CONTENT
@@ -225,9 +212,10 @@
 
 
                 <!-- Admin Profile -->
-                <button class="topbar-user" id="userMore">
-                    A
-                </button>
+              
+                  <a href="../../authentication/Login/logout.php" style="color: #b08c4d; font-size: 12px; letter-spacing: 1.8px; font-weight: 700; margin-bottom: 11px; text-decoration: none;"
+                   onclick="window.location.href = this.href";>LogOut</a> 
+                
 
             </div>
 

@@ -487,12 +487,13 @@ body {
     font-size: 13px;
 
     cursor: pointer;
+   
 }
 
 .topbar-user:hover {
     background: #2b3238;
-
     border-color: #d2aa60;
+    
 }
 
 
