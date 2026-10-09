@@ -48,13 +48,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             } else {
 
-                // Save user information in session
-                $_SESSION["user_id"] = $user["user_id"];
-                $_SESSION["firstname"] = $user["firstname"];
-                $_SESSION["lastname"] = $user["lastname"];
-                $_SESSION["student_id"] = $user["student_id"];
-                $_SESSION["role"] = $user_role;
+              // Save user information in session
+$_SESSION["user_id"] = $user["id"];
+$_SESSION["student_id"] = $user["student_id"];
+$_SESSION["role"] = $user_role;
 
+// Get full name from database
+$full_name = trim($user["full_name"]);
+
+// Split full name into first and last name
+$name_parts = preg_split('/\s+/', $full_name);
+
+$_SESSION["firstname"] = $name_parts[0] ?? "";
+
+if (count($name_parts) > 1) {
+    $_SESSION["lastname"] = implode(" ", array_slice($name_parts, 1));
+} else {
+    $_SESSION["lastname"] = "";
+}
                 // Redirect based on role
                 if ($user_role == "admin") {
 

@@ -1,3 +1,170 @@
+
+
+        /* active sidebar item has a gold outline */
+        .sidebar-menu a.active {
+            background: #1d1a14;
+            border: 1px solid #6b5630;
+            color: #e2e5e8;
+        }
+
+        /* hide the little gold line, the outline replaces it */
+        .sidebar-menu a.active::before {
+            display: none;
+        }
+
+       
+
+        /* bigger page title in the top bar */
+        .topbar-title {
+            font-size: 22px;
+        }
+
+        /* logout link (was inline style before) */
+        .logout {
+            color: #b08c4d;
+            font-size: 12px;
+            letter-spacing: 1.8px;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .logout:hover {
+            color: #d2aa60;
+        }
+
+        /* status badges: square-ish with a dark tinted background */
+        .status {
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 10px;
+        }
+
+        .status.verified,
+        .status.done {
+            background: #16231e;
+        }
+
+        .status.pending,
+        .status.new {
+            background: #241e12;
+        }
+
+        .notification {
+            font-size: 30px;
+        }
+
+        .sidebar-account {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: 0 12px 10px;
+    background: #111519;
+}
+
+/* ---------- admin account: 3 dots (right side) + popup menu ---------- */
+
+.sidebar-account-user {
+    display: flex;
+    align-items: center;
+}
+
+.account-menu-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+
+    width: 28px;
+    height: 28px;
+    margin-left: auto;
+    flex-shrink: 0;
+
+    background: transparent;
+
+    border: 1px solid transparent;
+    border-radius: 4px;
+
+    cursor: pointer;
+}
+
+.account-menu-btn span {
+    display: block;
+    width: 3px;
+    height: 3px;
+
+    background: #6d9b85;
+    border-radius: 50%;
+}
+
+.account-menu-btn:hover,
+.account-menu-btn.open {
+    background: #1d1a14;
+    border-color: #6b5630;
+}
+
+.account-menu-btn:hover span,
+.account-menu-btn.open span {
+    background: #d2aa60;
+}
+
+.account-menu {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: calc(100% + 6px);
+
+    display: none;
+
+    background: #11161a;
+
+    border: 1px solid #292f34;
+    border-radius: 5px;
+
+    overflow: hidden;
+    z-index: 300;
+}
+
+.account-menu.show {
+    display: block;
+}
+
+.account-menu a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    padding: 11px 14px;
+
+    color: #d5d9dc;
+
+    font-size: 12px;
+    text-decoration: none;
+}
+
+.account-menu a:hover {
+    background: #151a1e;
+    color: #d2aa60;
+}
+
+.account-menu a + a {
+    border-top: 1px solid #242a2f;
+}
+
+.account-menu .menu-logout {
+    color: #d0865a;
+}
+
+.account-menu .menu-logout:hover {
+    color: #e59a6d;
+}
+
+.account-menu-icon {
+    width: 14px;
+    text-align: center;
+}
+
 /* =========================================
    CHECKMATE ADMIN HOME
    admin_home.css
@@ -493,7 +660,7 @@ body {
 .topbar-user:hover {
     background: #2b3238;
     border-color: #d2aa60;
-    
+   
 }
 
 
@@ -1256,3 +1423,62 @@ body {
 .sidebar-menu a:link {
     text-decoration: none !important;
 }
+
+ /* active sidebar item has a gold outline */
+        .sidebar-menu a.active {
+            background: #1d1a14;
+            border: 1px solid #6b5630;
+            color: #e2e5e8;
+        }
+
+        /* hide the little gold line, the outline replaces it */
+        .sidebar-menu a.active::before {
+            display: none;
+        }
+
+        /* admin account sticks to the bottom of the sidebar */
+        .sidebar-account {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            margin: 0 12px 10px;
+            background: #111519;
+        }
+
+        /* bigger page title in the top bar */
+        .topbar-title {
+            font-size: 22px;
+        }
+
+        /* logout link (was inline style before) */
+        .logout {
+            color: #b08c4d;
+            font-size: 12px;
+            letter-spacing: 1.8px;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .logout:hover {
+            color: #d2aa60;
+        }
+
+        /* status badges: square-ish with a dark tinted background */
+        .status {
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 10px;
+        }
+
+        .status.verified,
+        .status.done {
+            background: #16231e;
+        }
+
+        .status.pending,
+        .status.new {
+            background: #241e12;
+        }
+
+        

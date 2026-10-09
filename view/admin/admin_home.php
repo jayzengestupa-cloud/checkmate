@@ -17,6 +17,7 @@ if (!isset($_SESSION["user_id"]) || $_SESSION["role"] != "admin") {
     <title>CHECKMATE - Admin Dashboard</title>
 
     <link rel="stylesheet" href="../../asset/css/admin_home.css">
+
 </head>
 
 <body>
@@ -49,17 +50,17 @@ if (!isset($_SESSION["user_id"]) || $_SESSION["role"] != "admin") {
                 OVERVIEW
             </div>
 
-            <ul class="sidebar-menu">
+           <ul class="sidebar-menu">
 
                 <li>
-                    <a href="#" class="active" data-page="dashboard">
+                    <a href="admin_home.php" data-page="dashboard">
                         <span class="menu-icon">⌂</span>
                         <span>Dashboard</span>
                     </a>
                 </li>
 
                 <li>
-                    <a href="#" data-page="students">
+                    <a href="student.php" data-page="students">
                         <span class="menu-icon">♟</span>
                         <span>Students</span>
                         <span class="menu-count">8</span>
@@ -67,23 +68,16 @@ if (!isset($_SESSION["user_id"]) || $_SESSION["role"] != "admin") {
                 </li>
 
                 <li>
-                    <a href="#" data-page="questions">
+                    <a href="question_ad.php" data-page="questions">
                         <span class="menu-icon">?</span>
                         <span>Questions</span>
                     </a>
                 </li>
 
                 <li>
-                    <a href="#" data-page="collaborations">
+                    <a href="collaboration.php" data-page="collaborations">
                         <span class="menu-icon">♞</span>
                         <span>Collaborations</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="#" data-page="messages">
-                        <span class="menu-icon">□</span>
-                        <span>Messages</span>
                     </a>
                 </li>
 
@@ -96,6 +90,7 @@ if (!isset($_SESSION["user_id"]) || $_SESSION["role"] != "admin") {
              MANAGEMENT MENU
              ===================================== -->
 
+       <!-- MANAGEMENT MENU -->
         <div class="sidebar-section">
 
             <div class="sidebar-title">
@@ -105,28 +100,21 @@ if (!isset($_SESSION["user_id"]) || $_SESSION["role"] != "admin") {
             <ul class="sidebar-menu">
 
                 <li>
-                    <a href="#" data-page="enrollment">
-                        <span class="menu-icon">+</span>
-                        <span>Enrollment</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="#" data-page="subjects">
+                    <a href="subject_course.php" data-page="subjects">
                         <span class="menu-icon">◇</span>
                         <span>Subjects & Courses</span>
                     </a>
                 </li>
 
                 <li>
-                    <a href="#" data-page="types">
+                    <a href="question_type.php" data-page="types">
                         <span class="menu-icon">≡</span>
                         <span>Question Types</span>
                     </a>
                 </li>
 
                 <li>
-                    <a href="#" data-page="reports">
+                    <a href="report.php" data-page="reports">
                         <span class="menu-icon">▤</span>
                         <span>Reports</span>
                         <span class="menu-dot"></span>
@@ -139,37 +127,47 @@ if (!isset($_SESSION["user_id"]) || $_SESSION["role"] != "admin") {
 
 
         <!-- =====================================
-             ACCOUNT MENU
-             ===================================== -->
-
-        <div class="sidebar-section">
-
-            
-
-        <!-- =====================================
              ADMIN ACCOUNT
              ===================================== -->
 
-        <div class="sidebar-account">
+        <!-- ADMIN ACCOUNT (bottom of sidebar) -->
+<div class="sidebar-account">
 
-            <div class="sidebar-account-user">
+    <div class="sidebar-account-user">
 
-                <div class="sidebar-account-avatar">
-                    A
-                </div>
-
-                <div class="sidebar-account-info">
-                    <strong>Administrator</strong>
-                    <span>CHECKMATE Admin</span>
-                </div>
-
-            </div>
-
+        <div class="sidebar-account-avatar">
+            A
         </div>
 
+        <div class="sidebar-account-info">
+            <strong>Administrator</strong>
+            <span>CHECKMATE Admin</span>
+        </div>
+
+        <!-- three dots (vertical) on the right side of the profile -->
+        <button class="account-menu-btn" id="accountMenuButton" title="Account options" aria-label="Account options">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+    </div>
+
+    <!-- menu that opens when the 3 dots are clicked -->
+    <div class="account-menu" id="accountMenu">
+        <a href="change_password.html">
+            <span class="account-menu-icon">⚿</span>
+            <span>Change Password</span>
+        </a>
+        <a href="../../authentication/Login/logout.php" class="menu-logout">
+            <span class="account-menu-icon">⏻</span>
+            <span>Log Out</span>
+        </a>
+    </div>
+
+</div>
     </aside>
 
-    
 
     <!-- =========================================
          MAIN CONTENT
@@ -211,11 +209,7 @@ if (!isset($_SESSION["user_id"]) || $_SESSION["role"] != "admin") {
                 </button>
 
 
-                <!-- Admin Profile -->
-              
-                  <a href="../../authentication/Login/logout.php" style="color: #b08c4d; font-size: 12px; letter-spacing: 1.8px; font-weight: 700; margin-bottom: 11px; text-decoration: none;"
-                   onclick="window.location.href = this.href";>LogOut</a> 
-                
+         
 
             </div>
 
@@ -409,7 +403,7 @@ if (!isset($_SESSION["user_id"]) || $_SESSION["role"] != "admin") {
 
                         </div>
 
-                        <a href="#" class="panel-link" id="viewStudents">
+                        <a href="students.html" class="panel-link" id="viewStudents">
                             View all →
                         </a>
 
@@ -437,7 +431,8 @@ if (!isset($_SESSION["user_id"]) || $_SESSION["role"] != "admin") {
 
                         </div>
 
-                        <span class="status pending">
+                        <!-- was class "pending" but the text says Verified, so changed it to verified -->
+                        <span class="status verified">
                             Verified
                         </span>
 
@@ -488,7 +483,7 @@ if (!isset($_SESSION["user_id"]) || $_SESSION["role"] != "admin") {
                             </div>
 
                             <div class="list-sub">
-                                BSIT · 2st Year
+                                BSIT · 2nd Year
                             </div>
 
                         </div>
@@ -516,7 +511,7 @@ if (!isset($_SESSION["user_id"]) || $_SESSION["role"] != "admin") {
                             </div>
 
                             <div class="list-sub">
-                                BSIT · 2rd Year
+                                BSIT · 2nd Year
                             </div>
 
                         </div>
