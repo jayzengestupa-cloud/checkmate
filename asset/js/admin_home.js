@@ -1,6 +1,6 @@
 /* =========================================
    CHECKMATE ADMIN HOME
-   admin_home.js
+   index.js
    ========================================= */
 
 
@@ -17,10 +17,6 @@ const quickCards = document.querySelectorAll(".quick-card");
 const verifyButton = document.getElementById("verifyButton");
 
 const notificationButton = document.getElementById("notificationButton");
-
-const userMore = document.getElementById("userMore");
-
-const viewStudents = document.getElementById("viewStudents");
 
 const viewReports = document.getElementById("viewReports");
 
@@ -47,99 +43,21 @@ function showToast(message) {
    3. SIDEBAR MENU
    ========================================= */
 
-sidebarLinks.forEach(function(link) {
+sidebarLinks.forEach(function (link) {
 
-    link.addEventListener("click", function(event) {
+    link.addEventListener("click", function (event) {
 
+        // CHANGED: links that go to a real page (like students.html)
+        // should just open normally, so we stop here for them
+        if (this.getAttribute("href") !== "#") {
+            return;
+        }
+
+        // the pages that are not built yet only show a message
         event.preventDefault();
 
-
-        /* Remove active from all links */
-
-        sidebarLinks.forEach(function(item) {
-
-            item.classList.remove("active");
-
-        });
-
-
-        /* Add active to selected link */
-
-        this.classList.add("active");
-
-
-        /* Get selected page */
-
-        const page = this.getAttribute("data-page");
-
-
-        /* Temporary front-end message */
-
-        if (page === "dashboard") {
-
-            showToast("Dashboard selected.");
-
-        }
-
-        else if (page === "students") {
-
-            showToast("Student management selected.");
-
-        }
-
-        else if (page === "questions") {
-
-            showToast("Question management selected.");
-
-        }
-
-        else if (page === "collaborations") {
-
-            showToast("Collaboration management selected.");
-
-        }
-
-        else if (page === "messages") {
-
-            showToast("Messages selected.");
-
-        }
-
-        else if (page === "enrollment") {
-
-            showToast("Enrollment selected.");
-
-        }
-
-        else if (page === "subjects") {
-
-            showToast("Subjects & Courses selected.");
-
-        }
-
-        else if (page === "types") {
-
-            showToast("Question Types selected.");
-
-        }
-
-        else if (page === "reports") {
-
-            showToast("Reports selected.");
-
-        }
-
-        else if (page === "profile") {
-
-            showToast("Admin Profile selected.");
-
-        }
-
-        else if (page === "settings") {
-
-            showToast("Settings selected.");
-
-        }
+        // TODO: remove this message when the other pages exist
+        showToast("That page is not built yet.");
 
     });
 
@@ -152,9 +70,11 @@ sidebarLinks.forEach(function(link) {
 
 if (verifyButton) {
 
-    verifyButton.addEventListener("click", function() {
+    verifyButton.addEventListener("click", function () {
 
-        showToast("Opening student verification...");
+        // CHANGED: goes to the students page now
+        // TODO: later filter the students page to Pending only
+        window.location.href = "students.html";
 
     });
 
@@ -167,7 +87,7 @@ if (verifyButton) {
 
 if (notificationButton) {
 
-    notificationButton.addEventListener("click", function() {
+    notificationButton.addEventListener("click", function () {
 
         showToast("You have 3 new notifications.");
 
@@ -177,44 +97,12 @@ if (notificationButton) {
 
 
 /* =========================================
-   6. ADMIN PROFILE BUTTON
-   ========================================= */
-
-if (userMore) {
-
-    userMore.addEventListener("click", function() {
-
-        showToast("Administrator account selected.");
-
-    });
-
-}
-
-
-/* =========================================
-   7. VIEW STUDENTS
-   ========================================= */
-
-if (viewStudents) {
-
-    viewStudents.addEventListener("click", function(event) {
-
-        event.preventDefault();
-
-        showToast("Opening student registrations...");
-
-    });
-
-}
-
-
-/* =========================================
-   8. VIEW REPORTS
+   6. VIEW REPORTS
    ========================================= */
 
 if (viewReports) {
 
-    viewReports.addEventListener("click", function(event) {
+    viewReports.addEventListener("click", function (event) {
 
         event.preventDefault();
 
@@ -224,21 +112,24 @@ if (viewReports) {
 
 }
 
+/* NOTE: the "View all" link for students is a normal link
+   to students.html now, so it does not need any JavaScript. */
+
 
 /* =========================================
-   9. QUICK ACCESS CARDS
+   7. QUICK ACCESS CARDS
    ========================================= */
 
-quickCards.forEach(function(card) {
+quickCards.forEach(function (card) {
 
-    card.addEventListener("click", function() {
+    card.addEventListener("click", function () {
 
         const action = this.getAttribute("data-action");
 
-
         if (action === "enrollment") {
 
-            showToast("Enrollment management selected.");
+            // enrollment is adding students, which is on the students page
+            window.location.href = "students.html";
 
         }
 
@@ -266,11 +157,34 @@ quickCards.forEach(function(card) {
 
 
 /* =========================================
-   10. PAGE LOAD
+   8. PAGE LOAD
    ========================================= */
 
-window.addEventListener("load", function() {
+window.addEventListener("load", function () {
 
     console.log("CHECKMATE Admin Dashboard loaded.");
 
+});
+
+// ---------- ACCOUNT MENU (3 dots) ----------
+var accountButton = document.getElementById("accountMenuButton");
+var accountMenu = document.getElementById("accountMenu");
+
+accountButton.addEventListener("click", function (event) {
+    event.stopPropagation();
+    accountMenu.classList.toggle("show");
+    accountButton.classList.toggle("open");
+});
+
+// clicking anywhere else (or pressing Esc) closes it
+document.addEventListener("click", function () {
+    accountMenu.classList.remove("show");
+    accountButton.classList.remove("open");
+});
+
+document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape") {
+        accountMenu.classList.remove("show");
+        accountButton.classList.remove("open");
+    }
 });
