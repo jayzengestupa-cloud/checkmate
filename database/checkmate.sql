@@ -19,3 +19,15 @@ CREATE TABLE IF NOT EXISTS users (
   role VARCHAR(10) NOT NULL DEFAULT 'student' -- everyone who signs up is a student
 
 );
+
+
+
+CREATE TABLE IF NOT EXISTS answers (
+    answer_id   INT AUTO_INCREMENT PRIMARY KEY,
+    question_id INT NOT NULL,                       -- questions.question_id
+    user_id     INT NOT NULL,                       -- users.id of the person who answered
+    answer      TEXT NOT NULL,
+    create_at   DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_answers_question (question_id),
+    INDEX idx_answers_user (user_id)
+);

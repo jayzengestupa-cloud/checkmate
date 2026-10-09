@@ -482,7 +482,7 @@ body {
    ========================================================= */
 
 .ask-box {
-    margin: 0 40px 0;
+    margin: 0 40px;
 }
 
 .ask-box-top {
@@ -665,37 +665,32 @@ body {
     letter-spacing: 1.8px;
 }
 
-
-/*
-   IMPORTANT:
-   Same exact typography as "What are you working on?"
-*/
-
 .quick-heading h2,
 .dashboard-section .quick-heading h2 {
-    margin: 11px 0 0 0 !important;
+    margin: 11px 0 0 !important;
     padding: 0 !important;
 
     color: #e8e2d9 !important;
 
     font-family: Georgia, "Times New Roman", serif !important;
-
     font-size: 30px !important;
     font-weight: 400 !important;
 
     line-height: 1.2 !important;
     letter-spacing: normal !important;
+    text-transform: none !important;
 }
 
 
 /* =========================================================
    QUICK GRID
+   Two remaining cards: Browse Questions and Collaborate
    ========================================================= */
 
 .quick-grid {
     display: grid;
 
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
 
     gap: 10px;
 }
@@ -724,6 +719,11 @@ body {
 .quick-card:hover {
     background: #13191e;
     border-color: #3b454e;
+}
+
+.quick-card:focus-visible {
+    outline: 1px solid #c49b4d;
+    outline-offset: 3px;
 }
 
 .quick-card-icon {
@@ -975,6 +975,7 @@ body {
 }
 
 .collaborator-info {
+    min-width: 0;
     margin-left: 10px;
 }
 
@@ -1004,6 +1005,7 @@ body {
     height: 31px;
 
     margin-left: auto;
+    flex-shrink: 0;
 
     border: 1px solid #35404a;
     border-radius: 5px;
@@ -1260,6 +1262,10 @@ body {
         gap: 12px;
     }
 
+    .ask-options {
+        flex-wrap: wrap;
+    }
+
     .ask-button {
         align-self: flex-end;
     }
@@ -1301,10 +1307,6 @@ body {
         padding-right: 16px;
     }
 
-    .ask-options {
-        flex-wrap: wrap;
-    }
-
     .topbar {
         padding: 0 14px;
     }
@@ -1321,24 +1323,19 @@ body {
 
 /* =========================================================
    FINAL HEADING OVERRIDE
-   =========================================================
-   KEEP THIS AT THE VERY END.
-   This makes "Choose your next move" visually match
-   "What are you working on?"
    ========================================================= */
 
 .dashboard-section .quick-heading h2 {
     color: #e8e2d9 !important;
+
     font-family: Georgia, "Times New Roman", serif !important;
+
     font-size: 30px !important;
     font-weight: 400 !important;
+
     line-height: 1.2 !important;
 
-    margin-top: 11px !important;
-    margin-right: 0 !important;
-    margin-bottom: 0 !important;
-    margin-left: 0 !important;
-
+    margin: 11px 0 0 !important;
     padding: 0 !important;
 
     letter-spacing: normal !important;

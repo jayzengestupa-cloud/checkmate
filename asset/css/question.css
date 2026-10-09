@@ -1,12 +1,10 @@
-/* =========================================================
-   CHECKMATE — QUESTIONS
-   VISUAL SYSTEM MATCHED TO STUDENT_HOME.CSS
-   ========================================================= */
-
 
 /* =========================================================
-   RESET
+   CHECKMATE — QUESTIONS PAGE
+   ORIGINAL DARK THEME + SUBJECT/COURSE/TYPE/ATTACHMENT
    ========================================================= */
+
+/* ===================== RESET ===================== */
 
 * {
     box-sizing: border-box;
@@ -27,40 +25,25 @@ body {
     overflow-x: hidden;
 }
 
-
-/* =========================================================
-   SIDEBAR
-   EXACTLY MATCHES STUDENT_HOME.CSS
-   ========================================================= */
+/* ===================== SIDEBAR ===================== */
 
 .sidebar {
     position: fixed;
     top: 0;
     left: 0;
-
     width: 253px;
     height: 100vh;
-
     background: #101419;
     border-right: 1px solid #272d33;
-
     display: flex;
     flex-direction: column;
-
     padding: 29px 17px 15px;
-
     z-index: 1000;
 }
-
-
-/* =========================================================
-   LOGO
-   ========================================================= */
 
 .logo-area {
     display: flex;
     align-items: center;
-
     padding: 0 8px;
     margin-bottom: 31px;
 }
@@ -68,17 +51,14 @@ body {
 .logo-piece {
     width: 40px;
     height: 40px;
-
+    flex-shrink: 0;
     border: 1px solid #394149;
     border-radius: 6px;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     color: #c49b4d;
     font-size: 20px;
-
     margin-right: 11px;
 }
 
@@ -89,89 +69,54 @@ body {
 
 .logo-text h1 {
     margin: 0;
-
     color: #e7e0d5;
-
     font-family: Georgia, "Times New Roman", serif;
     font-size: 18px;
     font-weight: 400;
-
     letter-spacing: 2px;
 }
 
 .logo-text span {
     display: block;
-
     margin-top: 7px;
-
     color: #6f8193;
-
     font-size: 8px;
     letter-spacing: 1.5px;
 }
 
-
-/* =========================================================
-   NEW QUESTION BUTTON
-   EXACTLY MATCHES STUDENT_HOME.CSS
-   ========================================================= */
+/* ===================== NEW QUESTION BUTTON ===================== */
 
 .new-question-button {
     width: 100%;
-    height: 55px;
-
+    min-height: 55px;
     display: flex;
     align-items: center;
-
     padding: 0 14px;
-
     border: 1px solid #71582d;
     border-radius: 6px;
-
     background: #181a18;
-
     color: #d4a657 !important;
-
     text-decoration: none !important;
-
     font-size: 13px;
     font-weight: 600;
-
     margin-bottom: 31px;
-
-    transition:
-        background 0.2s ease,
-        border-color 0.2s ease;
+    transition: background 0.2s ease, border-color 0.2s ease;
 }
 
 .new-question-button:hover {
     background: #201f1b;
     border-color: #9b7739;
-
     color: #e0b563 !important;
-}
-
-.new-question-button:focus,
-.new-question-button:active,
-.new-question-button:visited {
-    text-decoration: none !important;
-    outline: none !important;
-    box-shadow: none !important;
 }
 
 .button-icon {
     margin-right: 10px;
-
     color: #d4a657;
-
     font-size: 18px;
     font-weight: 700;
 }
 
-
-/* =========================================================
-   SIDEBAR SECTION
-   ========================================================= */
+/* ===================== SIDEBAR MENU ===================== */
 
 .sidebar-section {
     width: 100%;
@@ -184,45 +129,25 @@ body {
 .section-title {
     padding-left: 11px;
     margin-bottom: 10px;
-
     color: #6d7d8e;
-
     font-size: 9px;
     font-weight: 700;
-
     letter-spacing: 1.7px;
 }
 
-
-/* =========================================================
-   MENU ITEMS
-   EXACTLY MATCHES STUDENT_HOME.CSS
-   ========================================================= */
-
 .menu-item {
     position: relative;
-
     width: 100%;
-    height: 43px;
-
+    min-height: 43px;
     display: flex;
     align-items: center;
-
     padding: 0 10px 0 17px;
-
     border-radius: 5px;
-
     color: #8191a2 !important;
-
     text-decoration: none !important;
-
     font-size: 13px;
-
     margin-bottom: 2px;
-
-    transition:
-        background 0.2s ease,
-        color 0.2s ease;
+    transition: background 0.2s ease, color 0.2s ease;
 }
 
 .menu-item:hover {
@@ -237,29 +162,21 @@ body {
 
 .menu-item.active::before {
     content: "";
-
     position: absolute;
-
     left: 0;
     top: 0;
-
     width: 2px;
     height: 100%;
-
     background: #c69a4b;
-
     border-radius: 2px 0 0 2px;
 }
 
 .menu-icon {
     width: 24px;
-
+    flex-shrink: 0;
     margin-right: 9px;
-
     color: #7d8d9e;
-
     font-size: 15px;
-
     text-align: center;
 }
 
@@ -267,44 +184,26 @@ body {
     color: #c69a4b;
 }
 
-
-/* =========================================================
-   NOTIFICATION
-   ========================================================= */
-
 .notification {
     margin-left: auto;
-
     min-width: 20px;
     height: 20px;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     border-radius: 50%;
-
     background: #293039;
     color: #b9c0c8;
-
     font-size: 9px;
 }
 
-
-/* =========================================================
-   SIDEBAR USER
-   EXACTLY MATCHES STUDENT_HOME.CSS
-   ========================================================= */
+/* ===================== SIDEBAR USER ===================== */
 
 .sidebar-user {
     margin-top: auto;
-
     min-height: 62px;
-
     padding: 13px 8px 0;
-
     border-top: 1px solid #272d33;
-
     display: flex;
     align-items: center;
 }
@@ -312,63 +211,49 @@ body {
 .user-avatar {
     width: 37px;
     height: 37px;
-
     flex-shrink: 0;
-
     border: 1px solid #38414a;
     border-radius: 50%;
-
     background: #191e23;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     color: #c79b4c;
-
     font-family: Georgia, "Times New Roman", serif;
     font-size: 14px;
 }
 
 .user-information {
     min-width: 0;
-
     margin-left: 9px;
 }
 
 .user-information strong {
     display: block;
-
     color: #e2ddd5;
-
     font-size: 12px;
     font-weight: 600;
-
     white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .user-information span {
     display: block;
-
     margin-top: 4px;
-
     color: #68798a;
-
     font-size: 8px;
-
     white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .user-more {
     margin-left: auto;
-
     border: none;
     background: transparent;
-
     color: #bd9148;
-
     font-size: 19px;
-
     cursor: pointer;
 }
 
@@ -376,65 +261,48 @@ body {
     color: #d0a55c;
 }
 
-
-/* =========================================================
-   MAIN CONTENT
-   EXACTLY MATCHES STUDENT_HOME.CSS
-   ========================================================= */
+/* ===================== MAIN CONTENT ===================== */
 
 .main-content {
     min-height: 100vh;
-
     margin-left: 253px;
-
     background: #0b0e11;
-
     overflow-x: hidden;
 }
 
-
-/* =========================================================
-   TOPBAR
-   EXACTLY MATCHES STUDENT_HOME.CSS
-   ========================================================= */
+/* ===================== TOPBAR ===================== */
 
 .topbar {
-    height: 66px;
-
+    min-height: 66px;
     border-bottom: 1px solid #242a30;
-
     display: flex;
     align-items: center;
     justify-content: space-between;
-
+    gap: 15px;
     padding: 0 39px;
 }
 
 .topbar-left {
     display: flex;
     align-items: center;
+    min-width: 0;
 }
 
 .topbar-label {
     color: #718296;
-
     font-size: 8px;
     font-weight: 700;
-
     letter-spacing: 1.7px;
 }
 
 .topbar-divider {
     margin: 0 12px;
-
     color: #4b545d;
-
     font-size: 13px;
 }
 
 .topbar-current {
     color: #c49a4d;
-
     font-size: 11px;
 }
 
@@ -445,26 +313,16 @@ body {
 
 .topbar-right a,
 .topbar-right a:link,
-.topbar-right a:visited,
-.topbar-right a:hover,
-.topbar-right a:active,
-.topbar-right a:focus {
+.topbar-right a:visited {
     color: #b08c4d !important;
-
     text-decoration: none !important;
-    text-decoration-line: none !important;
-
     border: none !important;
     outline: none !important;
     box-shadow: none !important;
-
     background: transparent !important;
-
     font-size: 12px;
     font-weight: 700;
-
     letter-spacing: 1.8px;
-
     cursor: pointer;
 }
 
@@ -472,27 +330,14 @@ body {
     color: #d0a55c !important;
 }
 
-
-/* =========================================================
-   QUESTIONS PAGE
-   MATCHES HOME CONTENT WIDTH/SPACING SYSTEM
-   ========================================================= */
+/* ===================== QUESTIONS PAGE ===================== */
 
 .questions-page {
-    max-width: none;
-
     width: 100%;
-
+    max-width: none;
     margin: 0;
-
     padding: 48px 40px 38px;
 }
-
-
-/* =========================================================
-   PAGE HEADING
-   SAME TYPOGRAPHY AS WELCOME SECTION
-   ========================================================= */
 
 .page-heading {
     margin-bottom: 27px;
@@ -500,122 +345,162 @@ body {
 
 .heading-label {
     color: #b68c43;
-
     font-size: 9px;
     font-weight: 700;
-
     letter-spacing: 1.8px;
 }
 
 .page-heading h2 {
-    margin: 11px 0 0;
-
-    color: #e8e2d9;
-
-    font-family: Georgia, "Times New Roman", serif;
-
-    font-size: 30px;
-    font-weight: 400;
-
-    line-height: 1.2;
-
-    padding: 0;
+    margin: 11px 0 0 !important;
+    padding: 0 !important;
+    color: #e8e2d9 !important;
+    font-family: Georgia, "Times New Roman", serif !important;
+    font-size: 30px !important;
+    font-weight: 400 !important;
+    line-height: 1.2 !important;
+    letter-spacing: normal !important;
+    text-transform: none !important;
 }
 
 .page-heading p {
     margin: 10px 0 0;
-
     color: #718398;
-
     font-size: 12px;
     line-height: 1.5;
 }
 
-
-/* =========================================================
-   ASK QUESTION
-   BASED ON HOME ASK BOX
-   ========================================================= */
+/* ===================== ASK QUESTION PANEL ===================== */
 
 .ask-question-box {
+    width: 100%;
     margin: 0 0 38px;
 }
 
 .ask-heading {
     display: flex;
     align-items: center;
-
     margin-bottom: 19px;
 }
 
 .ask-icon {
-    width: 35px;
-    height: 35px;
-
+    width: 39px;
+    height: 39px;
+    flex-shrink: 0;
     border: 1px solid #333c44;
     border-radius: 5px;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     color: #c3994e;
-
-    margin-right: 11px;
-
-    font-size: 14px;
+    margin-right: 12px;
+    font-size: 15px;
 }
 
 .ask-heading h3 {
     margin: 0;
-
     color: #e3ddd4;
-
     font-family: Georgia, "Times New Roman", serif;
-
-    font-size: 15px;
+    font-size: 16px;
     font-weight: 400;
 }
 
 .ask-heading p {
     margin: 6px 0 0;
-
     color: #66798d;
-
-    font-size: 9px;
+    font-size: 10px;
 }
 
+/* ===================== FORM LAYOUT ===================== */
 
-/* =========================================================
-   QUESTION TEXTAREA
-   SAME VISUAL SYSTEM AS .question-input
-   ========================================================= */
-
-.ask-question-box textarea {
+.ask-question-box form {
     width: 100%;
-    min-height: 108px;
+    min-width: 0;
+}
 
-    height: 108px;
+.question-fields-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+    margin: 22px 0;
+}
 
-    padding: 14px 16px;
+.question-field {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    min-width: 0;
+}
 
+.question-field-full {
+    grid-column: 1 / -1;
+}
+
+.question-field label,
+.question-label {
+    display: block;
+    margin: 0;
+    color: #c49a4d;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+/* ===================== DROPDOWNS ===================== */
+
+.question-field select {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    height: 43px;
+    padding: 0 13px;
     border: 1px solid #293139;
     border-radius: 5px;
-
-    background: #10151a;
-
-    color: #dcd6cc;
-
+    background-color: #10151a;
+    color: #d8d2c8;
     font-family: Arial, Helvetica, sans-serif;
-
     font-size: 12px;
-
-    line-height: normal;
-
-    resize: vertical;
-
+    color-scheme: dark;
     outline: none;
+    cursor: pointer;
+    transition: border-color 0.2s ease, background 0.2s ease;
+}
 
+.question-field select option {
+    background: #10151a;
+    color: #d8d2c8;
+}
+
+.question-field select:hover {
+    border-color: #66502d;
+}
+
+.question-field select:focus {
+    border-color: #c49a4d;
+    background-color: #10151a;
+    color: #e8e2d9;
+    outline: none;
+    box-shadow: 0 0 0 2px rgb(196 154 77 / 10%);
+}
+
+/* ===================== QUESTION TEXTAREA ===================== */
+
+.ask-question-box textarea {
+    display: block;
+    width: 100%;
+    min-height: 120px;
+    height: 120px;
+    margin: 0;
+    padding: 15px 16px;
+    border: 1px solid #293139;
+    border-radius: 5px;
+    background: #10151a;
+    color: #dcd6cc;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    line-height: 1.6;
+    resize: vertical;
+    outline: none;
     box-shadow: none;
 }
 
@@ -624,151 +509,198 @@ body {
 }
 
 .ask-question-box textarea:focus {
-    border-color: #46515b;
-
-    box-shadow: none;
-
+    border-color: #8b6b36;
     background: #10151a;
+    color: #e8e2d9;
+    outline: none;
+    box-shadow: 0 0 0 2px rgb(196 154 77 / 8%);
 }
 
+/* ===================== ATTACHMENT ===================== */
 
-/* =========================================================
-   ASK BOTTOM
-   ========================================================= */
+.attachment-field {
+    width: 100%;
+    margin-top: 20px;
+    padding: 16px;
+    border: 1px dashed #394149;
+    border-radius: 5px;
+    background: #0e1317;
+}
+
+.attachment-field label {
+    display: block;
+    margin-bottom: 10px;
+    color: #c49a4d;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.attachment-field input[type="file"] {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    padding: 9px;
+    border: 1px solid #293139;
+    border-radius: 5px;
+    background: #10151a;
+    color: #9aa7b5;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11px;
+    color-scheme: dark;
+}
+
+.attachment-field input[type="file"]:focus {
+    border-color: #9b773f;
+    outline: none;
+}
+
+.attachment-field input[type="file"]::file-selector-button {
+    margin-right: 12px;
+    padding: 8px 12px;
+    border: 1px solid #71582d;
+    border-radius: 4px;
+    background: #181a18;
+    color: #d4a657;
+    font-size: 11px;
+    cursor: pointer;
+    transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.attachment-field input[type="file"]::file-selector-button:hover {
+    background: #25221b;
+    border-color: #9b7739;
+}
+
+.attachment-field small {
+    display: block;
+    margin-top: 9px;
+    color: #718398;
+    font-size: 10px;
+    line-height: 1.5;
+}
+
+/* ===================== FORM BOTTOM ===================== */
 
 .ask-form-bottom {
     display: flex;
     align-items: center;
     justify-content: space-between;
-
-    margin-top: 17px;
+    gap: 15px;
+    margin-top: 20px;
 }
 
 .ask-form-bottom span {
-    color: #74869a;
-
-    font-size: 9px;
+    color: #718398;
+    font-size: 10px;
+    line-height: 1.5;
 }
 
 .ask-form-bottom button {
-    height: 38px;
-
-    padding: 0 14px;
-
-    border: 1px solid #72582c;
+    min-height: 40px;
+    padding: 0 17px;
+    border: 1px solid #71582d;
     border-radius: 5px;
-
     background: #181816;
-
-    color: #c89b4c;
-
-    font-size: 9px;
-    font-weight: 600;
-
+    color: #d4a657;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
     cursor: pointer;
-
-    transition:
-        background 0.2s ease,
-        border-color 0.2s ease;
+    transition: background 0.2s ease, border-color 0.2s ease;
 }
 
 .ask-form-bottom button:hover {
-    background: #211f1a;
-
-    border-color: #a17b3a;
+    background: #242119;
+    border-color: #b18a45;
+    color: #e0b563;
 }
 
+.ask-form-bottom button:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgb(196 154 77 / 10%);
+}
 
-/* =========================================================
-   QUESTIONS PANEL
-   SAME AS .dashboard-panel
-   ========================================================= */
+/* ===================== FORM MESSAGES ===================== */
+
+.form-message {
+    padding: 12px 14px;
+    margin-bottom: 16px;
+    border: 1px solid #293139;
+    border-radius: 5px;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.form-message-error {
+    background: #241515;
+    border-color: #633737;
+    color: #f0b3b3;
+}
+
+.form-message-success {
+    background: #142119;
+    border-color: #315c40;
+    color: #a9ddb6;
+}
+
+/* ===================== QUESTIONS PANEL ===================== */
 
 .questions-section {
     width: 100%;
-
     min-width: 0;
-
     border: 1px solid #293139;
     border-radius: 5px;
-
     background: #10151a;
-
     overflow: hidden;
 }
 
-
-/* =========================================================
-   QUESTIONS PANEL HEADER
-   SAME AS .panel-header
-   ========================================================= */
-
 .questions-section > .section-heading {
     min-height: 80px;
-
     display: flex;
     align-items: center;
     justify-content: space-between;
-
     padding: 15px 17px;
-
     border-bottom: 1px solid #293139;
 }
 
 .questions-section > .section-heading .heading-label {
+    display: block;
     margin-bottom: 6px;
-
     color: #6e8295;
-
     font-size: 8px;
     font-weight: 700;
-
     letter-spacing: 1.7px;
 }
 
 .questions-section > .section-heading h3 {
     margin: 0;
-
     color: #ddd7ce;
-
     font-family: Georgia, "Times New Roman", serif;
-
     font-size: 17px;
     font-weight: 400;
 }
 
-
-/* =========================================================
-   SEARCH BOX
-   MATCHES HOME PANEL CONTENT
-   ========================================================= */
+/* ===================== SEARCH ===================== */
 
 .search-box {
     padding: 12px 17px;
-
     border-bottom: 1px solid #293139;
 }
 
 .search-box input {
+    display: block;
     width: 100%;
-
-    height: 34px;
-
+    height: 36px;
     padding: 0 12px;
-
     border: 1px solid #293139;
     border-radius: 5px;
-
     background: #11161b;
-
     color: #dcd6cc;
-
     font-family: Arial, Helvetica, sans-serif;
-
-    font-size: 9px;
-
+    font-size: 11px;
     outline: none;
-
     box-shadow: none;
 }
 
@@ -778,43 +710,25 @@ body {
 
 .search-box input:focus {
     border-color: #46515b;
-
     background: #11161b;
-
-    box-shadow: none;
+    color: #e8e2d9;
+    outline: none;
 }
 
-
-/* =========================================================
-   QUESTIONS LIST
-   ========================================================= */
+/* ===================== QUESTION LIST ===================== */
 
 .questions-list {
     width: 100%;
 }
 
-
-/* =========================================================
-   QUESTION CARD
-   SAME HEIGHT/SPACING SYSTEM AS .question-item
-   ========================================================= */
-
 .question-card {
     min-height: 74px;
-
     display: flex;
     align-items: center;
-
     padding: 12px 17px;
-
     border-bottom: 1px solid #252c32;
-
     background: #10151a;
-
-    cursor: pointer;
-
-    transition:
-        background 0.2s ease;
+    transition: background 0.2s ease;
 }
 
 .question-card:last-child {
@@ -825,66 +739,37 @@ body {
     background: #13191e;
 }
 
-
-/* =========================================================
-   QUESTION ICON
-   ========================================================= */
-
 .question-icon {
     width: 34px;
-
     flex-shrink: 0;
-
     color: #b78d48;
-
     font-family: Georgia, "Times New Roman", serif;
-
     font-size: 13px;
-
     line-height: 1;
-
     text-align: left;
 }
 
-
-/* =========================================================
-   QUESTION DETAILS
-   ========================================================= */
-
 .question-details {
     min-width: 0;
-
     flex: 1;
 }
 
 .question-details h3 {
     margin: 0;
-
     color: #d9d3ca;
-
     font-family: Georgia, "Times New Roman", serif;
-
     font-size: 13px;
     font-weight: 400;
-
-    line-height: normal;
-
-    white-space: nowrap;
-
-    overflow: hidden;
-
-    text-overflow: ellipsis;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
 }
 
 .question-meta {
     display: flex;
-
+    flex-wrap: wrap;
     gap: 5px;
-
     margin-top: 5px;
-
     color: #64778b;
-
     font-size: 8px;
 }
 
@@ -892,16 +777,10 @@ body {
     color: #b78d48;
 }
 
-
-/* =========================================================
-   QUESTION ARROW
-   ========================================================= */
-
 .question-arrow {
+    flex-shrink: 0;
     margin-left: 10px;
-
     color: #66798a;
-
     font-size: 13px;
 }
 
@@ -909,52 +788,68 @@ body {
     color: #c59b50;
 }
 
+/* ===================== QUESTION TAGS ===================== */
 
-/* =========================================================
-   EMPTY QUESTIONS
-   ========================================================= */
+.question-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 9px;
+}
+
+.question-tags span {
+    display: inline-block;
+    padding: 5px 8px;
+    border: 1px solid #353b3e;
+    border-radius: 4px;
+    background: #171c20;
+    color: #c49a4d;
+    font-size: 9px;
+}
+
+.attachment-link {
+    display: inline-block;
+    margin-top: 9px;
+    color: #c49a4d;
+    font-size: 10px;
+    text-decoration: none;
+    overflow-wrap: anywhere;
+}
+
+.attachment-link:hover {
+    color: #e0b563;
+    text-decoration: underline;
+}
+
+/* ===================== EMPTY QUESTIONS ===================== */
 
 .no-questions {
-    text-align: center;
-
     padding: 45px 20px;
+    text-align: center;
 }
 
 .no-questions > div {
     color: #9b773f;
-
     font-family: Georgia, "Times New Roman", serif;
-
     font-size: 18px;
-
     margin-bottom: 10px;
 }
 
 .no-questions h3 {
     margin: 0 0 6px;
-
     color: #b0a99f;
-
     font-family: Georgia, "Times New Roman", serif;
-
     font-size: 12px;
-
     font-weight: 400;
 }
 
 .no-questions p {
     margin: 0;
-
     color: #566879;
-
     font-size: 8px;
 }
 
-
-/* =========================================================
-   BOOTSTRAP PROTECTION
-   BOOTSTRAP REMAINS ENABLED IN QUESTIONS.PHP
-   ========================================================= */
+/* ===================== BOOTSTRAP PROTECTION ===================== */
 
 .questions-page h2,
 .questions-page h3,
@@ -977,14 +872,9 @@ body {
     margin-bottom: 0;
 }
 
-
-/* =========================================================
-   RESPONSIVE — TABLET
-   EXACT BREAKPOINT/SYSTEM FROM STUDENT_HOME.CSS
-   ========================================================= */
+/* ===================== TABLET ===================== */
 
 @media (max-width: 1000px) {
-
     .sidebar {
         width: 220px;
     }
@@ -1003,23 +893,16 @@ body {
     }
 }
 
-
-/* =========================================================
-   RESPONSIVE — MOBILE
-   EXACT BREAKPOINT/SYSTEM FROM STUDENT_HOME.CSS
-   ========================================================= */
+/* ===================== MOBILE ===================== */
 
 @media (max-width: 750px) {
-
     .sidebar {
         position: relative;
-
         width: 100%;
         height: auto;
-
+        min-height: auto;
         border-right: none;
         border-bottom: 1px solid #272d33;
-
         padding: 18px;
     }
 
@@ -1041,26 +924,35 @@ body {
 
     .main-content {
         margin-left: 0;
+        min-width: 0;
     }
 
     .topbar {
-        height: 58px;
-
-        padding: 0 18px;
+        min-height: 58px;
+        padding: 12px 18px;
     }
 
     .questions-page {
         padding: 35px 20px 25px;
     }
+
+    .question-fields-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .question-field-full {
+        grid-column: auto;
+    }
+
+    .attachment-field {
+        padding: 12px;
+    }
 }
 
-
-/* =========================================================
-   RESPONSIVE — SMALL MOBILE
-   ========================================================= */
+/* ===================== SMALL MOBILE ===================== */
 
 @media (max-width: 600px) {
-
     .page-heading h2 {
         font-size: 25px !important;
     }
@@ -1075,9 +967,7 @@ body {
 
     .ask-form-bottom {
         align-items: flex-start;
-
         flex-direction: column;
-
         gap: 12px;
     }
 
@@ -1086,17 +976,17 @@ body {
     }
 
     .question-card {
-        align-items: center;
+        align-items: flex-start;
+    }
+
+    .question-arrow {
+        margin-top: 3px;
     }
 }
 
-
-/* =========================================================
-   RESPONSIVE — EXTRA SMALL
-   ========================================================= */
+/* ===================== EXTRA SMALL MOBILE ===================== */
 
 @media (max-width: 450px) {
-
     .page-heading h2 {
         font-size: 23px !important;
     }
@@ -1112,7 +1002,7 @@ body {
     }
 
     .topbar {
-        padding: 0 14px;
+        padding: 12px 14px;
     }
 
     .topbar-label {
@@ -1128,7 +1018,7 @@ body {
     }
 
     .ask-form-bottom button {
-        width: auto;
+        width: 100%;
     }
 
     .questions-section > .section-heading {
@@ -1142,32 +1032,208 @@ body {
     .question-card {
         padding: 12px 15px;
     }
+
+    .question-icon {
+        width: 27px;
+    }
+
+    .question-details h3 {
+        font-size: 12px;
+    }
+}   
+
+/* QUESTION COMPOSER */
+
+.question-composer {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #353b42;
+    border-radius: 8px;
+    background: #10151a;
+    transition: border-color 0.2s ease;
 }
 
+.question-composer:focus-within {
+    border-color: #8b6b36;
+}
 
-/* =========================================================
-   FINAL TYPOGRAPHY OVERRIDE
-   ========================================================= */
+/* SUBJECT, COURSE, QUESTION TYPE */
 
-.page-heading h2 {
-    color: #e8e2d9 !important;
+.question-composer .question-fields-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+    margin: 0 0 10px;
+}
 
-    font-family: Georgia, "Times New Roman", serif !important;
+.question-composer .question-field {
+    min-width: 0;
+}
 
-    font-size: 30px !important;
+.question-composer .question-field select {
+    width: 100%;
+    height: 34px;
+    padding: 0 9px;
+    border: 1px solid #343b43;
+    border-radius: 5px;
+    background: #171c22;
+    color: #d8d2c8;
+    font-size: 11px;
+}
 
-    font-weight: 400 !important;
+.question-composer .question-field select:focus {
+    border-color: #c49a4d;
+    outline: none;
+}
 
-    line-height: 1.2 !important;
+/* QUESTION TEXT */
 
-    margin-top: 11px !important;
-    margin-right: 0 !important;
-    margin-bottom: 0 !important;
-    margin-left: 0 !important;
+.question-composer textarea {
+    display: block;
+    width: 100%;
+    min-height: 100px;
+    padding: 9px 2px;
+    border: none;
+    border-radius: 0;
+    background: transparent;
+    color: #e8e2d9;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 13px;
+    line-height: 1.6;
+    resize: vertical;
+    outline: none;
+    box-shadow: none;
+}
 
-    padding: 0 !important;
+.question-composer textarea:focus {
+    border: none;
+    background: transparent;
+    box-shadow: none;
+}
 
-    letter-spacing: normal !important;
+.question-composer textarea::placeholder {
+    color: #718091;
+}
 
-    text-transform: none !important;
+/* ATTACHMENT TOOLBAR */
+
+.attachment-toolbar {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 42px;
+    padding-top: 9px;
+    border-top: 1px solid #272e35;
+}
+
+.attachment-menu-container {
+    position: relative;
+    flex-shrink: 0;
+}
+
+.attachment-plus {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: 1px solid #394149;
+    border-radius: 50%;
+    background: #1a2026;
+    color: #d8d2c8;
+    font-size: 23px;
+    font-weight: 400;
+    line-height: 1;
+    cursor: pointer;
+    transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.attachment-plus:hover,
+.attachment-plus[aria-expanded="true"] {
+    background: #29251d;
+    border-color: #9b773f;
+    color: #e0b563;
+}
+
+.attachment-selected {
+    min-width: 0;
+    color: #718398;
+    font-size: 11px;
+    overflow-wrap: anywhere;
+}
+
+/* ATTACHMENT MENU */
+
+.attachment-menu {
+    position: absolute;
+    left: 0;
+    bottom: 43px;
+    z-index: 100;
+    width: 175px;
+    padding: 6px;
+    border: 1px solid #353d45;
+    border-radius: 9px;
+    background: #171c22;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+.attachment-menu[hidden] {
+    display: none !important;
+}
+
+.attachment-option {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    width: 100%;
+    min-height: 40px;
+    padding: 0 10px;
+    border: none;
+    border-radius: 5px;
+    background: transparent;
+    color: #ded8cf;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    text-align: left;
+    cursor: pointer;
+}
+
+.attachment-option:hover {
+    background: #252b32;
+    color: #e0b563;
+}
+
+.attachment-option-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    color: #c49a4d;
+    font-size: 17px;
+}
+
+/* POST BUTTON SPACING */
+
+.ask-form-bottom {
+    margin-top: 14px;
+}
+
+/* SMALLER SCREENS */
+
+@media (max-width: 750px) {
+    .question-composer {
+        padding: 10px;
+    }
+
+    .question-composer .question-fields-grid {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+
+    .question-composer .question-field select {
+        height: 38px;
+        font-size: 12px;
+    }
 }
