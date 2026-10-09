@@ -33,10 +33,6 @@ if (!isset($_SESSION["student_id"]) || $_SESSION["role"] != "student") {
 
     <!-- Force CHECKMATE link styling -->
     <style>
-        /* =========================================
-           LOGOUT
-        ========================================= */
-
         a.logout-link,
         a.logout-link:link,
         a.logout-link:visited,
@@ -67,11 +63,6 @@ if (!isset($_SESSION["student_id"]) || $_SESSION["role"] != "student") {
             color: #d0a55c !important;
         }
 
-
-        /* =========================================
-           NEW QUESTION
-        ========================================= */
-
         a.new-question-button,
         a.new-question-button:link,
         a.new-question-button:visited,
@@ -88,19 +79,12 @@ if (!isset($_SESSION["student_id"]) || $_SESSION["role"] != "student") {
 
 </head>
 
-
 <body>
 
-
-    <!-- =========================================
-         SIDEBAR
-    ========================================== -->
-
+    <!-- SIDEBAR -->
     <aside class="sidebar">
 
-
         <!-- LOGO -->
-
         <div class="logo-area">
 
             <div class="logo-piece">
@@ -119,10 +103,7 @@ if (!isset($_SESSION["student_id"]) || $_SESSION["role"] != "student") {
 
         </div>
 
-
-
         <!-- NEW QUESTION -->
-
         <a
             href="questions.php"
             class="new-question-button"
@@ -138,19 +119,14 @@ if (!isset($_SESSION["student_id"]) || $_SESSION["role"] != "student") {
 
         </a>
 
-
-
         <!-- MAIN MENU -->
-
         <div class="sidebar-section">
 
             <div class="section-title">
                 WORKSPACE
             </div>
 
-
             <!-- HOME -->
-
             <a
                 href="student_home.php"
                 class="menu-item active"
@@ -166,9 +142,7 @@ if (!isset($_SESSION["student_id"]) || $_SESSION["role"] != "student") {
 
             </a>
 
-
             <!-- QUESTIONS -->
-
             <a
                 href="questions.php"
                 class="menu-item"
@@ -184,9 +158,7 @@ if (!isset($_SESSION["student_id"]) || $_SESSION["role"] != "student") {
 
             </a>
 
-
             <!-- MY QUESTIONS -->
-
             <a
                 href="#"
                 class="menu-item"
@@ -202,9 +174,7 @@ if (!isset($_SESSION["student_id"]) || $_SESSION["role"] != "student") {
 
             </a>
 
-
             <!-- COLLABORATION -->
-
             <a
                 href="#"
                 class="menu-item"
@@ -220,9 +190,7 @@ if (!isset($_SESSION["student_id"]) || $_SESSION["role"] != "student") {
 
             </a>
 
-
             <!-- MESSAGES -->
-
             <a
                 href="#"
                 class="menu-item"
@@ -244,16 +212,12 @@ if (!isset($_SESSION["student_id"]) || $_SESSION["role"] != "student") {
 
         </div>
 
-
-
         <!-- USER -->
-
         <div class="sidebar-user">
 
             <div class="user-avatar">
                 S
             </div>
-
 
             <div class="user-information">
 
@@ -267,10 +231,10 @@ if (!isset($_SESSION["student_id"]) || $_SESSION["role"] != "student") {
 
             </div>
 
-
             <button
                 type="button"
                 class="user-more"
+                aria-label="More options"
             >
                 ⋮
             </button>
@@ -279,23 +243,11 @@ if (!isset($_SESSION["student_id"]) || $_SESSION["role"] != "student") {
 
     </aside>
 
-
-
-    <!-- =========================================
-         MAIN CONTENT
-    ========================================== -->
-
+    <!-- MAIN CONTENT -->
     <main class="main-content">
 
-
-        <!-- =====================================
-             TOPBAR
-        ====================================== -->
-
+        <!-- TOPBAR -->
         <header class="topbar">
-
-
-            <!-- TOPBAR LEFT -->
 
             <div class="topbar-left">
 
@@ -312,10 +264,6 @@ if (!isset($_SESSION["student_id"]) || $_SESSION["role"] != "student") {
                 </span>
 
             </div>
-
-
-
-            <!-- TOPBAR RIGHT -->
 
             <div class="topbar-right">
 
@@ -338,24 +286,16 @@ if (!isset($_SESSION["student_id"]) || $_SESSION["role"] != "student") {
 
         </header>
 
-
-
-        <!-- =====================================
-             WELCOME SECTION
-        ====================================== -->
-
+        <!-- WELCOME SECTION -->
         <section class="welcome-section">
-
 
             <div class="welcome-small">
                 ♟ YOUR MOVE
             </div>
 
-
             <h2>
                 What are you working on?
             </h2>
-
 
             <p>
                 Ask a question, find a peer, and make your next move.
@@ -363,22 +303,14 @@ if (!isset($_SESSION["student_id"]) || $_SESSION["role"] != "student") {
 
         </section>
 
-
-
-        <!-- =====================================
-             ASK QUESTION
-        ====================================== -->
-
+        <!-- QUICK QUESTION BOX -->
         <section class="ask-box">
 
-
             <div class="ask-box-top">
-
 
                 <div class="ask-icon">
                     ?
                 </div>
-
 
                 <div>
 
@@ -394,33 +326,21 @@ if (!isset($_SESSION["student_id"]) || $_SESSION["role"] != "student") {
 
             </div>
 
-
-
-            <form
-                id="questionForm"
-                action=""
-                method="POST"
-            >
-
+            <!-- This box is a shortcut to questions.php -->
+            <div id="questionForm">
 
                 <textarea
-                    name="question"
                     id="questionInput"
                     class="question-input"
                     placeholder="What would you like to ask?"
-                    required
+                    aria-label="Write a question"
                 ></textarea>
-
-
 
                 <div class="ask-bottom">
 
-
                     <div class="ask-options">
 
-
                         <!-- ATTACHMENT -->
-
                         <button
                             type="button"
                             class="ask-option"
@@ -435,10 +355,7 @@ if (!isset($_SESSION["student_id"]) || $_SESSION["role"] != "student") {
 
                         </button>
 
-
-
                         <!-- SUBJECT -->
-
                         <button
                             type="button"
                             class="ask-option"
@@ -453,10 +370,7 @@ if (!isset($_SESSION["student_id"]) || $_SESSION["role"] != "student") {
 
                         </button>
 
-
-
                         <!-- QUESTION TYPE -->
-
                         <button
                             type="button"
                             class="ask-option"
@@ -473,13 +387,11 @@ if (!isset($_SESSION["student_id"]) || $_SESSION["role"] != "student") {
 
                     </div>
 
-
-
                     <!-- MAKE A MOVE -->
-
                     <button
-                        type="submit"
+                        type="button"
                         class="ask-button"
+                        id="askButton"
                     >
 
                         Make a Move
@@ -492,21 +404,14 @@ if (!isset($_SESSION["student_id"]) || $_SESSION["role"] != "student") {
 
                 </div>
 
-            </form>
+            </div>
 
         </section>
 
-
-
-        <!-- =====================================
-             DASHBOARD
-        ====================================== -->
-
+        <!-- DASHBOARD -->
         <section class="dashboard-section">
 
-
             <!-- QUICK MOVES -->
-
             <div class="quick-heading">
 
                 <div class="heading-label">
@@ -519,58 +424,21 @@ if (!isset($_SESSION["student_id"]) || $_SESSION["role"] != "student") {
 
             </div>
 
-
-
             <!-- QUICK CARDS -->
-
             <div class="quick-grid">
 
-
-                <!-- ASK QUESTION -->
-
-                <div
-                    class="quick-card"
-                    onclick="window.location.href='questions.php'"
-                >
-
-                    <div class="quick-card-icon">
-                        ?
-                    </div>
-
-
-                    <div class="quick-card-content">
-
-                        <h4>
-                            Ask a Question
-                        </h4>
-
-                        <p>
-                            Get help from your classmates
-                            when you're stuck.
-                        </p>
-
-                    </div>
-
-
-                    <div class="card-arrow">
-                        →
-                    </div>
-
-                </div>
-
-
-
                 <!-- BROWSE QUESTIONS -->
-
                 <div
                     class="quick-card"
                     onclick="window.location.href='questions.php'"
+                    role="link"
+                    tabindex="0"
+                    onkeydown="if(event.key === 'Enter' || event.key === ' '){event.preventDefault();window.location.href='questions.php';}"
                 >
 
                     <div class="quick-card-icon">
                         ♧
                     </div>
-
 
                     <div class="quick-card-content">
 
@@ -579,12 +447,10 @@ if (!isset($_SESSION["student_id"]) || $_SESSION["role"] != "student") {
                         </h4>
 
                         <p>
-                            See what your classmates
-                            are asking.
+                            See what your classmates are asking.
                         </p>
 
                     </div>
-
 
                     <div class="card-arrow">
                         →
@@ -592,19 +458,18 @@ if (!isset($_SESSION["student_id"]) || $_SESSION["role"] != "student") {
 
                 </div>
 
-
-
                 <!-- COLLABORATE -->
-
                 <div
                     class="quick-card"
                     onclick="showToast('Collaboration feature coming soon.')"
+                    role="button"
+                    tabindex="0"
+                    onkeydown="if(event.key === 'Enter' || event.key === ' '){event.preventDefault();showToast('Collaboration feature coming soon.');}"
                 >
 
                     <div class="quick-card-icon">
                         ♟
                     </div>
-
 
                     <div class="quick-card-content">
 
@@ -613,12 +478,10 @@ if (!isset($_SESSION["student_id"]) || $_SESSION["role"] != "student") {
                         </h4>
 
                         <p>
-                            Find classmates to work
-                            and learn with.
+                            Find classmates to work and learn with.
                         </p>
 
                     </div>
-
 
                     <div class="card-arrow">
                         →
@@ -628,24 +491,13 @@ if (!isset($_SESSION["student_id"]) || $_SESSION["role"] != "student") {
 
             </div>
 
-
-
-            <!-- =================================
-                 TWO COLUMN DASHBOARD
-            ================================== -->
-
+            <!-- TWO COLUMN DASHBOARD -->
             <div class="dashboard-columns mt-3">
 
-
-                <!-- =================================
-                     RECENT QUESTIONS
-                ================================== -->
-
+                <!-- RECENT QUESTIONS -->
                 <div class="dashboard-panel">
 
-
                     <div class="panel-header">
-
 
                         <div>
 
@@ -658,7 +510,6 @@ if (!isset($_SESSION["student_id"]) || $_SESSION["role"] != "student") {
                             </h3>
 
                         </div>
-
 
                         <a
                             href="questions.php"
@@ -675,27 +526,20 @@ if (!isset($_SESSION["student_id"]) || $_SESSION["role"] != "student") {
 
                     </div>
 
-
-
                     <div class="questions-list">
 
-
                         <!-- QUESTION 1 -->
-
                         <div class="question-item">
-
 
                             <div class="question-number">
                                 01
                             </div>
-
 
                             <div class="question-content">
 
                                 <div class="question-text">
                                     Umiinom ba ng tubig yung isda?
                                 </div>
-
 
                                 <div class="question-meta">
 
@@ -715,31 +559,24 @@ if (!isset($_SESSION["student_id"]) || $_SESSION["role"] != "student") {
 
                             </div>
 
-
                             <div class="question-arrow">
                                 →
                             </div>
 
                         </div>
 
-
-
                         <!-- QUESTION 2 -->
-
                         <div class="question-item">
-
 
                             <div class="question-number">
                                 02
                             </div>
-
 
                             <div class="question-content">
 
                                 <div class="question-text">
                                     paano po maglagay ng file sa gdrive?
                                 </div>
-
 
                                 <div class="question-meta">
 
@@ -759,31 +596,24 @@ if (!isset($_SESSION["student_id"]) || $_SESSION["role"] != "student") {
 
                             </div>
 
-
                             <div class="question-arrow">
                                 →
                             </div>
 
                         </div>
 
-
-
                         <!-- QUESTION 3 -->
-
                         <div class="question-item">
-
 
                             <div class="question-number">
                                 03
                             </div>
-
 
                             <div class="question-content">
 
                                 <div class="question-text">
                                     Bat ba ginawa yung
                                 </div>
-
 
                                 <div class="question-meta">
 
@@ -803,7 +633,6 @@ if (!isset($_SESSION["student_id"]) || $_SESSION["role"] != "student") {
 
                             </div>
 
-
                             <div class="question-arrow">
                                 →
                             </div>
@@ -814,17 +643,10 @@ if (!isset($_SESSION["student_id"]) || $_SESSION["role"] != "student") {
 
                 </div>
 
-
-
-                <!-- =================================
-                     COLLABORATION
-                ================================== -->
-
+                <!-- COLLABORATION -->
                 <div class="dashboard-panel">
 
-
                     <div class="panel-header">
-
 
                         <div>
 
@@ -837,7 +659,6 @@ if (!isset($_SESSION["student_id"]) || $_SESSION["role"] != "student") {
                             </h3>
 
                         </div>
-
 
                         <a
                             href="#"
@@ -855,20 +676,14 @@ if (!isset($_SESSION["student_id"]) || $_SESSION["role"] != "student") {
 
                     </div>
 
-
-
                     <div class="collaboration-list">
 
-
                         <!-- COLLABORATOR 1 -->
-
                         <div class="collaboration-item">
-
 
                             <div class="collaborator-avatar">
                                 J
                             </div>
-
 
                             <div class="collaborator-info">
 
@@ -882,28 +697,23 @@ if (!isset($_SESSION["student_id"]) || $_SESSION["role"] != "student") {
 
                             </div>
 
-
                             <button
                                 type="button"
                                 class="open-button"
                                 onclick="showToast('Opening collaboration...')"
+                                aria-label="Open collaboration with Jayzen Titum"
                             >
                                 →
                             </button>
 
                         </div>
 
-
-
                         <!-- COLLABORATOR 2 -->
-
                         <div class="collaboration-item">
-
 
                             <div class="collaborator-avatar">
                                 D
                             </div>
-
 
                             <div class="collaborator-info">
 
@@ -917,11 +727,11 @@ if (!isset($_SESSION["student_id"]) || $_SESSION["role"] != "student") {
 
                             </div>
 
-
                             <button
                                 type="button"
                                 class="open-button"
                                 onclick="showToast('Collaboration request pending.')"
+                                aria-label="View collaboration request from DDS James"
                             >
                                 →
                             </button>
@@ -929,8 +739,6 @@ if (!isset($_SESSION["student_id"]) || $_SESSION["role"] != "student") {
                         </div>
 
                     </div>
-
-
 
                     <div class="panel-footer-note">
                         Connect with classmates and learn together.
@@ -942,19 +750,12 @@ if (!isset($_SESSION["student_id"]) || $_SESSION["role"] != "student") {
 
         </section>
 
-
-
-        <!-- =====================================
-             FOOTER
-        ====================================== -->
-
+        <!-- FOOTER -->
         <footer class="chess-footer">
-
 
             <div class="footer-piece">
                 ♟
             </div>
-
 
             <div class="footer-text">
 
@@ -968,7 +769,6 @@ if (!isset($_SESSION["student_id"]) || $_SESSION["role"] != "student") {
 
             </div>
 
-
             <div class="footer-piece">
                 ♟
             </div>
@@ -977,32 +777,34 @@ if (!isset($_SESSION["student_id"]) || $_SESSION["role"] != "student") {
 
     </main>
 
-
-
-    <!-- =========================================
-         TOAST
-    ========================================== -->
-
+    <!-- TOAST -->
     <div
         class="toast"
         id="toast"
+        role="status"
+        aria-live="polite"
     ></div>
 
-
-
-    <!-- =========================================
-         BOOTSTRAP 5.3.3 JAVASCRIPT
-    ========================================== -->
-
+    <!-- BOOTSTRAP 5.3.3 JAVASCRIPT -->
     <script
         src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
     ></script>
 
-
     <!-- CHECKMATE JAVASCRIPT -->
-
     <script src="../../asset/js/student_home.js"></script>
 
+    <!-- MAKE A MOVE SHORTCUT -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const askButton = document.getElementById("askButton");
+
+            if (askButton) {
+                askButton.addEventListener("click", function () {
+                    window.location.href = "questions.php";
+                });
+            }
+        });
+    </script>
 
 </body>
 
