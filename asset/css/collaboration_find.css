@@ -1,0 +1,233 @@
+/* =========================================================
+   CHECKMATE - COLLABORATION: FIND A PEER
+   Loads after collaboration_stu.css
+   ========================================================= */
+
+.find-peer {
+    margin-bottom: 30px;
+}
+
+.find-body {
+    padding: 17px;
+}
+
+.find-label {
+    display: block;
+    margin: 0 0 8px;
+    color: #6e8295;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+}
+
+.find-select,
+.find-input {
+    display: block;
+    width: 100%;
+    min-height: 40px;
+    margin: 0 0 18px;
+    padding: 0 12px;
+    border: 1px solid #293139;
+    border-radius: 5px;
+    outline: 0;
+    background: #0f1418;
+    color: #d5d9dc;
+    box-shadow: none;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
+}
+
+.find-select:focus,
+.find-input:focus {
+    border-color: #71582d;
+    background: #0f1418;
+    color: #e7e0d5;
+    box-shadow: 0 0 0 2px rgb(212 166 87 / 7%);
+}
+
+.find-select option {
+    background: #0f1418;
+    color: #d5d9dc;
+}
+
+.find-input::placeholder {
+    color: #718398;
+}
+
+.find-alert {
+    margin: 0 0 14px;
+    padding: 11px 13px;
+    border: 1px solid #5a2f2b;
+    border-radius: 5px;
+    background: #241512;
+    color: #dba09a;
+    font-size: 11px;
+    line-height: 1.6;
+}
+
+.find-alert.success {
+    border-color: #31483d;
+    background: #16231e;
+    color: #8fc0a5;
+}
+
+.find-alert[hidden] {
+    display: none !important;
+}
+
+.find-results {
+    max-height: 340px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    border: 1px solid #272e35;
+    border-radius: 5px;
+    background: #0e1317;
+    scrollbar-color: #394149 #10151a;
+    scrollbar-width: thin;
+}
+
+.find-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    border-bottom: 1px solid #252c32;
+}
+
+.find-row:last-child {
+    border-bottom: 0;
+}
+
+.find-row:hover {
+    background: #11161b;
+}
+
+.find-avatar {
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #38414a;
+    border-radius: 50%;
+    background: #191e23;
+    color: #c79b4c;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 13px;
+}
+
+.find-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.find-info strong {
+    display: block;
+    overflow: hidden;
+    color: #e2ddd5;
+    font-size: 12px;
+    font-weight: 600;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.find-info span {
+    display: block;
+    overflow: hidden;
+    margin-top: 4px;
+    color: #68798a;
+    font-size: 10px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.find-send {
+    flex-shrink: 0;
+    min-height: 32px;
+    padding: 0 14px;
+    border: 1px solid #71582d;
+    border-radius: 5px;
+    background: #181816;
+    color: #d4a657;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.find-send:hover:not(:disabled) {
+    border-color: #d4a657;
+    background: #292217;
+}
+
+.find-send:disabled {
+    opacity: 0.55;
+    cursor: wait;
+}
+
+.find-tag {
+    flex-shrink: 0;
+    padding: 5px 9px;
+    border: 1px solid #353b3e;
+    border-radius: 4px;
+    font-size: 9px;
+    white-space: nowrap;
+}
+
+.find-tag.pending {
+    border-color: #5a4727;
+    background: #1c1912;
+    color: #c49a4d;
+}
+
+.find-tag.accepted {
+    border-color: #315c40;
+    background: #142119;
+    color: #a9ddb6;
+}
+
+.find-tag.rejected {
+    border-color: #633737;
+    background: #241515;
+    color: #f0b3b3;
+}
+
+.find-note {
+    padding: 26px 16px;
+    color: #718398;
+    font-size: 11px;
+    line-height: 1.8;
+    text-align: center;
+}
+
+.find-note-box {
+    border: 1px solid #272e35;
+    border-radius: 5px;
+    background: #0e1317;
+}
+
+.find-note a {
+    color: #d4a657;
+    text-decoration: none;
+}
+
+.find-note a:hover {
+    color: #e0b563;
+}
+
+@media (max-width: 600px) {
+    .find-body {
+        padding: 14px;
+    }
+
+    .find-row {
+        flex-wrap: wrap;
+    }
+
+    .find-send,
+    .find-tag {
+        margin-left: 48px;
+    }
+}

@@ -2,7 +2,27 @@
 session_start();
 require_once "../../config/config.php";
 
+function jsonOut(array $data, int $status = 200): void
+{
+    http_response_code($status);
+    header("Content-Type: application/json; charset=utf-8");
+    header("Cache-Control: no-store");
+    echo json_encode($data, JSON_INVALID_UTF8_SUBSTITUTE);
+    exit();
+}
+
+$getAction = $_GET["action"] ?? "";
+$postAction = $_POST["action"] ?? "";
+
+$isAjax =
+    in_array($getAction, ["search", "summary"], true) ||
+    $postAction === "send";
+
 if (empty($_SESSION["student_id"])) {
+    if ($isAjax) {
+        jsonOut(["ok" => false, "error" => "Please log in again."], 401);
+    }
+
     header("Location: ../../authentication/Login/login.php");
     exit();
 }
@@ -10,7 +30,7 @@ if (empty($_SESSION["student_id"])) {
 $student_id = $_SESSION["student_id"];
 
 $stmt = $conn->prepare(
-    "SELECT id, full_name, student_id, course
+    "SELECT id, first_name, last_name, student_id, course
      FROM users WHERE student_id = ? LIMIT 1"
 );
 if (!$stmt) {
@@ -28,6 +48,11 @@ if (!$user) {
 
 $user_id = (int)$user["id"];
 
+if (empty($_SESSION["collab_csrf"])) {
+    $_SESSION["collab_csrf"] = bin2hex(random_bytes(32));
+}
+$csrf = $_SESSION["collab_csrf"];
+
 function e($value): string
 {
     return htmlspecialchars((string)($value ?? ""), ENT_QUOTES, "UTF-8");
@@ -40,13 +65,262 @@ function collabStatus($status): string
     return in_array($key, ["accepted", "rejected"], true) ? $key : "pending";
 }
 
-/* Accept or reject a request that was sent to this student */
+/* Changes whenever a request is added or its status changes */
+function collabSignature(array $rows): string
+{
+    $parts = [];
+
+    foreach ($rows as $r) {
+        $parts[] = (int)$r["collaboration_id"] . ":" . collabStatus($r["status"]);
+    }
+
+    sort($parts);
+
+    return md5(implode("|", $parts));
+}
+
+function csrfOk(string $sent): bool
+{
+    $known = $_SESSION["collab_csrf"] ?? "";
+
+    return $known !== "" && $sent !== "" && hash_equals($known, $sent);
+}
+
+/* =========================================================
+   JSON ENDPOINTS
+   ========================================================= */
+
+/* Live summary (used to refresh the page when something changes) */
+if ($_SERVER["REQUEST_METHOD"] === "GET" && $getAction === "summary") {
+    try {
+        $stmt = $conn->prepare(
+            "SELECT collaboration_id, status
+             FROM collaborations
+             WHERE requester_id = ? OR receiver_id = ?"
+        );
+
+        if (!$stmt) {
+            throw new Exception("prepare failed");
+        }
+
+        $stmt->bind_param("ii", $user_id, $user_id);
+        $stmt->execute();
+        $rows = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+        $stmt->close();
+
+        jsonOut(["ok" => true, "signature" => collabSignature($rows)]);
+    } catch (Throwable $ex) {
+        jsonOut(["ok" => false, "error" => "Unable to check updates."], 500);
+    }
+}
+
+/* Search students */
+if ($_SERVER["REQUEST_METHOD"] === "GET" && $getAction === "search") {
+    $q = trim((string)($_GET["q"] ?? ""));
+    $questionId = (int)($_GET["question_id"] ?? 0);
+    $like = "%" . $q . "%";
+
+    try {
+        $stmt = $conn->prepare(
+            "SELECT u.id, u.first_name, u.last_name, u.student_id,
+                    u.course, u.year_level,
+                    (
+                        SELECT c.status
+                        FROM collaborations c
+                        WHERE c.question_id = ?
+                          AND c.requester_id = ?
+                          AND c.receiver_id = u.id
+                        ORDER BY c.collaboration_id DESC
+                        LIMIT 1
+                    ) AS existing_status
+             FROM users u
+             WHERE u.id <> ?
+               AND LOWER(TRIM(u.role)) = 'student'
+               AND (
+                    u.first_name LIKE ?
+                    OR u.last_name LIKE ?
+                    OR CONCAT_WS(' ', u.first_name, u.last_name) LIKE ?
+                    OR u.student_id LIKE ?
+                    OR u.course LIKE ?
+               )
+             ORDER BY u.first_name, u.last_name
+             LIMIT 20"
+        );
+
+        if (!$stmt) {
+            throw new Exception("prepare failed");
+        }
+
+        $stmt->bind_param(
+            "iiisssss",
+            $questionId,
+            $user_id,
+            $user_id,
+            $like,
+            $like,
+            $like,
+            $like,
+            $like
+        );
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $users = [];
+
+        while ($row = $result->fetch_assoc()) {
+            $name = trim(
+                trim((string)$row["first_name"]) . " " .
+                trim((string)$row["last_name"])
+            );
+
+            $users[] = [
+                "id" => (int)$row["id"],
+                "name" => $name !== "" ? $name : "Student",
+                "student_id" => (string)$row["student_id"],
+                "course" => (string)($row["course"] ?? ""),
+                "year_level" => (string)($row["year_level"] ?? ""),
+                "status" => $row["existing_status"] === null
+                    ? null
+                    : collabStatus($row["existing_status"])
+            ];
+        }
+
+        $stmt->close();
+
+        jsonOut(["ok" => true, "users" => $users]);
+    } catch (Throwable $ex) {
+        jsonOut([
+            "ok" => false,
+            "error" => "Unable to search students. Make sure the collaborations table exists."
+        ], 500);
+    }
+}
+
+/* Send a collaboration request */
+if ($_SERVER["REQUEST_METHOD"] === "POST" && $postAction === "send") {
+    if (!csrfOk((string)($_POST["csrf"] ?? ""))) {
+        jsonOut([
+            "ok" => false,
+            "error" => "Security token invalid. Refresh the page."
+        ], 403);
+    }
+
+    $questionId = (int)($_POST["question_id"] ?? 0);
+    $receiverId = (int)($_POST["receiver_id"] ?? 0);
+
+    if ($questionId <= 0 || $receiverId <= 0 || $receiverId === $user_id) {
+        jsonOut([
+            "ok" => false,
+            "error" => "Choose one of your questions and another student."
+        ], 422);
+    }
+
+    try {
+        /* The question must be yours and still active */
+        $stmt = $conn->prepare(
+            "SELECT question_id
+             FROM questions
+             WHERE question_id = ? AND user_id = ? AND status = 'Active'
+             LIMIT 1"
+        );
+        if (!$stmt) {
+            throw new Exception("prepare failed");
+        }
+        $stmt->bind_param("ii", $questionId, $user_id);
+        $stmt->execute();
+        $ownQuestion = (bool)$stmt->get_result()->fetch_assoc();
+        $stmt->close();
+
+        if (!$ownQuestion) {
+            jsonOut([
+                "ok" => false,
+                "error" => "You can only ask for help on your own active questions."
+            ], 403);
+        }
+
+        /* The receiver must be another student */
+        $stmt = $conn->prepare(
+            "SELECT id
+             FROM users
+             WHERE id = ? AND LOWER(TRIM(role)) = 'student'
+             LIMIT 1"
+        );
+        if (!$stmt) {
+            throw new Exception("prepare failed");
+        }
+        $stmt->bind_param("i", $receiverId);
+        $stmt->execute();
+        $receiverOk = (bool)$stmt->get_result()->fetch_assoc();
+        $stmt->close();
+
+        if (!$receiverOk) {
+            jsonOut([
+                "ok" => false,
+                "error" => "You can only send a request to another student."
+            ], 403);
+        }
+
+        /* One request per question and student */
+        $stmt = $conn->prepare(
+            "SELECT collaboration_id
+             FROM collaborations
+             WHERE question_id = ? AND requester_id = ? AND receiver_id = ?
+             LIMIT 1"
+        );
+        if (!$stmt) {
+            throw new Exception("prepare failed");
+        }
+        $stmt->bind_param("iii", $questionId, $user_id, $receiverId);
+        $stmt->execute();
+        $already = (bool)$stmt->get_result()->fetch_assoc();
+        $stmt->close();
+
+        if ($already) {
+            jsonOut([
+                "ok" => false,
+                "error" => "You already sent a request to this student for that question."
+            ], 409);
+        }
+
+        $stmt = $conn->prepare(
+            "INSERT INTO collaborations
+                (question_id, requester_id, receiver_id, status)
+             VALUES (?, ?, ?, 'Pending')"
+        );
+        if (!$stmt) {
+            throw new Exception("prepare failed");
+        }
+        $stmt->bind_param("iii", $questionId, $user_id, $receiverId);
+
+        if (!$stmt->execute()) {
+            $stmt->close();
+            throw new Exception("insert failed");
+        }
+        $stmt->close();
+
+        jsonOut(["ok" => true, "message" => "Request sent. Waiting for their reply."]);
+    } catch (Throwable $ex) {
+        jsonOut([
+            "ok" => false,
+            "error" => "Could not send the request. Make sure the collaborations table exists."
+        ], 500);
+    }
+}
+
+/* =========================================================
+   ACCEPT / REJECT A REQUEST SENT TO THIS STUDENT
+   ========================================================= */
+
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $collabId = (int)($_POST["collaboration_id"] ?? 0);
     $action = $_POST["action"] ?? "";
     $result = "failed";
 
-    if ($collabId > 0 && in_array($action, ["accept", "reject"], true)) {
+    if (
+        csrfOk((string)($_POST["csrf"] ?? "")) &&
+        $collabId > 0 &&
+        in_array($action, ["accept", "reject"], true)
+    ) {
         $newStatus = $action === "accept" ? "Accepted" : "Rejected";
 
         try {
@@ -74,32 +348,58 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         }
     }
 
-    header("Location: collaboration.php?updated=" . $result);
+    header("Location: collaboration_stu.php?updated=" . $result);
     exit();
 }
 
-/* Load every collaboration this student is part of */
+/* =========================================================
+   PAGE DATA
+   ========================================================= */
+
+/* Your active questions (for the "Find a peer" box) */
+$myQuestions = [];
+
+try {
+    $stmt = $conn->prepare(
+        "SELECT question_id, question, subject
+         FROM questions
+         WHERE user_id = ? AND status = 'Active'
+         ORDER BY create_at DESC
+         LIMIT 50"
+    );
+
+    if ($stmt) {
+        $stmt->bind_param("i", $user_id);
+        $stmt->execute();
+        $myQuestions = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+        $stmt->close();
+    }
+} catch (Throwable $ex) {
+    $myQuestions = [];
+}
+
+/* Every collaboration this student is part of */
 $collabs = [];
 $loadError = false;
 
 try {
     $stmt = $conn->prepare(
-        "SELECT c.collaboration_id, c.question_id, c.requestor_id,
+        "SELECT c.collaboration_id, c.question_id, c.requester_id,
                 c.receiver_id, c.status, c.create_at,
                 q.question, q.subject, q.question_course,
                 q.question_type, q.attachment,
-                req.full_name AS requestor_name,
+                TRIM(CONCAT_WS(' ', req.first_name, req.last_name)) AS requestor_name,
                 req.course AS requestor_course,
                 req.student_id AS requestor_sid,
-                rec.full_name AS receiver_name,
+                TRIM(CONCAT_WS(' ', rec.first_name, rec.last_name)) AS receiver_name,
                 rec.course AS receiver_course,
                 rec.student_id AS receiver_sid
          FROM collaborations c
          INNER JOIN questions q ON c.question_id = q.question_id
-         INNER JOIN users req ON c.requestor_id = req.id
+         INNER JOIN users req ON c.requester_id = req.id
          INNER JOIN users rec ON c.receiver_id = rec.id
-         WHERE c.requestor_id = ? OR c.receiver_id = ?
-         ORDER BY c.create_at DESC"
+         WHERE c.requester_id = ? OR c.receiver_id = ?
+         ORDER BY c.create_at DESC, c.collaboration_id DESC"
     );
 
     if (!$stmt) {
@@ -108,47 +408,39 @@ try {
 
     $stmt->bind_param("ii", $user_id, $user_id);
     $stmt->execute();
-    $result = $stmt->get_result();
-
-    while ($row = $result->fetch_assoc()) {
-        $collabs[] = $row;
-    }
+    $collabs = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
     $stmt->close();
 } catch (Throwable $ex) {
     $loadError = true;
+    $collabs = [];
 }
 
-/* Summary numbers */
+/* Numbers shown in the cards AND the tabs (they always match):
+   Received = requests sent to you that wait for your reply
+   Sent     = requests you sent that wait for a reply
+   Active   = accepted collaborations (either direction)
+   All      = everything, including rejected (kept as history) */
 $receivedCount = 0;
 $sentCount = 0;
 $activeCount = 0;
-$pendingReceived = 0;
-$pendingSent = 0;
 
 foreach ($collabs as $c) {
     $isReceiver = (int)$c["receiver_id"] === $user_id;
     $key = collabStatus($c["status"]);
 
-    if ($isReceiver) {
-        $receivedCount++;
-    } else {
-        $sentCount++;
-    }
-
-    if ($key === "pending") {
-        if ($isReceiver) {
-            $pendingReceived++;
-        } else {
-            $pendingSent++;
-        }
-    }
-
     if ($key === "accepted") {
         $activeCount++;
+    } elseif ($key === "pending") {
+        if ($isReceiver) {
+            $receivedCount++;
+        } else {
+            $sentCount++;
+        }
     }
 }
 
 $totalCollabs = count($collabs);
+$signature = collabSignature($collabs);
 $updated = $_GET["updated"] ?? "";
 ?>
 <!DOCTYPE html>
@@ -159,8 +451,11 @@ $updated = $_GET["updated"] ?? "";
     <title>CHECKMATE - Collaboration</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
           rel="stylesheet">
+    <script src="../../asset/js/notify.js" defer></script>
+    <script src="../../asset/js/user_menu.js" defer></script>
     <link rel="stylesheet" href="../../asset/css/question.css">
     <link rel="stylesheet" href="../../asset/css/collaboration_stu.css">
+    <link rel="stylesheet" href="../../asset/css/collaboration_find.css">
 </head>
 <body>
 
@@ -197,17 +492,24 @@ $updated = $_GET["updated"] ?? "";
             <span class="menu-icon">♟</span><span>Collaboration</span>
         </a>
 
-        <a href="#" class="menu-item">
+        <a href="messages.php" class="menu-item">
             <span class="menu-icon">✉</span><span>Messages</span>
         </a>
     </div>
 
     <div class="sidebar-user">
+
         <div class="user-avatar">
-            <?= e(strtoupper(substr($user["full_name"], 0, 1))) ?>
+            <?= e(strtoupper(
+                substr(trim($user["first_name"] ?? ""), 0, 1) .
+                substr(trim($user["last_name"] ?? ""), 0, 1)
+            )) ?>
         </div>
+
         <div class="user-information">
-            <strong><?= e($user["full_name"]) ?></strong>
+            <strong>
+                <?= e(trim(($user["first_name"] ?? "") . " " . ($user["last_name"] ?? "")) ?: "Student") ?>
+            </strong>
             <span><?= e($user["course"]) ?> · <?= e($user["student_id"]) ?></span>
         </div>
         <button class="user-more" type="button" aria-label="More options">⋮</button>
@@ -221,9 +523,6 @@ $updated = $_GET["updated"] ?? "";
             <span class="topbar-divider">/</span>
             <span class="topbar-current">Collaboration</span>
         </div>
-        <div class="topbar-right">
-            <a href="../../authentication/Login/logout.php">LogOut</a>
-        </div>
     </header>
 
     <section class="questions-page">
@@ -231,12 +530,13 @@ $updated = $_GET["updated"] ?? "";
         <div class="page-heading">
             <span class="heading-label">PEER COLLABORATION</span>
             <h2>Collaboration</h2>
-            <p>Answer help requests, follow the ones you sent, and open your active collaborations.</p>
+            <p>Find a peer to help you, answer help requests, and open your active collaborations.</p>
         </div>
 
         <?php if ($loadError): ?>
             <div class="form-message form-message-error">
                 Collaboration requests could not be loaded right now.
+                Make sure the collaborations table exists.
             </div>
         <?php endif; ?>
 
@@ -258,13 +558,13 @@ $updated = $_GET["updated"] ?? "";
 
             <div class="summary-card">
                 <span class="summary-label">RECEIVED</span>
-                <strong><?= $pendingReceived ?></strong>
+                <strong><?= $receivedCount ?></strong>
                 <span class="summary-hint">Waiting for your reply</span>
             </div>
 
             <div class="summary-card">
                 <span class="summary-label">SENT</span>
-                <strong><?= $pendingSent ?></strong>
+                <strong><?= $sentCount ?></strong>
                 <span class="summary-hint">Waiting for a response</span>
             </div>
 
@@ -275,6 +575,63 @@ $updated = $_GET["updated"] ?? "";
             </div>
 
         </div>
+
+        <!-- FIND A PEER -->
+        <section class="questions-section find-peer">
+
+            <div class="section-heading">
+                <div>
+                    <span class="heading-label">FIND A PEER</span>
+                    <h3>Ask a classmate for help</h3>
+                </div>
+            </div>
+
+            <div class="find-body">
+
+                <?php if (count($myQuestions) > 0): ?>
+
+                    <label class="find-label" for="findQuestion">
+                        1. CHOOSE YOUR QUESTION
+                    </label>
+
+                    <select id="findQuestion" class="find-select">
+                        <?php foreach ($myQuestions as $mq): ?>
+                            <option value="<?= (int)$mq["question_id"] ?>">
+                                <?= e(mb_strimwidth((string)$mq["question"], 0, 80, "…", "UTF-8")) ?>
+                                <?= !empty($mq["subject"]) ? " (" . e($mq["subject"]) . ")" : "" ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+
+                    <label class="find-label" for="findSearch">
+                        2. FIND A STUDENT
+                    </label>
+
+                    <input type="text"
+                           id="findSearch"
+                           class="find-input"
+                           placeholder="Search by name, student ID or course..."
+                           autocomplete="off">
+
+                    <div id="findAlert" class="find-alert" role="alert" hidden></div>
+
+                    <div id="findResults" class="find-results" aria-live="polite">
+                        <div class="find-note">Loading students...</div>
+                    </div>
+
+                <?php else: ?>
+
+                    <div class="find-note find-note-box">
+                        You have no active questions yet.
+                        <a href="questions.php">Post a question</a> first,
+                        then pick a classmate to help you with it.
+                    </div>
+
+                <?php endif; ?>
+
+            </div>
+
+        </section>
 
         <section class="questions-section">
 
@@ -302,10 +659,11 @@ $updated = $_GET["updated"] ?? "";
 
             <div class="search-box">
                 <input type="text" id="searchCollaborations"
-                       placeholder="Search by question or student...">
+                       placeholder="Filter your requests by question or student...">
             </div>
 
-            <div class="questions-list" id="collabList">
+            <div class="questions-list" id="collabList"
+                 data-signature="<?= e($signature) ?>">
 
                 <?php if ($totalCollabs > 0): ?>
 
@@ -319,22 +677,31 @@ $updated = $_GET["updated"] ?? "";
                             $partnerName = $c["requestor_name"];
                             $partnerCourse = $c["requestor_course"];
                             $partnerSid = $c["requestor_sid"];
-                            $summary = $partnerName . " asked for your help";
                         } else {
                             $partnerName = $c["receiver_name"];
                             $partnerCourse = $c["receiver_course"];
                             $partnerSid = $c["receiver_sid"];
-                            $summary = "You asked " . $partnerName . " for help";
                         }
 
-                        $groups = $isReceiver ? "received" : "sent";
+                        $partnerName = trim((string)$partnerName) !== ""
+                            ? $partnerName
+                            : "Student";
+
+                        $summary = $isReceiver
+                            ? $partnerName . " asked for your help"
+                            : "You asked " . $partnerName . " for help";
+
                         if ($key === "accepted") {
-                            $groups .= " active";
+                            $groups = "active";
+                        } elseif ($key === "pending") {
+                            $groups = $isReceiver ? "received" : "sent";
+                        } else {
+                            $groups = "";
                         }
 
                         $dateText = date(
                             "M d, Y h:i A",
-                            strtotime($c["create_at"])
+                            strtotime((string)$c["create_at"])
                         );
                         ?>
 
@@ -367,6 +734,7 @@ $updated = $_GET["updated"] ?? "";
                                         <div class="collab-actions">
 
                                             <form method="POST">
+                                                <input type="hidden" name="csrf" value="<?= e($csrf) ?>">
                                                 <input type="hidden" name="collaboration_id" value="<?= $cid ?>">
                                                 <input type="hidden" name="action" value="accept">
                                                 <button type="submit" class="collab-btn accept">
@@ -376,6 +744,7 @@ $updated = $_GET["updated"] ?? "";
 
                                             <form method="POST"
                                                   onsubmit="return confirm('Reject this collaboration request?');">
+                                                <input type="hidden" name="csrf" value="<?= e($csrf) ?>">
                                                 <input type="hidden" name="collaboration_id" value="<?= $cid ?>">
                                                 <input type="hidden" name="action" value="reject">
                                                 <button type="submit" class="collab-btn reject">
@@ -403,7 +772,7 @@ $updated = $_GET["updated"] ?? "";
                                 <div class="answer-item">
 
                                     <div class="answer-avatar">
-                                        <?= e(strtoupper(substr($partnerName, 0, 1))) ?>
+                                        <?= e(mb_strtoupper(mb_substr($partnerName, 0, 1, "UTF-8"), "UTF-8")) ?>
                                     </div>
 
                                     <div class="answer-body">
@@ -479,6 +848,12 @@ $updated = $_GET["updated"] ?? "";
     </section>
 </main>
 
+<script>
+    window.CHECKMATE_COLLAB = {
+        url: "collaboration_stu.php",
+        csrf: <?= json_encode($csrf) ?>
+    };
+</script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="../../asset/js/collaboration_stu.js"></script>
 </body>

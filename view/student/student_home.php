@@ -2,9 +2,178 @@
 
 session_start();
 
-if (!isset($_SESSION["student_id"]) || $_SESSION["role"] != "student") {
+if (
+    !isset($_SESSION["student_id"]) ||
+    ($_SESSION["role"] ?? "") !== "student"
+) {
     header("Location: ../../authentication/Login/login.php");
     exit();
+}
+
+require_once "../../config/config.php";
+
+$student_id = $_SESSION["student_id"];
+
+$stmt = $conn->prepare(
+    "SELECT id, first_name, last_name, student_id, course
+     FROM users
+     WHERE student_id = ?
+     LIMIT 1"
+);
+
+if (!$stmt) {
+    die("User query failed: " . $conn->error);
+}
+
+$stmt->bind_param("s", $student_id);
+$stmt->execute();
+
+$user = $stmt->get_result()->fetch_assoc();
+$stmt->close();
+
+if (!$user) {
+    die("Student account not found.");
+}
+
+$user_id = (int)$user["id"];
+
+function e($value): string
+{
+    return htmlspecialchars(
+        (string)($value ?? ""),
+        ENT_QUOTES,
+        "UTF-8"
+    );
+}
+
+function personName($first, $last): string
+{
+    $name = trim(trim((string)$first) . " " . trim((string)$last));
+    return $name !== "" ? $name : "Student";
+}
+
+function firstLetter($text): string
+{
+    $letter = mb_strtoupper(
+        mb_substr(trim((string)$text), 0, 1, "UTF-8"),
+        "UTF-8"
+    );
+
+    return $letter !== "" ? $letter : "S";
+}
+
+function timeAgo($seconds): string
+{
+    $seconds = max(0, (int)$seconds);
+
+    if ($seconds < 60) {
+        return "Just now";
+    }
+
+    if ($seconds < 3600) {
+        return floor($seconds / 60) . " min ago";
+    }
+
+    if ($seconds < 86400) {
+        $hours = (int)floor($seconds / 3600);
+        return $hours . ($hours === 1 ? " hr ago" : " hrs ago");
+    }
+
+    $days = (int)floor($seconds / 86400);
+
+    if ($days < 30) {
+        return $days . ($days === 1 ? " day ago" : " days ago");
+    }
+
+    return floor($days / 30) . " mo ago";
+}
+
+$firstInitial = substr(
+    trim($user["first_name"] ?? ""),
+    0,
+    1
+);
+
+$lastInitial = substr(
+    trim($user["last_name"] ?? ""),
+    0,
+    1
+);
+
+$initials = strtoupper($firstInitial . $lastInitial);
+
+$displayName = trim(
+    ($user["first_name"] ?? "") . " " .
+    ($user["last_name"] ?? "")
+);
+
+/* RECENT QUESTIONS: newest questions posted by OTHER students */
+$recentQuestions = [];
+
+try {
+    $stmt = $conn->prepare(
+        "SELECT q.question_id,
+                q.question,
+                TIMESTAMPDIFF(SECOND, q.create_at, NOW()) AS seconds_ago,
+                u.first_name,
+                u.last_name
+         FROM questions q
+         INNER JOIN users u ON u.id = q.user_id
+         WHERE q.user_id <> ?
+         ORDER BY q.create_at DESC, q.question_id DESC
+         LIMIT 3"
+    );
+
+    if ($stmt) {
+        $stmt->bind_param("i", $user_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        while ($row = $result->fetch_assoc()) {
+            $recentQuestions[] = $row;
+        }
+
+        $stmt->close();
+    }
+} catch (Throwable $ex) {
+    $recentQuestions = [];
+}
+
+/* YOUR PEERS: students who have an ACCEPTED collaboration with you */
+$peers = [];
+
+try {
+    $stmt = $conn->prepare(
+        "SELECT u.id,
+                u.first_name,
+                u.last_name,
+                MAX(c.create_at) AS last_at
+         FROM collaborations c
+         INNER JOIN users u
+            ON u.id = CASE
+                WHEN c.requester_id = ? THEN c.receiver_id
+                ELSE c.requester_id
+            END
+         WHERE (c.requester_id = ? OR c.receiver_id = ?)
+           AND c.status = 'Accepted'
+         GROUP BY u.id, u.first_name, u.last_name
+         ORDER BY last_at DESC
+         LIMIT 5"
+    );
+
+    if ($stmt) {
+        $stmt->bind_param("iii", $user_id, $user_id, $user_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        while ($row = $result->fetch_assoc()) {
+            $peers[] = $row;
+        }
+
+        $stmt->close();
+    }
+} catch (Throwable $ex) {
+    $peers = [];
 }
 
 ?>
@@ -24,7 +193,8 @@ if (!isset($_SESSION["student_id"]) || $_SESSION["role"] != "student") {
         href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
         rel="stylesheet"
     >
-
+    <script src="../../asset/js/notify.js" defer></script>
+    <script src="../../asset/js/user_menu.js" defer></script>
     <!-- CHECKMATE Student Home CSS -->
     <link
         rel="stylesheet"
@@ -33,36 +203,6 @@ if (!isset($_SESSION["student_id"]) || $_SESSION["role"] != "student") {
 
     <!-- Force CHECKMATE link styling -->
     <style>
-        a.logout-link,
-        a.logout-link:link,
-        a.logout-link:visited,
-        a.logout-link:hover,
-        a.logout-link:active,
-        a.logout-link:focus {
-            color: #b08c4d !important;
-
-            text-decoration: none !important;
-            text-decoration-line: none !important;
-            text-decoration-style: none !important;
-            text-decoration-color: transparent !important;
-
-            border: none !important;
-            outline: none !important;
-            box-shadow: none !important;
-
-            background: transparent !important;
-
-            font-size: 12px;
-            letter-spacing: 1.8px;
-            font-weight: 700;
-
-            cursor: pointer;
-        }
-
-        a.logout-link:hover {
-            color: #d0a55c !important;
-        }
-
         a.new-question-button,
         a.new-question-button:link,
         a.new-question-button:visited,
@@ -71,9 +211,15 @@ if (!isset($_SESSION["student_id"]) || $_SESSION["role"] != "student") {
         a.new-question-button:focus {
             text-decoration: none !important;
             text-decoration-line: none !important;
-
             outline: none !important;
             box-shadow: none !important;
+        }
+
+        .empty-note {
+            padding: 26px 22px;
+            color: #718398;
+            font-size: 12px;
+            line-height: 1.7;
         }
     </style>
 
@@ -81,167 +227,93 @@ if (!isset($_SESSION["student_id"]) || $_SESSION["role"] != "student") {
 
 <body>
 
-    <!-- SIDEBAR -->
-    <aside class="sidebar">
 
-        <!-- LOGO -->
-        <div class="logo-area">
+<!-- SIDEBAR -->
+<aside class="sidebar">
 
-            <div class="logo-piece">
-                ♟
-            </div>
+    <!-- LOGO -->
+    <div class="logo-area">
+        <div class="logo-piece">♞</div>
 
-            <div class="logo-text">
-
-                <h1>CHECKMATE</h1>
-
-                <span>
-                    STUDENT COLLABORATION
-                </span>
-
-            </div>
-
+        <div class="logo-text">
+            <h1>CHECKMATE</h1>
+            <span>PEER COLLABORATION</span>
         </div>
+    </div>
 
-        <!-- NEW QUESTION -->
-        <a
-            href="questions.php"
-            class="new-question-button"
-        >
+    <!-- NEW QUESTION -->
+    <a href="questions.php" class="new-question-button">
+        <span class="button-icon">+</span>
+        <span>New Question</span>
+    </a>
 
-            <span class="button-icon">
-                +
-            </span>
+    <!-- WORKSPACE MENU -->
+    <div class="sidebar-section">
 
-            <span>
-                New Question
-            </span>
+        <div class="section-title">WORKSPACE</div>
 
+        <!-- HOME -->
+        <a href="student_home.php" class="menu-item active">
+            <span class="menu-icon">⌂</span>
+            <span>Home</span>
         </a>
 
-        <!-- MAIN MENU -->
-        <div class="sidebar-section">
+        <!-- QUESTIONS -->
+        <a href="questions.php" class="menu-item">
+            <span class="menu-icon">?</span>
+            <span>Questions</span>
+        </a>
 
-            <div class="section-title">
-                WORKSPACE
-            </div>
+        <!-- MY QUESTIONS -->
+        <a href="my_question.php" class="menu-item">
+            <span class="menu-icon">♧</span>
+            <span>My Questions</span>
+        </a>
 
-            <!-- HOME -->
-            <a
-                href="student_home.php"
-                class="menu-item active"
-            >
+        <!-- COLLABORATION -->
+        <a href="collaboration_stu.php" class="menu-item">
+            <span class="menu-icon">♟</span>
+            <span>Collaboration</span>
+        </a>
 
-                <span class="menu-icon">
-                    ⌂
-                </span>
+        <!-- MESSAGES -->
+        <a href="messages.php" class="menu-item">
+            <span class="menu-icon">✉</span>
+            <span>Messages</span>
+        </a>
 
-                <span>
-                    Home
-                </span>
+    </div>
 
-            </a>
+    <!-- STUDENT PROFILE -->
+    <div class="sidebar-user">
 
-            <!-- QUESTIONS -->
-            <a
-                href="questions.php"
-                class="menu-item"
-            >
-
-                <span class="menu-icon">
-                    ?
-                </span>
-
-                <span>
-                    Questions
-                </span>
-
-            </a>
-
-            <!-- MY QUESTIONS -->
-            <a
-                href="#"
-                class="menu-item"
-            >
-
-                <span class="menu-icon">
-                    ♧
-                </span>
-
-                <span>
-                    My Questions
-                </span>
-
-            </a>
-
-            <!-- COLLABORATION -->
-            <a
-                href="#"
-                class="menu-item"
-            >
-
-                <span class="menu-icon">
-                    ♟
-                </span>
-
-                <span>
-                    Collaboration
-                </span>
-
-            </a>
-
-            <!-- MESSAGES -->
-            <a
-                href="#"
-                class="menu-item"
-            >
-
-                <span class="menu-icon">
-                    ✉
-                </span>
-
-                <span>
-                    Messages
-                </span>
-
-                <span class="notification">
-                    2
-                </span>
-
-            </a>
-
+        <div class="user-avatar">
+            <?= e($initials) ?>
         </div>
 
-        <!-- USER -->
-        <div class="sidebar-user">
+        <div class="user-information">
 
-            <div class="user-avatar">
-                S
-            </div>
+            <strong>
+                <?= e(trim(($user["first_name"] ?? "") . " " . ($user["last_name"] ?? "")) ?: "Student") ?>
+            </strong>
 
-            <div class="user-information">
-
-                <strong>
-                    Student Name
-                </strong>
-
-                <span>
-                    Program and Student Name
-                </span>
-
-            </div>
-
-            <button
-                type="button"
-                class="user-more"
-                aria-label="More options"
-            >
-                ⋮
-            </button>
-
+            <span>
+                <?= e($user["course"] ?? "") ?>
+                ·
+                <?= e($user["student_id"] ?? "") ?>
+            </span>
         </div>
 
-    </aside>
+        <button
+            class="user-more"
+            type="button"
+            aria-label="More options"
+        >⋮</button>
+
+    </div>
+
+</aside>
+
 
     <!-- MAIN CONTENT -->
     <main class="main-content">
@@ -262,25 +334,6 @@ if (!isset($_SESSION["student_id"]) || $_SESSION["role"] != "student") {
                 <span class="topbar-current">
                     Home
                 </span>
-
-            </div>
-
-            <div class="topbar-right">
-
-                <a
-                    href="../../authentication/Login/logout.php"
-                    class="logout-link"
-                    style="
-                        color:#b08c4d !important;
-                        text-decoration:none !important;
-                        border:none !important;
-                        outline:none !important;
-                        box-shadow:none !important;
-                        background:transparent !important;
-                    "
-                >
-                    LogOut
-                </a>
 
             </div>
 
@@ -326,7 +379,7 @@ if (!isset($_SESSION["student_id"]) || $_SESSION["role"] != "student") {
 
             </div>
 
-            <!-- This box is a shortcut to questions.php -->
+            <!-- Shortcut to questions.php -->
             <div id="questionForm">
 
                 <textarea
@@ -346,13 +399,8 @@ if (!isset($_SESSION["student_id"]) || $_SESSION["role"] != "student") {
                             class="ask-option"
                             id="attachmentButton"
                         >
-
-                            <span>
-                                ＋
-                            </span>
-
+                            <span>＋</span>
                             Attachment
-
                         </button>
 
                         <!-- SUBJECT -->
@@ -361,13 +409,8 @@ if (!isset($_SESSION["student_id"]) || $_SESSION["role"] != "student") {
                             class="ask-option"
                             id="subjectButton"
                         >
-
-                            <span>
-                                ＋
-                            </span>
-
+                            <span>＋</span>
                             Subject
-
                         </button>
 
                         <!-- QUESTION TYPE -->
@@ -376,13 +419,8 @@ if (!isset($_SESSION["student_id"]) || $_SESSION["role"] != "student") {
                             class="ask-option"
                             id="typeButton"
                         >
-
-                            <span>
-                                ＋
-                            </span>
-
+                            <span>＋</span>
                             Question Type
-
                         </button>
 
                     </div>
@@ -393,13 +431,8 @@ if (!isset($_SESSION["student_id"]) || $_SESSION["role"] != "student") {
                         class="ask-button"
                         id="askButton"
                     >
-
                         Make a Move
-
-                        <span>
-                            →
-                        </span>
-
+                        <span>→</span>
                     </button>
 
                 </div>
@@ -461,10 +494,10 @@ if (!isset($_SESSION["student_id"]) || $_SESSION["role"] != "student") {
                 <!-- COLLABORATE -->
                 <div
                     class="quick-card"
-                    onclick="showToast('Collaboration feature coming soon.')"
-                    role="button"
+                    role="link"
+                    onclick="window.location.href='collaboration_stu.php'"
                     tabindex="0"
-                    onkeydown="if(event.key === 'Enter' || event.key === ' '){event.preventDefault();showToast('Collaboration feature coming soon.');}"
+                    onkeydown="if(event.key === 'Enter' || event.key === ' '){event.preventDefault();window.location.href='collaboration_stu.php';}"
                 >
 
                     <div class="quick-card-icon">
@@ -515,129 +548,56 @@ if (!isset($_SESSION["student_id"]) || $_SESSION["role"] != "student") {
                             href="questions.php"
                             class="view-all"
                         >
-
                             View All
-
-                            <span>
-                                →
-                            </span>
-
+                            <span>→</span>
                         </a>
 
                     </div>
 
                     <div class="questions-list">
 
-                        <!-- QUESTION 1 -->
-                        <div class="question-item">
+                        <?php if (!empty($recentQuestions)): ?>
 
-                            <div class="question-number">
-                                01
-                            </div>
+                            <?php foreach ($recentQuestions as $index => $q): ?>
 
-                            <div class="question-content">
+                                <div
+                                    class="question-item"
+                                    onclick="window.location.href='questions.php'"
+                                >
 
-                                <div class="question-text">
-                                    Umiinom ba ng tubig yung isda?
-                                </div>
+                                    <div class="question-number">
+                                        <?= str_pad((string)($index + 1), 2, "0", STR_PAD_LEFT) ?>
+                                    </div>
 
-                                <div class="question-meta">
+                                    <div class="question-content">
 
-                                    <span>
-                                        Kapatid Ni Rene
-                                    </span>
+                                        <div class="question-text">
+                                            <?= e(mb_strimwidth((string)$q["question"], 0, 90, "…", "UTF-8")) ?>
+                                        </div>
 
-                                    <span>
-                                        •
-                                    </span>
+                                        <div class="question-meta">
+                                            <span><?= e(personName($q["first_name"], $q["last_name"])) ?></span>
+                                            <span>•</span>
+                                            <span><?= e(timeAgo($q["seconds_ago"])) ?></span>
+                                        </div>
 
-                                    <span>
-                                        2 min ago
-                                    </span>
+                                    </div>
 
-                                </div>
-
-                            </div>
-
-                            <div class="question-arrow">
-                                →
-                            </div>
-
-                        </div>
-
-                        <!-- QUESTION 2 -->
-                        <div class="question-item">
-
-                            <div class="question-number">
-                                02
-                            </div>
-
-                            <div class="question-content">
-
-                                <div class="question-text">
-                                    paano po maglagay ng file sa gdrive?
-                                </div>
-
-                                <div class="question-meta">
-
-                                    <span>
-                                        maui moana
-                                    </span>
-
-                                    <span>
-                                        •
-                                    </span>
-
-                                    <span>
-                                        8 min ago
-                                    </span>
+                                    <div class="question-arrow">
+                                        →
+                                    </div>
 
                                 </div>
 
+                            <?php endforeach; ?>
+
+                        <?php else: ?>
+
+                            <div class="empty-note">
+                                No questions from other students yet.
                             </div>
 
-                            <div class="question-arrow">
-                                →
-                            </div>
-
-                        </div>
-
-                        <!-- QUESTION 3 -->
-                        <div class="question-item">
-
-                            <div class="question-number">
-                                03
-                            </div>
-
-                            <div class="question-content">
-
-                                <div class="question-text">
-                                    Bat ba ginawa yung
-                                </div>
-
-                                <div class="question-meta">
-
-                                    <span>
-                                        andrea brilyante
-                                    </span>
-
-                                    <span>
-                                        •
-                                    </span>
-
-                                    <span>
-                                        15 min ago
-                                    </span>
-
-                                </div>
-
-                            </div>
-
-                            <div class="question-arrow">
-                                →
-                            </div>
-
-                        </div>
+                        <?php endif; ?>
 
                     </div>
 
@@ -661,82 +621,60 @@ if (!isset($_SESSION["student_id"]) || $_SESSION["role"] != "student") {
                         </div>
 
                         <a
-                            href="#"
+                            href="collaboration_stu.php"
                             class="view-all"
-                            onclick="showToast('Collaboration page coming soon.'); return false;"
                         >
-
                             View All
-
-                            <span>
-                                →
-                            </span>
-
+                            <span>→</span>
                         </a>
 
                     </div>
 
                     <div class="collaboration-list">
 
-                        <!-- COLLABORATOR 1 -->
-                        <div class="collaboration-item">
+                        <?php if (!empty($peers)): ?>
 
-                            <div class="collaborator-avatar">
-                                J
-                            </div>
+                            <?php foreach ($peers as $peer): ?>
+                                <?php $peerName = personName($peer["first_name"], $peer["last_name"]); ?>
 
-                            <div class="collaborator-info">
+                                <div class="collaboration-item">
 
-                                <div class="collaborator-name">
-                                    jayzen titum
+                                    <div class="collaborator-avatar">
+                                        <?= e(firstLetter($peerName)) ?>
+                                    </div>
+
+                                    <div class="collaborator-info">
+
+                                        <div class="collaborator-name">
+                                            <?= e($peerName) ?>
+                                        </div>
+
+                                        <div class="collaborator-status active">
+                                            ● Active
+                                        </div>
+
+                                    </div>
+
+                                    <button
+                                        type="button"
+                                        class="open-button"
+                                        onclick="window.location.href='collaboration_stu.php'"
+                                        aria-label="Open collaboration with <?= e($peerName) ?>"
+                                    >
+                                        →
+                                    </button>
+
                                 </div>
 
-                                <div class="collaborator-status active">
-                                    ● Active
-                                </div>
+                            <?php endforeach; ?>
 
+                        <?php else: ?>
+
+                            <div class="empty-note">
+                                No accepted collaborations yet.
                             </div>
 
-                            <button
-                                type="button"
-                                class="open-button"
-                                onclick="showToast('Opening collaboration...')"
-                                aria-label="Open collaboration with Jayzen Titum"
-                            >
-                                →
-                            </button>
-
-                        </div>
-
-                        <!-- COLLABORATOR 2 -->
-                        <div class="collaboration-item">
-
-                            <div class="collaborator-avatar">
-                                D
-                            </div>
-
-                            <div class="collaborator-info">
-
-                                <div class="collaborator-name">
-                                    dds james
-                                </div>
-
-                                <div class="collaborator-status pending">
-                                    ● Pending
-                                </div>
-
-                            </div>
-
-                            <button
-                                type="button"
-                                class="open-button"
-                                onclick="showToast('Collaboration request pending.')"
-                                aria-label="View collaboration request from DDS James"
-                            >
-                                →
-                            </button>
-
-                        </div>
+                        <?php endif; ?>
 
                     </div>
 

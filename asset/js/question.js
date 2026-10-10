@@ -75,3 +75,120 @@ if (attachmentPlus && attachmentMenu && attachmentInput) {
     });
 
 }
+
+
+/* Answer form: open and close under each question */
+
+document.querySelectorAll(".question-card").forEach(function (card) {
+    const form = card.querySelector(".answer-form");
+
+    if (!form) {
+        return;
+    }
+
+    const toggles = card.querySelectorAll(".answer-toggle");
+    const button = card.querySelector(".answer-toggle-btn");
+    const textarea = form.querySelector("textarea");
+    const cancel = form.querySelector(".answer-cancel");
+    const submit = form.querySelector(".answer-submit");
+
+    function setOpen(open) {
+        form.hidden = !open;
+        card.classList.toggle("answering", open);
+
+        if (button) {
+            button.setAttribute("aria-expanded", String(open));
+        }
+
+        if (open && textarea) {
+            textarea.focus();
+        }
+    }
+
+    toggles.forEach(function (toggle) {
+        toggle.addEventListener("click", function () {
+            setOpen(form.hidden);
+        });
+
+        toggle.addEventListener("keydown", function (event) {
+            if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                setOpen(form.hidden);
+            }
+        });
+    });
+
+    if (cancel) {
+        cancel.addEventListener("click", function () {
+            if (textarea) {
+                textarea.value = "";
+            }
+
+            setOpen(false);
+        });
+    }
+
+    // Prevent double posting
+    form.addEventListener("submit", function () {
+        if (submit) {
+            submit.disabled = true;
+            submit.textContent = "Posting...";
+        }
+    });
+});
+
+
+/* Pop-up message (for example "Your question has been posted.") */
+
+function showFlash(type, message) {
+    let box = document.getElementById("cmFlash");
+
+    if (!box) {
+        box = document.createElement("div");
+        box.id = "cmFlash";
+        box.setAttribute("role", "status");
+        box.setAttribute("aria-live", "polite");
+        document.body.appendChild(box);
+    }
+
+    const toast = document.createElement("div");
+    toast.className = "cm-flash" + (type === "error" ? " error" : "");
+
+    const text = document.createElement("span");
+    text.textContent = message;
+
+    const close = document.createElement("button");
+    close.type = "button";
+    close.className = "cm-flash-close";
+    close.setAttribute("aria-label", "Close");
+    close.textContent = "×";
+
+    function remove() {
+        toast.classList.add("hide");
+        setTimeout(function () {
+            toast.remove();
+        }, 250);
+    }
+
+    close.addEventListener("click", remove);
+
+    toast.append(text, close);
+    box.appendChild(toast);
+
+    setTimeout(remove, 5000);
+}
+
+const flashData = document.getElementById("flashData");
+
+if (flashData) {
+    showFlash(flashData.dataset.type, flashData.dataset.message);
+
+    // Remove ?notice=... so the message does not show again on refresh
+    if (window.history && window.history.replaceState) {
+        window.history.replaceState(
+            null,
+            "",
+            window.location.pathname + window.location.hash
+        );
+    }
+}

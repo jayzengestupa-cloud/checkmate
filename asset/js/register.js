@@ -1,10 +1,12 @@
+
+"use strict";
+
 // ========================================
 // GET ELEMENTS
 // ========================================
 
 var form = document.getElementById("signupForm");
 var errorMsg = document.getElementById("errorMsg");
-
 
 // ========================================
 // SHOW / HIDE PASSWORD
@@ -17,7 +19,6 @@ for (var i = 0; i < eyeButtons.length; i++) {
     eyeButtons[i].addEventListener("click", function () {
 
         var inputId = this.getAttribute("data-target");
-
         var input = document.getElementById(inputId);
 
         if (input.type === "password") {
@@ -44,23 +45,24 @@ for (var i = 0; i < eyeButtons.length; i++) {
 
 }
 
-
 // ========================================
 // FORM SUBMIT
 // ========================================
 
 form.addEventListener("submit", function (event) {
 
-    // Stop normal submission temporarily
+    // Stop submission until validation passes
     event.preventDefault();
-
 
     // ========================================
     // GET VALUES
     // ========================================
 
-    var fullName =
-        document.getElementById("fullname").value.trim();
+    var firstName =
+        document.getElementById("firstName").value.trim();
+
+    var lastName =
+        document.getElementById("lastName").value.trim();
 
     var studentId =
         document.getElementById("studentId").value.trim();
@@ -83,20 +85,19 @@ form.addEventListener("submit", function (event) {
     var agree =
         document.getElementById("agree").checked;
 
-
     // ========================================
     // CLEAR OLD ERROR
     // ========================================
 
     errorMsg.textContent = "";
 
-
     // ========================================
     // CHECK EMPTY FIELDS
     // ========================================
 
     if (
-        fullName === "" ||
+        firstName === "" ||
+        lastName === "" ||
         studentId === "" ||
         email === "" ||
         course === "" ||
@@ -111,14 +112,12 @@ form.addEventListener("submit", function (event) {
         return;
     }
 
-
     // ========================================
     // CHECK STUDENT ID
     // Example: 2025-62390
     // ========================================
 
-    var idPattern =
-        /^\d{4}-\d{5}$/;
+    var idPattern = /^\d{4}-\d{5}$/;
 
     if (!idPattern.test(studentId)) {
 
@@ -127,7 +126,6 @@ form.addEventListener("submit", function (event) {
 
         return;
     }
-
 
     // ========================================
     // CHECK NCST EMAIL
@@ -144,7 +142,6 @@ form.addEventListener("submit", function (event) {
         return;
     }
 
-
     // ========================================
     // CHECK PASSWORD LENGTH
     // ========================================
@@ -156,7 +153,6 @@ form.addEventListener("submit", function (event) {
 
         return;
     }
-
 
     // ========================================
     // CHECK PASSWORD MATCH
@@ -170,7 +166,6 @@ form.addEventListener("submit", function (event) {
         return;
     }
 
-
     // ========================================
     // CHECK TERMS
     // ========================================
@@ -183,11 +178,10 @@ form.addEventListener("submit", function (event) {
         return;
     }
 
-
     // ========================================
-    // SEND FORM TO register.php
+    // SUBMIT TO register.php
     // ========================================
 
-    form.submit();
+    HTMLFormElement.prototype.submit.call(form);
 
 });

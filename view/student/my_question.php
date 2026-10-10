@@ -10,7 +10,7 @@ if (empty($_SESSION["student_id"])) {
 $student_id = $_SESSION["student_id"];
 
 $stmt = $conn->prepare(
-    "SELECT id, full_name, student_id, course
+    "SELECT id, first_name, last_name, student_id, course
      FROM users WHERE student_id = ? LIMIT 1"
 );
 if (!$stmt) {
@@ -69,7 +69,7 @@ if (count($questions) > 0) {
 
         $stmt = $conn->prepare(
             "SELECT a.answer_id, a.question_id, a.answer, a.create_at,
-                    u.full_name, u.course
+             TRIM(CONCAT_WS(' ', u.first_name, u.last_name)) AS full_name, u.course
              FROM answers a
              INNER JOIN users u ON a.user_id = u.id
              WHERE a.question_id IN ($placeholders)
@@ -91,6 +91,25 @@ if (count($questions) > 0) {
     } catch (Throwable $ex) {
         $answersUnavailable = true;
     }
+}
+
+/* Opening this page counts as seeing the new answers,
+   so the notification badge and pop-up are cleared. */
+try {
+    $stmt = $conn->prepare(
+        "UPDATE answers a
+         INNER JOIN questions q ON q.question_id = a.question_id
+         SET a.is_seen = 1
+         WHERE q.user_id = ? AND a.is_seen = 0"
+    );
+
+    if ($stmt) {
+        $stmt->bind_param("i", $user_id);
+        $stmt->execute();
+        $stmt->close();
+    }
+} catch (Throwable $ex) {
+    /* the page still works without this */
 }
 
 /* Summary numbers */
@@ -116,6 +135,8 @@ $waitingQuestions = $totalQuestions - $answeredQuestions;
     <title>CHECKMATE - My Questions</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
           rel="stylesheet">
+    <script src="../../asset/js/notify.js" defer></script>
+    <script src="../../asset/js/user_menu.js" defer></script>
     <link rel="stylesheet" href="../../asset/css/question.css">
     <link rel="stylesheet" href="../../asset/css/my_question.css">
 </head>
@@ -154,17 +175,24 @@ $waitingQuestions = $totalQuestions - $answeredQuestions;
             <span class="menu-icon">♟</span><span>Collaboration</span>
         </a>
 
-        <a href="#" class="menu-item">
+        <a href="messages.php" class="menu-item">
             <span class="menu-icon">✉</span><span>Messages</span>
         </a>
     </div>
 
     <div class="sidebar-user">
+        
         <div class="user-avatar">
-            <?= e(strtoupper(substr($user["full_name"], 0, 1))) ?>
+            <?= e(strtoupper(
+                substr(trim($user["first_name"] ?? ""), 0, 1) .
+                substr(trim($user["last_name"] ?? ""), 0, 1)
+            )) ?>
         </div>
+
         <div class="user-information">
-            <strong><?= e($user["full_name"]) ?></strong>
+            <strong>
+                <?= e(trim(($user["first_name"] ?? "") . " " . ($user["last_name"] ?? "")) ?: "Student") ?>
+            </strong>
             <span><?= e($user["course"]) ?> · <?= e($user["student_id"]) ?></span>
         </div>
         <button class="user-more" type="button" aria-label="More options">⋮</button>
@@ -177,9 +205,6 @@ $waitingQuestions = $totalQuestions - $answeredQuestions;
             <span class="topbar-label">STUDENT WORKSPACE</span>
             <span class="topbar-divider">/</span>
             <span class="topbar-current">My Questions</span>
-        </div>
-        <div class="topbar-right">
-            <a href="../../authentication/Login/logout.php">LogOut</a>
         </div>
     </header>
 

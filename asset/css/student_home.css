@@ -1,3 +1,4 @@
+
 /* =========================================================
    CHECKMATE — STUDENT HOME
    ========================================================= */
@@ -29,18 +30,13 @@ body {
     position: fixed;
     top: 0;
     left: 0;
-
     width: 253px;
     height: 100vh;
-
     background: #101419;
     border-right: 1px solid #272d33;
-
     display: flex;
     flex-direction: column;
-
     padding: 29px 17px 15px;
-
     z-index: 1000;
 }
 
@@ -52,7 +48,6 @@ body {
 .logo-area {
     display: flex;
     align-items: center;
-
     padding: 0 8px;
     margin-bottom: 31px;
 }
@@ -60,41 +55,37 @@ body {
 .logo-piece {
     width: 40px;
     height: 40px;
-
+    flex-shrink: 0;
     border: 1px solid #394149;
     border-radius: 6px;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     color: #c49b4d;
     font-size: 20px;
-
     margin-right: 11px;
+}
+
+.logo-text {
+    min-width: 0;
 }
 
 .logo-text h1 {
     margin: 0;
-
     color: #e7e0d5;
-
     font-family: Georgia, "Times New Roman", serif;
     font-size: 18px;
     font-weight: 400;
-
     letter-spacing: 2px;
 }
 
 .logo-text span {
     display: block;
-
     margin-top: 7px;
-
     color: #6f8193;
-
     font-size: 8px;
     letter-spacing: 1.5px;
+    white-space: nowrap;
 }
 
 
@@ -104,35 +95,24 @@ body {
 
 .new-question-button {
     width: 100%;
-    height: 55px;
-
+    min-height: 55px;
     display: flex;
     align-items: center;
-
     padding: 0 14px;
-
     border: 1px solid #71582d;
     border-radius: 6px;
-
     background: #181a18;
-
     color: #d4a657 !important;
-
     text-decoration: none !important;
-
     font-size: 13px;
     font-weight: 600;
-
     margin-bottom: 31px;
-
-    transition: background 0.2s ease,
-                border-color 0.2s ease;
+    transition: background 0.2s ease, border-color 0.2s ease;
 }
 
 .new-question-button:hover {
     background: #201f1b;
     border-color: #9b7739;
-
     color: #e0b563 !important;
 }
 
@@ -145,10 +125,9 @@ body {
 }
 
 .button-icon {
+    flex-shrink: 0;
     margin-right: 10px;
-
     color: #d4a657;
-
     font-size: 18px;
     font-weight: 700;
 }
@@ -165,12 +144,9 @@ body {
 .section-title {
     padding-left: 11px;
     margin-bottom: 10px;
-
     color: #6d7d8e;
-
     font-size: 9px;
     font-weight: 700;
-
     letter-spacing: 1.7px;
 }
 
@@ -181,27 +157,17 @@ body {
 
 .menu-item {
     position: relative;
-
     width: 100%;
     height: 43px;
-
     display: flex;
     align-items: center;
-
     padding: 0 10px 0 17px;
-
     border-radius: 5px;
-
     color: #8191a2 !important;
-
     text-decoration: none !important;
-
     font-size: 13px;
-
     margin-bottom: 2px;
-
-    transition: background 0.2s ease,
-                color 0.2s ease;
+    transition: background 0.2s ease, color 0.2s ease;
 }
 
 .menu-item:hover {
@@ -216,26 +182,20 @@ body {
 
 .menu-item.active::before {
     content: "";
-
     position: absolute;
     left: 0;
     top: 0;
-
     width: 2px;
     height: 100%;
-
     background: #c69a4b;
-
     border-radius: 2px 0 0 2px;
 }
 
 .menu-icon {
     width: 24px;
-
+    flex-shrink: 0;
     margin-right: 9px;
-
     color: #7d8d9e;
-
     font-size: 15px;
     text-align: center;
 }
@@ -246,49 +206,45 @@ body {
 
 .notification {
     margin-left: auto;
-
     min-width: 20px;
     height: 20px;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     border-radius: 50%;
-
     background: #293039;
     color: #b9c0c8;
-
     font-size: 9px;
 }
 
 
 /* =========================================================
-   SIDEBAR USER
+   SIDEBAR USER — FIXED OVERFLOW
+   Keep student name and ID inside the sidebar.
+   The three-dot menu stays visible.
    ========================================================= */
 
 .sidebar-user {
     margin-top: auto;
-
     min-height: 62px;
-
     padding: 13px 8px 0;
-
     border-top: 1px solid #272d33;
 
     display: flex;
     align-items: center;
+    gap: 0;
+
+    min-width: 0;
+    width: 100%;
 }
 
 .user-avatar {
     width: 37px;
     height: 37px;
-
-    flex-shrink: 0;
+    flex: 0 0 37px;
 
     border: 1px solid #38414a;
     border-radius: 50%;
-
     background: #191e23;
 
     display: flex;
@@ -296,51 +252,76 @@ body {
     justify-content: center;
 
     color: #c79b4c;
-
     font-family: Georgia, "Times New Roman", serif;
     font-size: 14px;
 }
 
+/* Allow this section to shrink inside the available space */
 .user-information {
+    flex: 1 1 0;
     min-width: 0;
-
+    max-width: 100%;
     margin-left: 9px;
+    overflow: hidden;
 }
 
 .user-information strong {
     display: block;
+    width: 100%;
+    min-width: 0;
 
     color: #e2ddd5;
-
     font-size: 12px;
     font-weight: 600;
 
     white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .user-information span {
     display: block;
+    width: 100%;
+    min-width: 0;
 
     margin-top: 4px;
-
     color: #68798a;
-
     font-size: 8px;
 
     white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
+/* Prevent the menu button from being squeezed or pushed outside */
 .user-more {
-    margin-left: auto;
+    flex: 0 0 20px;
+    width: 20px;
+    min-width: 20px;
+    height: 30px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-left: 5px;
+    padding: 0;
 
     border: none;
     background: transparent;
-
     color: #bd9148;
-
     font-size: 19px;
+    line-height: 1;
 
     cursor: pointer;
+}
+
+.user-more:hover {
+    color: #d0a55c;
+}
+
+.user-more:focus {
+    outline: none;
 }
 
 
@@ -350,11 +331,8 @@ body {
 
 .main-content {
     min-height: 100vh;
-
     margin-left: 253px;
-
     background: #0b0e11;
-
     overflow-x: hidden;
 }
 
@@ -365,7 +343,6 @@ body {
 
 .topbar {
     height: 66px;
-
     border-bottom: 1px solid #242a30;
 
     display: flex;
@@ -382,24 +359,19 @@ body {
 
 .topbar-label {
     color: #718296;
-
     font-size: 8px;
     font-weight: 700;
-
     letter-spacing: 1.7px;
 }
 
 .topbar-divider {
     margin: 0 12px;
-
     color: #4b545d;
-
     font-size: 13px;
 }
 
 .topbar-current {
     color: #c49a4d;
-
     font-size: 11px;
 }
 
@@ -415,21 +387,15 @@ body {
 .topbar-right a:active,
 .topbar-right a:focus {
     color: #b08c4d !important;
-
     text-decoration: none !important;
     text-decoration-line: none !important;
-
     border: none !important;
     outline: none !important;
     box-shadow: none !important;
-
     background: transparent !important;
-
     font-size: 12px;
     font-weight: 700;
-
     letter-spacing: 1.8px;
-
     cursor: pointer;
 }
 
@@ -448,30 +414,23 @@ body {
 
 .welcome-small {
     color: #b68c43;
-
     font-size: 9px;
     font-weight: 700;
-
     letter-spacing: 1.8px;
 }
 
 .welcome-section h2 {
     margin: 11px 0 0;
-
     color: #e8e2d9;
-
     font-family: Georgia, "Times New Roman", serif;
     font-size: 30px;
     font-weight: 400;
-
     line-height: 1.2;
 }
 
 .welcome-section p {
     margin: 10px 0 0;
-
     color: #718398;
-
     font-size: 12px;
     line-height: 1.5;
 }
@@ -488,13 +447,13 @@ body {
 .ask-box-top {
     display: flex;
     align-items: center;
-
     margin-bottom: 19px;
 }
 
 .ask-icon {
     width: 35px;
     height: 35px;
+    flex-shrink: 0;
 
     border: 1px solid #333c44;
     border-radius: 5px;
@@ -504,17 +463,13 @@ body {
     justify-content: center;
 
     color: #c3994e;
-
     margin-right: 11px;
-
     font-size: 14px;
 }
 
 .ask-box-top h3 {
     margin: 0;
-
     color: #e3ddd4;
-
     font-family: Georgia, "Times New Roman", serif;
     font-size: 15px;
     font-weight: 400;
@@ -522,30 +477,24 @@ body {
 
 .ask-box-top p {
     margin: 6px 0 0;
-
     color: #66798d;
-
     font-size: 9px;
 }
 
 .question-input {
     width: 100%;
     min-height: 108px;
-
     padding: 14px 16px;
 
     border: 1px solid #293139;
     border-radius: 5px;
-
     background: #10151a;
 
     color: #dcd6cc;
-
     font-family: Arial, Helvetica, sans-serif;
     font-size: 12px;
 
     resize: vertical;
-
     outline: none;
 }
 
@@ -555,7 +504,6 @@ body {
 
 .question-input:focus {
     border-color: #46515b;
-
     box-shadow: none;
 }
 
@@ -568,7 +516,6 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-
     margin-top: 17px;
 }
 
@@ -579,22 +526,17 @@ body {
 
 .ask-option {
     height: 34px;
-
     padding: 0 12px;
 
     border: 1px solid #293139;
     border-radius: 5px;
-
     background: #11161b;
 
     color: #74869a;
-
     font-size: 9px;
-
     cursor: pointer;
 
-    transition: border-color 0.2s ease,
-                color 0.2s ease;
+    transition: border-color 0.2s ease, color 0.2s ease;
 }
 
 .ask-option:hover {
@@ -604,29 +546,23 @@ body {
 
 .ask-option span {
     margin-right: 5px;
-
     color: #b28a47;
 }
 
 .ask-button {
     height: 38px;
-
     padding: 0 14px;
 
     border: 1px solid #72582c;
     border-radius: 5px;
-
     background: #181816;
 
     color: #c89b4c;
-
     font-size: 9px;
     font-weight: 600;
-
     cursor: pointer;
 
-    transition: background 0.2s ease,
-                border-color 0.2s ease;
+    transition: background 0.2s ease, border-color 0.2s ease;
 }
 
 .ask-button:hover {
@@ -658,10 +594,8 @@ body {
 
 .heading-label {
     color: #b68c43;
-
     font-size: 9px;
     font-weight: 700;
-
     letter-spacing: 1.8px;
 }
 
@@ -671,7 +605,6 @@ body {
     padding: 0 !important;
 
     color: #e8e2d9 !important;
-
     font-family: Georgia, "Times New Roman", serif !important;
     font-size: 30px !important;
     font-weight: 400 !important;
@@ -684,20 +617,16 @@ body {
 
 /* =========================================================
    QUICK GRID
-   Two remaining cards: Browse Questions and Collaborate
    ========================================================= */
 
 .quick-grid {
     display: grid;
-
     grid-template-columns: repeat(2, minmax(0, 1fr));
-
     gap: 10px;
 }
 
 .quick-card {
     min-height: 95px;
-
     position: relative;
 
     display: flex;
@@ -707,13 +636,11 @@ body {
 
     border: 1px solid #293139;
     border-radius: 5px;
-
     background: #10151a;
 
     cursor: pointer;
 
-    transition: border-color 0.2s ease,
-                background 0.2s ease;
+    transition: border-color 0.2s ease, background 0.2s ease;
 }
 
 .quick-card:hover {
@@ -729,7 +656,6 @@ body {
 .quick-card-icon {
     width: 34px;
     height: 34px;
-
     flex-shrink: 0;
 
     border: 1px solid #333c44;
@@ -740,22 +666,18 @@ body {
     justify-content: center;
 
     color: #bd9149;
-
     font-size: 13px;
 }
 
 .quick-card-content {
     min-width: 0;
-
     padding-left: 11px;
     padding-right: 18px;
 }
 
 .quick-card-content h4 {
     margin: 0;
-
     color: #ded8cf;
-
     font-family: Georgia, "Times New Roman", serif;
     font-size: 14px;
     font-weight: 400;
@@ -763,21 +685,16 @@ body {
 
 .quick-card-content p {
     margin: 7px 0 0;
-
     color: #687b8f;
-
     font-size: 9px;
     line-height: 1.45;
 }
 
 .card-arrow {
     position: absolute;
-
     right: 12px;
     bottom: 12px;
-
     color: #66798a;
-
     font-size: 14px;
 }
 
@@ -788,9 +705,7 @@ body {
 
 .dashboard-columns {
     display: grid;
-
-    grid-template-columns: 1fr 1fr;
-
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     gap: 10px;
 }
 
@@ -801,43 +716,32 @@ body {
 
 .dashboard-panel {
     min-width: 0;
-
     border: 1px solid #293139;
     border-radius: 5px;
-
     background: #10151a;
-
     overflow: hidden;
 }
 
 .panel-header {
     min-height: 80px;
-
     display: flex;
     align-items: center;
     justify-content: space-between;
-
     padding: 15px 17px;
-
     border-bottom: 1px solid #293139;
 }
 
 .panel-label {
     margin-bottom: 6px;
-
     color: #6e8295;
-
     font-size: 8px;
     font-weight: 700;
-
     letter-spacing: 1.7px;
 }
 
 .panel-header h3 {
     margin: 0;
-
     color: #ddd7ce;
-
     font-family: Georgia, "Times New Roman", serif;
     font-size: 17px;
     font-weight: 400;
@@ -845,11 +749,8 @@ body {
 
 .view-all {
     color: #b88c46 !important;
-
     font-size: 8px;
-
     text-decoration: underline !important;
-
     text-underline-offset: 3px;
 }
 
@@ -859,7 +760,6 @@ body {
 
 .view-all span {
     margin-left: 4px;
-
     text-decoration: none;
 }
 
@@ -874,12 +774,9 @@ body {
 
 .question-item {
     min-height: 74px;
-
     display: flex;
     align-items: center;
-
     padding: 12px 17px;
-
     border-bottom: 1px solid #252c32;
 }
 
@@ -889,11 +786,8 @@ body {
 
 .question-number {
     width: 34px;
-
     flex-shrink: 0;
-
     color: #b78d48;
-
     font-family: Georgia, "Times New Roman", serif;
     font-size: 13px;
 }
@@ -905,10 +799,8 @@ body {
 
 .question-text {
     color: #d9d3ca;
-
     font-family: Georgia, "Times New Roman", serif;
     font-size: 13px;
-
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -917,19 +809,15 @@ body {
 .question-meta {
     display: flex;
     gap: 5px;
-
     margin-top: 5px;
-
     color: #64778b;
-
     font-size: 8px;
 }
 
 .question-arrow {
+    flex-shrink: 0;
     margin-left: 10px;
-
     color: #66798a;
-
     font-size: 13px;
 }
 
@@ -944,24 +832,19 @@ body {
 
 .collaboration-item {
     min-height: 67px;
-
     display: flex;
     align-items: center;
-
     padding: 11px 17px;
-
     border-bottom: 1px solid #252c32;
 }
 
 .collaborator-avatar {
     width: 34px;
     height: 34px;
-
     flex-shrink: 0;
 
     border: 1px solid #35404a;
     border-radius: 50%;
-
     background: #1a2025;
 
     display: flex;
@@ -969,7 +852,6 @@ body {
     justify-content: center;
 
     color: #c59a4c;
-
     font-family: Georgia, "Times New Roman", serif;
     font-size: 12px;
 }
@@ -981,14 +863,12 @@ body {
 
 .collaborator-name {
     color: #d8d2c9;
-
     font-family: Georgia, "Times New Roman", serif;
     font-size: 12px;
 }
 
 .collaborator-status {
     margin-top: 4px;
-
     font-size: 8px;
 }
 
@@ -1003,17 +883,14 @@ body {
 .open-button {
     width: 31px;
     height: 31px;
-
     margin-left: auto;
     flex-shrink: 0;
 
     border: 1px solid #35404a;
     border-radius: 5px;
-
     background: transparent;
 
     color: #7b8b9b;
-
     cursor: pointer;
 }
 
@@ -1024,9 +901,7 @@ body {
 
 .panel-footer-note {
     padding: 12px 17px;
-
     color: #5e7082;
-
     font-size: 8px;
 }
 
@@ -1037,23 +912,17 @@ body {
 
 .chess-footer {
     min-height: 90px;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     gap: 14px;
-
     margin-top: 25px;
-
     border-top: 1px solid #20262c;
-
     color: #617386;
 }
 
 .footer-piece {
     color: #9b773f;
-
     font-size: 18px;
 }
 
@@ -1061,13 +930,11 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-
     gap: 5px;
 }
 
 .footer-text strong {
     color: #b0a99f;
-
     font-family: Georgia, "Times New Roman", serif;
     font-size: 12px;
     font-weight: 400;
@@ -1075,7 +942,6 @@ body {
 
 .footer-text span {
     color: #566879;
-
     font-size: 8px;
 }
 
@@ -1086,37 +952,29 @@ body {
 
 .toast {
     position: fixed;
-
     right: 25px;
     bottom: 25px;
-
     min-width: 220px;
-
     padding: 13px 17px;
 
     border: 1px solid #39444d;
     border-radius: 5px;
-
     background: #171d22;
 
     color: #d8d1c8;
-
     font-size: 11px;
 
     opacity: 0;
     visibility: hidden;
-
     transform: translateY(10px);
 
     transition: all 0.25s ease;
-
     z-index: 9999;
 }
 
 .toast.show {
     opacity: 1;
     visibility: visible;
-
     transform: translateY(0);
 }
 
@@ -1136,13 +994,24 @@ body {
     font-weight: 400 !important;
 }
 
+.dashboard-section .quick-heading h2 {
+    color: #e8e2d9 !important;
+    font-family: Georgia, "Times New Roman", serif !important;
+    font-size: 30px !important;
+    font-weight: 400 !important;
+    line-height: 1.2 !important;
+    margin: 11px 0 0 !important;
+    padding: 0 !important;
+    letter-spacing: normal !important;
+    text-transform: none !important;
+}
+
 
 /* =========================================================
    RESPONSIVE — TABLET
    ========================================================= */
 
 @media (max-width: 1000px) {
-
     .sidebar {
         width: 220px;
     }
@@ -1173,6 +1042,20 @@ body {
     .dashboard-columns {
         grid-template-columns: 1fr;
     }
+
+    /* Keep the profile contents within the narrower sidebar */
+    .sidebar-user {
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+
+    .user-information {
+        margin-left: 7px;
+    }
+
+    .user-more {
+        margin-left: 3px;
+    }
 }
 
 
@@ -1181,12 +1064,11 @@ body {
    ========================================================= */
 
 @media (max-width: 750px) {
-
     .sidebar {
         position: relative;
-
         width: 100%;
         height: auto;
+        min-height: 0;
 
         border-right: none;
         border-bottom: 1px solid #272d33;
@@ -1208,6 +1090,15 @@ body {
 
     .sidebar-user {
         margin-top: 15px;
+        padding: 13px 8px 0;
+    }
+
+    .user-information {
+        margin-left: 9px;
+    }
+
+    .user-more {
+        margin-left: 5px;
     }
 
     .main-content {
@@ -1216,7 +1107,6 @@ body {
 
     .topbar {
         height: 58px;
-
         padding: 0 18px;
     }
 
@@ -1241,7 +1131,6 @@ body {
    ========================================================= */
 
 @media (max-width: 600px) {
-
     .welcome-section h2,
     .quick-heading h2,
     .dashboard-section .quick-heading h2 {
@@ -1285,7 +1174,6 @@ body {
    ========================================================= */
 
 @media (max-width: 450px) {
-
     .welcome-section h2,
     .quick-heading h2,
     .dashboard-section .quick-heading h2 {
@@ -1318,26 +1206,4 @@ body {
     .topbar-divider {
         margin-left: 0;
     }
-}
-
-
-/* =========================================================
-   FINAL HEADING OVERRIDE
-   ========================================================= */
-
-.dashboard-section .quick-heading h2 {
-    color: #e8e2d9 !important;
-
-    font-family: Georgia, "Times New Roman", serif !important;
-
-    font-size: 30px !important;
-    font-weight: 400 !important;
-
-    line-height: 1.2 !important;
-
-    margin: 11px 0 0 !important;
-    padding: 0 !important;
-
-    letter-spacing: normal !important;
-    text-transform: none !important;
 }

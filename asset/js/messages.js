@@ -1,540 +1,602 @@
-/* =========================================
-   CHECKMATE MESSAGES JAVASCRIPT
-========================================= */
+(() => {
+    "use strict";
 
+    const cfg = window.CHECKMATE_MESSAGES;
+    if (!cfg) return;
 
-/* =========================================
-   GET ELEMENTS
-========================================= */
+    const $ = id => document.getElementById(id);
 
-const menuItems =
-    document.querySelectorAll(".menu-item");
+    const LOCKED_TEXT =
+        "Messaging is available after a collaboration request is accepted.";
 
-const newQuestionButton =
-    document.getElementById("newQuestionButton");
+    const state = {
+        mode: "chats",
+        users: [],
+        conversations: [],
+        activeConversationId: null,
+        activeOtherId: null,
+        activeOther: null,
+        lastKey: "",
+        busy: false
+    };
 
-const userMore =
-    document.getElementById("userMore");
+    const list = $("peopleList");
+    const search = $("conversationSearch");
+    const alertBox = $("messageAlert");
+    const chatEmpty = $("chatEmpty");
+    const activeChat = $("activeChat");
+    const chatMessages = $("chatMessages");
+    const messageForm = $("messageForm");
+    const messageInput = $("messageInput");
+    const sendButton = $("sendButton");
+    const composerNote = document.querySelector(".composer-note");
+    const composerNoteDefault = composerNote
+        ? composerNote.textContent.trim()
+        : "";
 
-const helpButton =
-    document.getElementById("helpButton");
+    function escapeHtml(value) {
+        return String(value ?? "").replace(/[&<>"']/g, char => ({
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#039;"
+        })[char]);
+    }
 
-const toast =
-    document.getElementById("toast");
+    function showAlert(message = "", success = false) {
+        alertBox.textContent = message;
+        alertBox.hidden = !message;
+        alertBox.classList.toggle("success", Boolean(message && success));
+    }
 
-const messageSearch =
-    document.getElementById("messageSearch");
+    async function api(action, options = {}) {
+        const method = options.method || "GET";
+        const url = new URL(cfg.apiUrl, window.location.href);
 
-const conversationItems =
-    document.querySelectorAll(".conversation-item");
+        url.searchParams.set("action", action);
 
-const messageInput =
-    document.getElementById("messageInput");
+        if (method === "GET" && options.params) {
+            Object.entries(options.params).forEach(([key, value]) => {
+                url.searchParams.set(key, String(value));
+            });
+        }
 
-const sendMessageButton =
-    document.getElementById("sendMessageButton");
+        const init = {
+            method,
+            credentials: "same-origin",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
 
-const attachmentButton =
-    document.getElementById("attachmentButton");
+        if (method === "POST") {
+            init.headers["Content-Type"] =
+                "application/x-www-form-urlencoded;charset=UTF-8";
 
-const chatMessages =
-    document.getElementById("chatMessages");
+            init.headers["X-CSRF-Token"] = cfg.csrfToken;
 
+            init.body = new URLSearchParams({
+                action,
+                ...(options.data || {})
+            }).toString();
+        }
 
-/* =========================================
-   TOAST FUNCTION
-========================================= */
+        const response = await fetch(url, init);
 
-function showToast(message) {
+        let data;
 
-    toast.textContent = message;
+        try {
+            data = await response.json();
+        } catch {
+            throw new Error(
+                "Invalid server response. Check your PHP error log."
+            );
+        }
 
-    toast.classList.add("show");
+        if (!response.ok || !data.ok) {
+            throw new Error(data.error || "Request failed.");
+        }
 
+        return data;
+    }
 
-    setTimeout(function() {
+    function formatTime(value) {
+        if (!value) return "";
 
-        toast.classList.remove("show");
+        const date = new Date(String(value).replace(" ", "T"));
 
-    }, 2300);
+        if (Number.isNaN(date.getTime())) return "";
 
-}
+        const today = new Date();
 
+        if (date.toDateString() === today.toDateString()) {
+            return date.toLocaleTimeString([], {
+                hour: "numeric",
+                minute: "2-digit"
+            });
+        }
 
-/* =========================================
-   SEARCH CONVERSATIONS
-========================================= */
+        return date.toLocaleDateString([], {
+            month: "short",
+            day: "numeric"
+        });
+    }
 
-if (messageSearch) {
+    function initials(name) {
+        const text = String(name || "?").trim();
+        const parts = text.split(/\s+/).filter(Boolean);
 
-    messageSearch.addEventListener(
-        "input",
-        function() {
+        if (!parts.length) return "?";
 
+        return (
+            parts[0].charAt(0) +
+            (parts.length > 1 ? parts[parts.length - 1].charAt(0) : "")
+        ).toUpperCase();
+    }
 
-            /* Get search text */
+    /* Lock the composer when the collaboration is not (or no longer) accepted */
 
-            const searchValue =
-                messageSearch.value
-                    .toLowerCase()
-                    .trim();
+    function isActiveLocked() {
+        const conversation = state.conversations.find(
+            item => Number(item.conversation_id) ===
+                    Number(state.activeConversationId)
+        );
 
+        return Boolean(conversation) && conversation.can_message === false;
+    }
 
-            /* Check every conversation */
+    function updateComposerState() {
+        if (!state.activeConversationId) return;
 
-            conversationItems.forEach(
-                function(item) {
+        const locked = isActiveLocked();
 
+        messageInput.disabled = locked;
+        sendButton.disabled = locked || state.busy;
+        messageInput.placeholder = locked
+            ? "Messaging is locked"
+            : "Write your message...";
 
-                    const conversationText =
-                        item.textContent.toLowerCase();
+        if (composerNote) {
+            composerNote.textContent = locked
+                ? LOCKED_TEXT
+                : composerNoteDefault;
+        }
 
+        messageForm.classList.toggle("locked", locked);
+    }
 
-                    if (
-                        conversationText.includes(
-                            searchValue
-                        )
-                    ) {
+    async function loadConversations() {
+        const data = await api("conversations");
+        state.conversations = data.conversations || [];
 
-                        item.style.display = "";
+        if (state.mode === "chats") renderList();
 
+        updateComposerState();
+    }
 
-                    } else {
+    async function loadUsers() {
+        const data = await api("users", {
+            params: {
+                q: search.value.trim()
+            }
+        });
 
-                        item.style.display = "none";
+        state.users = data.users || [];
 
+        if (state.mode === "people") renderList();
+    }
+
+    function renderList() {
+        const query = search.value.trim().toLowerCase();
+
+        let entries = state.mode === "chats"
+            ? state.conversations
+            : state.users;
+
+        entries = entries.filter(item => {
+            const text = state.mode === "chats"
+                ? `${item.name} ${item.student_id} ${item.last_message || ""}`
+                : `${item.name} ${item.student_id} ${item.course || ""}`;
+
+            return text.toLowerCase().includes(query);
+        });
+
+        if (!entries.length) {
+            list.innerHTML = `
+                <div class="list-placeholder">
+                    ${
+                        state.mode === "chats"
+                            ? 'No conversations yet.<br>Messaging opens once a collaboration request is accepted. Choose "Find people" to start a chat with your collaborators.'
+                            : "No collaborators found.<br>Only students whose collaboration request was accepted can be messaged."
                     }
-
-                }
-            );
-
+                </div>
+            `;
+            return;
         }
-    );
 
-}
+        list.innerHTML = entries.map(item => {
+            const isChat = state.mode === "chats";
+            const id = isChat ? item.other_id : item.id;
+            const conversationId = isChat ? item.conversation_id : "";
 
+            const selected = isChat &&
+                Number(item.conversation_id) ===
+                Number(state.activeConversationId);
 
-/* =========================================
-   SELECT CONVERSATION
-========================================= */
+            const preview = isChat
+                ? (item.last_message || "Start a conversation")
+                : (item.course || item.student_id || "Student");
 
-conversationItems.forEach(function(item) {
+            const unread = isChat && Number(item.unread_count) > 0
+                ? `<span class="unread-badge">${
+                    Number(item.unread_count) > 99
+                        ? "99+"
+                        : Number(item.unread_count)
+                  }</span>`
+                : "";
 
-    item.addEventListener(
-        "click",
-        function() {
+            return `
+                <button
+                    type="button"
+                    class="person-row ${selected ? "selected" : ""}"
+                    data-kind="${isChat ? "chat" : "user"}"
+                    data-id="${Number(id)}"
+                    data-conversation="${Number(conversationId) || ""}"
+                >
+                    <span class="person-avatar">
+                        ${escapeHtml(initials(item.name))}
+                    </span>
 
+                    <span class="person-row-copy">
+                        <span class="person-row-top">
+                            <span class="person-row-name">
+                                ${escapeHtml(item.name)}
+                            </span>
 
-            /* Remove active */
+                            <span class="person-row-time">
+                                ${escapeHtml(formatTime(item.last_sent_at))}
+                            </span>
+                        </span>
 
-            conversationItems.forEach(
-                function(conversation) {
+                        <span class="person-row-preview">
+                            ${escapeHtml(preview)}
+                        </span>
 
-                    conversation.classList.remove(
-                        "active"
-                    );
+                        <span class="person-role">
+                            ${escapeHtml(item.student_id || "Student")}
+                        </span>
+                    </span>
 
-                }
-            );
-
-
-            /* Add active */
-
-            item.classList.add("active");
-
-
-            /* Get person's name */
-
-            const person =
-                item.dataset.person ||
-                "student";
-
-
-            showToast(
-                "Conversation with " +
-                person +
-                " opened."
-            );
-
-
-            /*
-            Later:
-
-            The selected conversation
-            will be loaded from MySQL
-            using PHP.
-
-            Example:
-
-            window.location.href =
-                "messages.php?id=" +
-                item.dataset.id;
-            */
-
-        }
-    );
-
-});
-
-
-/* =========================================
-   SEND MESSAGE
-========================================= */
-
-function sendMessage() {
-
-    if (!messageInput) {
-        return;
+                    ${unread}
+                </button>
+            `;
+        }).join("");
     }
 
+    function setMode(mode) {
+        state.mode = mode;
 
-    /* Get message */
+        document.querySelectorAll("[data-list-mode]").forEach(button => {
+            const selected = button.dataset.listMode === mode;
+            button.classList.toggle("selected", selected);
+            button.setAttribute("aria-pressed", String(selected));
+        });
 
-    const message =
-        messageInput.value.trim();
+        search.value = "";
+        renderList();
 
+        const request = mode === "people"
+            ? loadUsers()
+            : loadConversations();
 
-    /* Check if empty */
-
-    if (message === "") {
-
-        showToast(
-            "Please enter a message."
-        );
-
-        messageInput.focus();
-
-        return;
-
+        request.catch(error => showAlert(error.message));
     }
 
+    function updateChatHeader(person) {
+        $("chatName").textContent = person?.name || "Student";
 
-    /* =================================
-       CREATE MESSAGE
-    ================================= */
+        $("chatMeta").textContent =
+            `${person?.student_id || "Student account"}` +
+            `${person?.course ? " · " + person.course : ""}`;
 
-    if (chatMessages) {
-
-        const messageRow =
-            document.createElement("div");
-
-        messageRow.classList.add(
-            "message-row",
-            "sent"
-        );
-
-
-        const messageBubble =
-            document.createElement("div");
-
-        messageBubble.classList.add(
-            "message-bubble"
-        );
-
-
-        messageBubble.textContent =
-            message;
-
-
-        messageRow.appendChild(
-            messageBubble
-        );
-
-
-        chatMessages.appendChild(
-            messageRow
-        );
-
-
-        /* Scroll to newest message */
-
-        chatMessages.scrollTop =
-            chatMessages.scrollHeight;
-
+        $("chatAvatar").textContent = initials(person?.name);
     }
 
+    async function openConversation(conversationId, otherId, person) {
+        state.activeConversationId = Number(conversationId);
+        state.activeOtherId = Number(otherId);
 
-    /* Clear input */
+        // lets notify.js know which chat is open, so it skips that popup
+        window.CHECKMATE_ACTIVE_CONVERSATION = state.activeConversationId;
 
-    messageInput.value = "";
+        state.activeOther =
+            person ||
+            state.conversations.find(
+                item => Number(item.other_id) === Number(otherId)
+            ) ||
+            state.users.find(
+                item => Number(item.id) === Number(otherId)
+            );
 
+        updateChatHeader(state.activeOther);
 
-    /*
-    Later:
+        chatEmpty.hidden = true;
+        activeChat.hidden = false;
+        state.lastKey = "";
 
-    The message will be sent
-    to PHP and saved in MySQL.
+        renderList();
+        updateComposerState();
 
-    Example:
+        await loadMessages(true);
 
-    fetch("send_message.php", {
-        method: "POST",
-        body: formData
-    });
-    */
+        if (!messageInput.disabled) messageInput.focus();
+    }
 
+    async function startConversation(userId) {
+        const person = state.users.find(
+            item => Number(item.id) === Number(userId)
+        );
 
-}
+        const data = await api("start", {
+            method: "POST",
+            data: {
+                user_id: String(userId)
+            }
+        });
 
+        state.mode = "chats";
 
-/* =========================================
-   SEND BUTTON
-========================================= */
+        document.querySelectorAll("[data-list-mode]").forEach(button => {
+            const selected = button.dataset.listMode === "chats";
+            button.classList.toggle("selected", selected);
+            button.setAttribute("aria-pressed", String(selected));
+        });
 
-if (sendMessageButton) {
+        search.value = "";
 
-    sendMessageButton.addEventListener(
-        "click",
-        function() {
+        await loadConversations();
 
-            sendMessage();
+        const conversation = state.conversations.find(
+            item => Number(item.conversation_id) ===
+                    Number(data.conversation_id)
+        );
 
-        }
-    );
+        await openConversation(
+            data.conversation_id,
+            userId,
+            conversation || person
+        );
+    }
 
-}
+    async function loadMessages(forceScroll = false) {
+        if (!state.activeConversationId) return;
 
+        const data = await api("messages", {
+            params: {
+                conversation_id: state.activeConversationId
+            }
+        });
 
-/* =========================================
-   ENTER KEY
-========================================= */
+        const messages = data.messages || [];
 
-if (messageInput) {
+        const key = messages.length
+            ? `${messages.length}:${messages[messages.length - 1].message_id}:${messages[messages.length - 1].is_read}`
+            : "empty";
 
-    messageInput.addEventListener(
-        "keydown",
-        function(event) {
+        if (key !== state.lastKey) {
+            const nearBottom =
+                chatMessages.scrollHeight -
+                chatMessages.scrollTop -
+                chatMessages.clientHeight < 100;
 
+            state.lastKey = key;
 
-            if (
-                event.key === "Enter" &&
-                !event.shiftKey
-            ) {
+            if (!messages.length) {
+                chatMessages.innerHTML = `
+                    <div class="list-placeholder">
+                        No messages yet. Say hello to start the conversation.
+                    </div>
+                `;
+            } else {
+                chatMessages.innerHTML = messages.map(message => {
+                    const mine =
+                        Number(message.sender_id) === Number(cfg.currentUserId);
 
-                event.preventDefault();
+                    return `
+                        <div class="message-line ${mine ? "mine" : ""}">
+                            ${
+                                mine ? "" : `
+                                    <div class="message-sender">
+                                        ${escapeHtml(message.sender_name)}
+                                    </div>
+                                `
+                            }
 
-                sendMessage();
+                            <div class="message-bubble">${escapeHtml(
+                                message.message_body
+                            )}</div>
 
+                            <div class="message-time">
+                                ${escapeHtml(formatTime(message.sent_at))}
+                                ${mine && message.is_read ? " · Read" : ""}
+                            </div>
+                        </div>
+                    `;
+                }).join("");
             }
 
+            if (forceScroll || nearBottom) {
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
         }
-    );
 
-}
+        await loadConversations();
+    }
 
+    async function sendMessage(event) {
+        event.preventDefault();
 
-/* =========================================
-   ATTACHMENT BUTTON
-========================================= */
+        if (state.busy || !state.activeConversationId) return;
 
-if (attachmentButton) {
-
-    attachmentButton.addEventListener(
-        "click",
-        function() {
-
-            showToast(
-                "Attachment option selected."
-            );
-
-
-            /*
-            Later:
-
-            This can open a file input
-            and upload an attachment
-            through PHP.
-
-            Example:
-
-            document.getElementById(
-                "fileInput"
-            ).click();
-            */
-
+        if (isActiveLocked()) {
+            showAlert(LOCKED_TEXT);
+            return;
         }
-    );
 
-}
+        const body = messageInput.value.trim();
 
+        if (!body) return;
 
-/* =========================================
-   SIDEBAR MENU
-========================================= */
+        state.busy = true;
+        sendButton.disabled = true;
 
-menuItems.forEach(function(item) {
-
-    item.addEventListener(
-        "click",
-        function(event) {
-
-            event.preventDefault();
-
-
-            /* Remove active */
-
-            menuItems.forEach(function(menu) {
-
-                menu.classList.remove("active");
-
+        try {
+            await api("send", {
+                method: "POST",
+                data: {
+                    conversation_id: String(state.activeConversationId),
+                    message_body: body
+                }
             });
 
+            messageInput.value = "";
+            messageInput.style.height = "auto";
 
-            /* Add active */
+            showAlert("");
+            await loadMessages(true);
+        } catch (error) {
+            showAlert(error.message);
 
-            item.classList.add("active");
+            // the collaboration may have changed: refresh the lock state
+            loadConversations().catch(() => {});
+        } finally {
+            state.busy = false;
+            updateComposerState();
 
+            if (!messageInput.disabled) messageInput.focus();
+        }
+    }
 
-            /* Get selected page */
+    list.addEventListener("click", async event => {
+        const row = event.target.closest(".person-row");
 
-            const page =
-                item.dataset.page;
+        if (!row) return;
 
+        try {
+            showAlert("");
 
-            /* =================================
-               TEMPORARY NAVIGATION
-            ================================= */
-
-            if (page === "home") {
-
-                showToast(
-                    "Home selected."
+            if (row.dataset.kind === "chat") {
+                const item = state.conversations.find(
+                    conversation =>
+                        Number(conversation.conversation_id) ===
+                        Number(row.dataset.conversation)
                 );
 
-
-                /*
-                Later:
-
-                window.location.href =
-                    "student_home.php";
-                */
-
-            } else if (page === "questions") {
-
-                showToast(
-                    "Questions selected."
+                await openConversation(
+                    row.dataset.conversation,
+                    row.dataset.id,
+                    item
                 );
+            } else {
+                await startConversation(row.dataset.id);
+            }
+        } catch (error) {
+            showAlert(error.message);
+        }
+    });
 
+    document.querySelectorAll("[data-list-mode]").forEach(button => {
+        button.addEventListener("click", () => {
+            setMode(button.dataset.listMode);
+        });
+    });
 
-                /*
-                Later:
+    $("showUsersButton").addEventListener("click", () => {
+        setMode("people");
+    });
 
-                window.location.href =
-                    "questions.php";
-                */
+    $("emptyNewChatButton").addEventListener("click", () => {
+        setMode("people");
+    });
 
-            } else if (page === "my-questions") {
+    let searchTimer;
 
-                showToast(
-                    "My Questions selected."
+    search.addEventListener("input", () => {
+        renderList();
+
+        if (state.mode === "people") {
+            clearTimeout(searchTimer);
+
+            searchTimer = setTimeout(() => {
+                loadUsers().catch(error => showAlert(error.message));
+            }, 250);
+        }
+    });
+
+    messageForm.addEventListener("submit", sendMessage);
+
+    messageInput.addEventListener("input", () => {
+        messageInput.style.height = "auto";
+        messageInput.style.height =
+            `${Math.min(messageInput.scrollHeight, 120)}px`;
+    });
+
+    messageInput.addEventListener("keydown", event => {
+        if (event.key === "Enter" && !event.shiftKey) {
+            event.preventDefault();
+            messageForm.requestSubmit();
+        }
+    });
+
+    async function refresh() {
+        try {
+            await loadConversations();
+
+            if (state.activeConversationId) {
+                await loadMessages(false);
+            }
+        } catch (error) {
+            if (/log in|session/i.test(error.message)) {
+                showAlert(error.message);
+            }
+        }
+    }
+
+    async function init() {
+        try {
+            await loadConversations();
+            renderList();
+
+            // open a chat when arriving from a notification (?c=conversation_id)
+            const wanted = Number(
+                new URLSearchParams(window.location.search).get("c")
+            );
+
+            const found = state.conversations.find(
+                item => Number(item.conversation_id) === wanted
+            );
+
+            if (found) {
+                await openConversation(
+                    found.conversation_id,
+                    found.other_id,
+                    found
                 );
-
-
-            } else if (page === "collaboration") {
-
-                showToast(
-                    "Collaboration selected."
-                );
-
-
-                /*
-                Later:
-
-                window.location.href =
-                    "collaboration.php";
-                */
-
-            } else if (page === "messages") {
-
-                showToast(
-                    "Messages selected."
-                );
-
-
-            } else if (page === "profile") {
-
-                showToast(
-                    "Profile selected."
-                );
-
-
-            } else if (page === "settings") {
-
-                showToast(
-                    "Settings selected."
-                );
-
             }
 
+            window.setInterval(refresh, 3500);
+        } catch (error) {
+            showAlert(error.message);
+
+            list.innerHTML = `
+                <div class="list-placeholder">
+                    Unable to load messages.<br>
+                    ${escapeHtml(error.message)}
+                </div>
+            `;
         }
-    );
+    }
 
-});
-
-
-/* =========================================
-   NEW QUESTION BUTTON
-========================================= */
-
-if (newQuestionButton) {
-
-    newQuestionButton.addEventListener(
-        "click",
-        function() {
-
-            showToast(
-                "Opening new question..."
-            );
-
-
-            /*
-            Later:
-
-            window.location.href =
-                "student_home.php";
-            */
-
-        }
-    );
-
-}
-
-
-/* =========================================
-   USER MORE BUTTON
-========================================= */
-
-if (userMore) {
-
-    userMore.addEventListener(
-        "click",
-        function() {
-
-            showToast(
-                "Account options selected."
-            );
-
-        }
-    );
-
-}
-
-
-/* =========================================
-   HELP BUTTON
-========================================= */
-
-if (helpButton) {
-
-    helpButton.addEventListener(
-        "click",
-        function() {
-
-            showToast(
-                "Help section will be available soon."
-            );
-
-        }
-    );
-
-}
+    init();
+})();
