@@ -1,0 +1,194 @@
+/* CHECKMATE - answer form and pop-up message on the Questions page */
+
+/* Let the answer form sit under the question row */
+.question-card {
+    flex-wrap: wrap;
+}
+
+.answer-toggle {
+    cursor: pointer;
+}
+
+.answer-toggle-btn {
+    margin-top: 12px;
+    padding: 6px 12px;
+    border: 1px solid #71582d;
+    border-radius: 4px;
+    background: transparent;
+    color: #d4a657;
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.answer-toggle-btn:hover {
+    background: #292217;
+}
+
+.question-card.answering .question-arrow {
+    transform: rotate(90deg);
+}
+
+.answer-form {
+    display: flex;
+    flex: 0 0 100%;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid #2a2a26;
+}
+
+.answer-form[hidden] {
+    display: none;
+}
+
+.answer-form textarea {
+    width: 100%;
+    min-height: 90px;
+    padding: 10px 12px;
+    border: 1px solid #2f2f2a;
+    border-radius: 5px;
+    background: #0f1115;
+    color: #e7e0d5;
+    font-family: inherit;
+    font-size: 13px;
+    resize: vertical;
+}
+
+.answer-form textarea:focus {
+    outline: none;
+    border-color: #d4a657;
+}
+
+.answer-form-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.answer-form-bottom > span {
+    color: #8f9bb0;
+    font-size: 11px;
+}
+
+.answer-form-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.answer-cancel,
+.answer-submit {
+    padding: 8px 14px;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.answer-cancel {
+    border: 1px solid #2f2f2a;
+    background: transparent;
+    color: #c9c3b9;
+}
+
+.answer-cancel:hover {
+    background: #1d1d1a;
+}
+
+.answer-submit {
+    border: 1px solid #71582d;
+    background: #292217;
+    color: #d4a657;
+}
+
+.answer-submit:hover {
+    background: #3a2f1c;
+}
+
+.answer-submit:disabled {
+    opacity: .6;
+    cursor: not-allowed;
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
+/* Pop-up message */
+
+#cmFlash {
+    position: fixed;
+    top: 18px;
+    right: 18px;
+    z-index: 99999;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 340px;
+}
+
+.cm-flash {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 14px;
+    border: 1px solid #71582d;
+    border-left: 3px solid #d4a657;
+    border-radius: 5px;
+    background: #181816;
+    color: #e7e0d5;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 13px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, .45);
+    animation: cmFlashIn .25s ease;
+    transition: opacity .25s ease, transform .25s ease;
+}
+
+.cm-flash.error {
+    border-color: #7a3b35;
+    border-left-color: #d06a5f;
+}
+
+.cm-flash.hide {
+    opacity: 0;
+    transform: translateY(-6px);
+}
+
+.cm-flash-close {
+    border: 0;
+    background: transparent;
+    color: #c9c3b9;
+    font-size: 18px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.cm-flash-close:hover {
+    color: #ffffff;
+}
+
+@keyframes cmFlashIn {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

@@ -7,7 +7,12 @@ $message = "";
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Get form values
-    $fullname = trim($_POST["fullname"] ?? "");
+    $first_name = trim($_POST["first_name"] ?? "");
+    $last_name = trim($_POST["last_name"] ?? "");
+
+    // Combine names for the existing database column
+    $fullname = trim($first_name . " " . $last_name);
+
     $student_id = trim($_POST["student_id"] ?? "");
     $email = trim($_POST["email"] ?? "");
     $course = trim($_POST["course"] ?? "");
@@ -15,12 +20,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $password = $_POST["password"] ?? "";
     $confirm_password = $_POST["confirm_password"] ?? "";
 
-    // ==============================
     // CHECK REQUIRED FIELDS
-    // ==============================
-
     if (
-        $fullname === "" ||
+        $first_name === "" ||
+        $last_name === "" ||
         $student_id === "" ||
         $email === "" ||
         $course === "" ||
@@ -28,112 +31,99 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $password === "" ||
         $confirm_password === ""
     ) {
-
         $message = "Please fill out all fields.";
 
-    }
-
-    // ==============================
     // CHECK PASSWORD
-    // ==============================
-
-    elseif ($password !== $confirm_password) {
+    } elseif ($password !== $confirm_password) {
 
         $message = "Passwords do not match.";
 
-    }
-
-    // ==============================
     // CHECK IF ACCOUNT ALREADY EXISTS
-    // ==============================
-
-    else {
+    } else {
 
         $check_sql = "
-            SELECT id 
-            FROM users 
+            SELECT id
+            FROM users
             WHERE student_id = ? OR email = ?
         ";
 
         $check_stmt = $conn->prepare($check_sql);
 
-        $check_stmt->bind_param(
-            "ss",
-            $student_id,
-            $email
-        );
+        if (!$check_stmt) {
 
-        $check_stmt->execute();
-
-        $check_result = $check_stmt->get_result();
-
-        if ($check_result->num_rows > 0) {
-
-            $message = "Student ID or email is already registered.";
-
-            $check_stmt->close();
+            $message = "Database error: " . $conn->error;
 
         } else {
 
-            $check_stmt->close();
-
-            // ==============================
-            // HASH PASSWORD
-            // ==============================
-
-            $hashed_password = password_hash(
-                $password,
-                PASSWORD_DEFAULT
+            $check_stmt->bind_param(
+                "ss",
+                $student_id,
+                $email
             );
 
-            // ==============================
-            // DEFAULT ROLE
-            // ==============================
+            $check_stmt->execute();
+            $check_result = $check_stmt->get_result();
 
-            $role = "student";
+            if ($check_result->num_rows > 0) {
 
-            // ==============================
-            // INSERT USER
-            // ==============================
-
-            $sql = "
-                INSERT INTO users
-                (full_name, student_id, email, course, year_level, password, role)
-                VALUES (?, ?, ?, ?, ?, ?, ?)
-            ";
-
-            $stmt = $conn->prepare($sql);
-
-            if (!$stmt) {
-
-                $message = "Database error: " . $conn->error;
+                $message = "Student ID or email is already registered.";
+                $check_stmt->close();
 
             } else {
 
-                $stmt->bind_param(
-                    "sssssss",
-                    $fullname,
-                    $student_id,
-                    $email,
-                    $course,
-                    $year,
-                    $hashed_password,
-                    $role
+                $check_stmt->close();
+
+                // HASH PASSWORD
+                $hashed_password = password_hash(
+                    $password,
+                    PASSWORD_DEFAULT
                 );
 
-                if ($stmt->execute()) {
+                // DEFAULT ROLE
+                $role = "student";
 
-                    // Account successfully created
-                    header("Location: Login/login.php");
-                    exit();
+                // INSERT USER
+                // Keep the existing full_name database column.
+                $sql = "
+                    INSERT INTO users
+                    (first_name, last_name, student_id, email, course, year_level, password, role)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                ";
+
+                $stmt = $conn->prepare($sql);
+
+                if (!$stmt) {
+
+                    $message = "Database error: " . $conn->error;
 
                 } else {
 
-                    $message =
-                        "Error creating account: " . $stmt->error;
-                }
+                    // 8 values => 8 type characters
+                    $stmt->bind_param(
+                        "ssssssss",
+                        $first_name,
+                        $last_name,
+                        $student_id,
+                        $email,
+                        $course,
+                        $year,
+                        $hashed_password,
+                        $role
+                    );
 
-                $stmt->close();
+                    if ($stmt->execute()) {
+
+                        $stmt->close();
+
+                        header("Location: Login/login.php");
+                        exit();
+
+                    } else {
+
+                        $message = "Error creating account: " . $stmt->error;
+                        $stmt->close();
+                    }
+                }
             }
         }
     }
@@ -145,7 +135,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <html lang="en">
 
 <head>
-
     <meta charset="UTF-8">
 
     <meta
@@ -159,13 +148,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         rel="stylesheet"
         href="/checkmate/asset/css/register.css"
     >
-
 </head>
 
 <body>
 
     <!-- LOGO -->
-
     <div class="logo">
 
         <svg viewBox="0 0 24 24">
@@ -178,9 +165,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     <div class="logo-line"></div>
 
-
     <!-- SIGN UP CARD -->
-
     <div class="card">
 
         <p class="small-title">
@@ -196,7 +181,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             answering, and learning together.
         </p>
 
-
         <form
             id="signupForm"
             method="POST"
@@ -204,44 +188,43 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             novalidate
         >
 
-            <!-- FULL NAME + STUDENT ID -->
-
+            <!-- FIRST NAME + LAST NAME -->
             <div class="row">
 
                 <div class="field">
 
-                    <label for="fullname">
-                        Full Name
+                    <label for="firstName">
+                        First Name
                     </label>
 
                     <div class="input-box">
 
                         <input
                             type="text"
-                            id="fullname"
-                            name="fullname"
-                            placeholder="Enter your full name"
+                            id="firstName"
+                            name="first_name"
+                            placeholder="Enter your first name"
+                            autocomplete="given-name"
                         >
 
                     </div>
 
                 </div>
 
-
                 <div class="field">
 
-                    <label for="studentId">
-                        Student ID
+                    <label for="lastName">
+                        Last Name
                     </label>
 
                     <div class="input-box">
 
                         <input
                             type="text"
-                            id="studentId"
-                            name="student_id"
-                            maxlength="10"
-                            placeholder="Enter your student ID"
+                            id="lastName"
+                            name="last_name"
+                            placeholder="Enter your last name"
+                            autocomplete="family-name"
                         >
 
                     </div>
@@ -250,9 +233,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             </div>
 
+            <!-- STUDENT ID -->
+            <div class="field">
+
+                <label for="studentId">
+                    Student ID
+                </label>
+
+                <div class="input-box">
+
+                    <input
+                        type="text"
+                        id="studentId"
+                        name="student_id"
+                        maxlength="10"
+                        placeholder="Enter your student ID"
+                        autocomplete="off"
+                    >
+
+                </div>
+
+            </div>
 
             <!-- EMAIL -->
-
             <div class="field">
 
                 <label for="email">
@@ -266,15 +269,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         id="email"
                         name="email"
                         placeholder="Enter your email address"
+                        autocomplete="email"
                     >
 
                 </div>
 
             </div>
 
-
             <!-- COURSE + YEAR -->
-
             <div class="row">
 
                 <div class="field">
@@ -285,28 +287,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                     <div class="input-box">
 
-                        <select
-                            id="course"
-                            name="course"
-                        >
+                        <select id="course" name="course">
 
                             <option value="">
                                 Select your course
                             </option>
 
-                            <option>
+                            <option value="BS Information Technology">
                                 BS Information Technology
                             </option>
 
-                            <option>
+                            <option value="BS Computer Science">
                                 BS Computer Science
                             </option>
 
-                            <option>
+                            <option value="BS Information Systems">
                                 BS Information Systems
                             </option>
 
-                            <option>
+                            <option value="BS Engineering">
                                 BS Engineering
                             </option>
 
@@ -316,7 +315,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                 </div>
 
-
                 <div class="field">
 
                     <label for="year">
@@ -325,28 +323,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                     <div class="input-box">
 
-                        <select
-                            id="year"
-                            name="year"
-                        >
+                        <select id="year" name="year">
 
                             <option value="">
                                 Select your year level
                             </option>
 
-                            <option>
+                            <option value="1st Year">
                                 1st Year
                             </option>
 
-                            <option>
+                            <option value="2nd Year">
                                 2nd Year
                             </option>
 
-                            <option>
+                            <option value="3rd Year">
                                 3rd Year
                             </option>
 
-                            <option>
+                            <option value="4th Year">
                                 4th Year
                             </option>
 
@@ -358,9 +353,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             </div>
 
-
             <!-- PASSWORD -->
-
             <div class="field">
 
                 <label for="password">
@@ -374,6 +367,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         id="password"
                         name="password"
                         placeholder="Enter your password"
+                        autocomplete="new-password"
                     >
 
                     <button
@@ -389,9 +383,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             </div>
 
-
             <!-- CONFIRM PASSWORD -->
-
             <div class="field">
 
                 <label for="confirm">
@@ -405,6 +397,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         id="confirm"
                         name="confirm_password"
                         placeholder="Confirm your password"
+                        autocomplete="new-password"
                     >
 
                     <button
@@ -420,9 +413,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             </div>
 
-
             <!-- TERMS -->
-
             <div class="terms">
 
                 <input
@@ -431,61 +422,41 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 >
 
                 <label for="agree">
-
                     I agree to the
                     <a href="#">Terms and Conditions</a>
                     and
                     <a href="#">Privacy Policy</a>
-
                 </label>
 
             </div>
 
-
             <!-- ERROR MESSAGE -->
-
-            <p
-                class="error"
-                id="errorMsg"
-            >
-                <?php echo htmlspecialchars($message); ?>
+            <p class="error" id="errorMsg">
+                <?php echo htmlspecialchars($message, ENT_QUOTES, 'UTF-8'); ?>
             </p>
 
-
             <!-- SUBMIT -->
-
             <button
                 type="submit"
                 class="create-btn"
             >
-
                 Create Account
-                <span class="arrow">
-                    &rarr;
-                </span>
-
+                <span class="arrow">&rarr;</span>
             </button>
 
         </form>
 
-
         <p class="signin-text">
-
             Already have an account?
 
             <a href="/checkmate/authentication/Login/login.php">
                 Sign in
             </a>
-
         </p>
 
     </div>
 
-
-    <script
-        src="/checkmate/asset/js/register.js"
-    ></script>
+    <script src="/checkmate/asset/js/register.js"></script>
 
 </body>
-
 </html>
