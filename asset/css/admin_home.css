@@ -1,112 +1,363 @@
+/* =========================================
+   CHECKMATE ADMIN HOME
+   admin_home.css
+   Fonts and the sidebar profile are copied
+   from student_home.css so both sides match.
+   (student.css is not needed on this page)
+   ========================================= */
 
 
-        /* active sidebar item has a gold outline */
-        .sidebar-menu a.active {
-            background: #1d1a14;
-            border: 1px solid #6b5630;
-            color: #e2e5e8;
-        }
+/* =========================================
+   1. BASIC RESET
+   ========================================= */
 
-        /* hide the little gold line, the outline replaces it */
-        .sidebar-menu a.active::before {
-            display: none;
-        }
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-       
+html {
+    min-height: 100%;
+}
 
-        /* bigger page title in the top bar */
-        .topbar-title {
-            font-size: 22px;
-        }
+body {
+    min-height: 100vh;
+    background: #0d1013;
+    color: #d9dde1;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
+}
 
-        /* logout link (was inline style before) */
-        .logout {
-            color: #b08c4d;
-            font-size: 12px;
-            letter-spacing: 1.8px;
-            font-weight: 700;
-            text-decoration: none;
-        }
 
-        .logout:hover {
-            color: #d2aa60;
-        }
+/* =========================================
+   2. SIDEBAR
+   ========================================= */
 
-        /* status badges: square-ish with a dark tinted background */
-        .status {
-            padding: 4px 10px;
-            border-radius: 4px;
-            font-size: 10px;
-        }
-
-        .status.verified,
-        .status.done {
-            background: #16231e;
-        }
-
-        .status.pending,
-        .status.new {
-            background: #241e12;
-        }
-
-        
-
-        .sidebar-account {
-    position: absolute;
+/* the sidebar is a column: logo and menus on top,
+   the admin profile is pushed to the bottom */
+.sidebar {
+    position: fixed;
+    top: 0;
     left: 0;
-    right: 0;
-    bottom: 0;
-    margin: 0 12px 10px;
-    background: #111519;
-}
 
-/* ---------- admin account: 3 dots (right side) + popup menu ---------- */
+    width: 253px;
+    height: 100vh;
 
-.sidebar-account-user {
-    display: flex;
-    align-items: center;
-}
-
-.account-menu-btn {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 3px;
 
-    width: 28px;
-    height: 28px;
-    margin-left: auto;
+    background: #111519;
+    border-right: 1px solid #292f34;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    z-index: 100;
+}
+
+/* sidebar scrollbar */
+.sidebar::-webkit-scrollbar {
+    width: 5px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+    background: #292f34;
+    border-radius: 10px;
+}
+
+
+/* =========================================
+   3. LOGO (same as the student page)
+   ========================================= */
+
+.logo-area {
+    display: flex;
+    align-items: center;
+
+    padding: 29px 25px 0;
+    margin-bottom: 31px;
+}
+
+/* the square box with the knight in it */
+.logo-piece {
+    width: 40px;
+    height: 40px;
     flex-shrink: 0;
 
+    border: 1px solid #394149;
+    border-radius: 6px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #c49b4d;
+    font-size: 20px;
+
+    margin-right: 11px;
+}
+
+.logo-text {
+    min-width: 0;
+}
+
+.logo-text h1 {
+    color: #e7e0d5;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 18px;
+    font-weight: 400;
+    letter-spacing: 2px;
+}
+
+.logo-text span {
+    display: block;
+    margin-top: 7px;
+
+    color: #6f8193;
+    font-size: 8px;
+    letter-spacing: 1.5px;
+    white-space: nowrap;
+}
+
+
+/* =========================================
+   4. SIDEBAR SECTIONS AND MENU
+   ========================================= */
+
+.sidebar-section {
+    margin-bottom: 28px;
+}
+
+.sidebar-title {
+    padding: 0 29px;
+    margin-bottom: 10px;
+
+    color: #6d7d8e;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1.7px;
+    text-transform: uppercase;
+}
+
+.sidebar-menu {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.sidebar-menu li {
+    margin: 2px 17px;
+    padding: 0;
+    list-style: none;
+}
+
+.sidebar-menu a {
+    display: flex;
+    align-items: center;
+
+    width: 100%;
+    height: 43px;
+
+    padding: 0 10px 0 17px;
+
+    color: #8191a2;
     background: transparent;
 
+    /* invisible border, so the link does not
+       jump by 1px when it becomes active */
     border: 1px solid transparent;
-    border-radius: 4px;
+    border-radius: 5px;
 
-    cursor: pointer;
+    text-decoration: none;
+    font-size: 13px;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease,
+        border-color 0.2s ease;
 }
 
-.account-menu-btn span {
-    display: block;
-    width: 3px;
-    height: 3px;
-
-    background: #6d9b85;
-    border-radius: 50%;
+.sidebar-menu a:hover {
+    background: #171c21;
+    color: #d5d0c8;
 }
 
-.account-menu-btn:hover,
-.account-menu-btn.open {
+/* THE PAGE YOU ARE ON: gold outline */
+.sidebar-menu a.active {
+    background: #1d1a14;
+    border-color: #6b5630;
+    color: #e6e0d6;
+}
+
+/* keep the gold outline even when the mouse is over the active link */
+.sidebar-menu a.active:hover {
     background: #1d1a14;
     border-color: #6b5630;
 }
 
-.account-menu-btn:hover span,
-.account-menu-btn.open span {
-    background: #d2aa60;
+/* gold outline appears the moment you press the mouse down on any link */
+.sidebar-menu a:active {
+    background: #1d1a14;
+    border-color: #6b5630;
+    color: #e6e0d6;
 }
 
+
+/* =========================================
+   5. SIDEBAR ICONS, COUNTS, DOT
+   ========================================= */
+
+.menu-icon {
+    width: 24px;
+    margin-right: 9px;
+
+    color: #7d8d9e;
+    font-size: 15px;
+    text-align: center;
+
+    flex-shrink: 0;
+}
+
+.sidebar-menu a.active .menu-icon {
+    color: #c69a4b;
+}
+
+.menu-count {
+    margin-left: auto;
+
+    color: #c69a4b;
+    font-size: 11px;
+}
+
+.menu-dot {
+    width: 5px;
+    height: 5px;
+    margin-left: auto;
+
+    background: #c69a4b;
+    border-radius: 50%;
+
+    flex-shrink: 0;
+}
+
+
+/* =========================================
+   6. SIDEBAR PROFILE (copied from student page)
+   ========================================= */
+
+/* this wrapper only holds the profile and the popup menu */
+.sidebar-account {
+    position: relative;      /* so the popup menu can sit above it */
+
+    margin: auto 17px 15px;  /* auto on top pushes it to the bottom */
+}
+
+.sidebar-user {
+    min-height: 62px;
+    width: 100%;
+    min-width: 0;
+
+    padding: 13px 8px 0;
+    border-top: 1px solid #272d33;
+
+    display: flex;
+    align-items: center;
+}
+
+/* the round circle with the initials */
+.user-avatar {
+    width: 37px;
+    height: 37px;
+    flex: 0 0 37px;
+
+    border: 1px solid #38414a;
+    border-radius: 50%;
+    background: #191e23;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #c79b4c;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 14px;
+}
+
+/* name and lines under it (they shrink so nothing overflows) */
+.user-information {
+    flex: 1 1 0;
+    min-width: 0;
+    max-width: 100%;
+
+    margin-left: 9px;
+    overflow: hidden;
+}
+
+.user-information strong {
+    display: block;
+    width: 100%;
+
+    color: #e2ddd5;
+    font-size: 12px;
+    font-weight: 600;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.user-information span {
+    display: block;
+    width: 100%;
+
+    margin-top: 4px;
+
+    color: #68798a;
+    font-size: 8px;
+    line-height: 1.5;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* the three dots button (the ⋮ character) */
+.user-more {
+    flex: 0 0 20px;
+    width: 20px;
+    height: 30px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-left: 5px;
+    padding: 0;
+
+    border: none;
+    background: transparent;
+
+    color: #bd9148;
+    font-size: 19px;
+    line-height: 1;
+
+    cursor: pointer;
+}
+
+.user-more:hover,
+.user-more.open {
+    color: #d0a55c;
+}
+
+.user-more:focus {
+    outline: none;
+}
+
+/* popup menu that opens above the profile */
 .account-menu {
     position: absolute;
     left: 0;
@@ -116,7 +367,6 @@
     display: none;
 
     background: #11161a;
-
     border: 1px solid #292f34;
     border-radius: 5px;
 
@@ -136,7 +386,6 @@
     padding: 11px 14px;
 
     color: #d5d9dc;
-
     font-size: 12px;
     text-decoration: none;
 }
@@ -163,370 +412,24 @@
     text-align: center;
 }
 
-/* =========================================
-   CHECKMATE ADMIN HOME
-   admin_home.css
-   ========================================= */
-
 
 /* =========================================
-   1. BASIC RESET
-   ========================================= */
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-html {
-    min-height: 100%;
-}
-
-body {
-    min-height: 100vh;
-
-    background: #0d1013;
-    color: #d9dde1;
-
-    font-family: Arial, Helvetica, sans-serif;
-
-    font-size: 14px;
-}
-
-
-/* =========================================
-   2. SIDEBAR
-   ========================================= */
-
-.sidebar {
-    position: fixed;
-
-    top: 0;
-    left: 0;
-
-    width: 235px;
-    height: 100vh;
-
-    background: #111519;
-
-    border-right: 1px solid #292f34;
-
-    overflow-y: auto;
-    overflow-x: hidden;
-
-    z-index: 100;
-}
-
-
-/* Sidebar scrollbar */
-
-.sidebar::-webkit-scrollbar {
-    width: 5px;
-}
-
-.sidebar::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-.sidebar::-webkit-scrollbar-thumb {
-    background: #292f34;
-    border-radius: 10px;
-}
-
-.sidebar::-webkit-scrollbar-thumb:hover {
-    background: #3a4148;
-}
-
-
-/* =========================================
-   3. LOGO
-   ========================================= */
-
-.logo {
-    height: 82px;
-
-    display: flex;
-    align-items: center;
-
-    padding: 0 30px;
-
-    color: #d2aa60;
-
-    font-family: Georgia, "Times New Roman", serif;
-
-    font-size: 20px;
-    font-weight: bold;
-
-    letter-spacing: 1.5px;
-}
-
-.logo span {
-    margin-right: 10px;
-
-    font-size: 25px;
-
-    color: #d2aa60;
-}
-
-
-/* =========================================
-   4. ADMINISTRATION LABEL
-   ========================================= */
-
-.admin-label {
-    padding: 0 30px;
-
-    margin-bottom: 28px;
-
-    color: #7f8992;
-
-    font-size: 10px;
-
-    letter-spacing: 2px;
-
-    text-transform: uppercase;
-}
-
-
-/* =========================================
-   5. SIDEBAR SECTIONS
-   ========================================= */
-
-.sidebar-section {
-    margin-bottom: 28px;
-}
-
-.sidebar-title {
-    padding: 0 30px;
-
-    margin-bottom: 10px;
-
-    color: #67717a;
-
-    font-size: 11px;
-
-    letter-spacing: 2px;
-
-    text-transform: uppercase;
-}
-
-
-/* =========================================
-   6. SIDEBAR MENU
-   ========================================= */
-
-.sidebar-menu {
-    margin: 0;
-    padding: 0;
-
-    list-style: none;
-}
-
-.sidebar-menu li {
-    margin: 2px 12px;
-
-    padding: 0;
-
-    list-style: none;
-}
-
-.sidebar-menu li::marker {
-    display: none;
-
-    content: "";
-}
-
-.sidebar-menu a {
-    position: relative;
-
-    display: flex;
-    align-items: center;
-
-    width: 100%;
-    min-height: 42px;
-
-    padding: 0 18px;
-
-    color: #89929a;
-
-    background: transparent;
-
-    border: none;
-
-    border-radius: 5px;
-
-    text-decoration: none;
-
-    font-family: Arial, Helvetica, sans-serif;
-
-    font-size: 14px;
-    font-weight: normal;
-
-    cursor: pointer;
-
-    transition:
-        background 0.2s ease,
-        color 0.2s ease;
-}
-
-.sidebar-menu a:hover {
-    background: #171c21;
-
-    color: #d7dce0;
-}
-
-.sidebar-menu a.active {
-    background: #1a2025;
-
-    color: #e2e5e8;
-}
-
-
-/* Active menu line */
-
-.sidebar-menu a.active::before {
-    content: "";
-
-    position: absolute;
-
-    left: 0;
-    top: 11px;
-
-    width: 2px;
-    height: 20px;
-
-    background: #d2aa60;
-}
-
-
-/* =========================================
-   7. SIDEBAR ICONS
-   ========================================= */
-
-.menu-icon {
-    width: 25px;
-
-    margin-right: 5px;
-
-    color: #77818a;
-
-    font-size: 13px;
-
-    text-align: center;
-
-    flex-shrink: 0;
-}
-
-.sidebar-menu a.active .menu-icon {
-    color: #d2aa60;
-}
-
-
-/* =========================================
-   8. MENU COUNTS
-   ========================================= */
-
-.menu-count {
-    margin-left: auto;
-
-    color: #d2aa60;
-
-    font-size: 11px;
-}
-
-.menu-dot {
-    width: 5px;
-    height: 5px;
-
-    margin-left: auto;
-
-    background: #d2aa60;
-
-    border-radius: 50%;
-
-    flex-shrink: 0;
-}
-
-
-/* =========================================
-   9. SIDEBAR ADMIN ACCOUNT
-   ========================================= */
-
-.sidebar-account {
-    margin: 15px 12px 25px;
-
-    padding: 15px;
-
-    border-top: 1px solid #252b30;
-}
-
-.sidebar-account-user {
-    display: flex;
-    align-items: center;
-}
-
-.sidebar-account-avatar {
-    width: 32px;
-    height: 32px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    margin-right: 10px;
-
-    background: #252b30;
-
-    color: #d2aa60;
-
-    border-radius: 50%;
-
-    font-family: Georgia, "Times New Roman", serif;
-
-    font-size: 13px;
-}
-
-.sidebar-account-info strong {
-    display: block;
-
-    color: #d9dde1;
-
-    font-size: 13px;
-
-    font-weight: normal;
-}
-
-.sidebar-account-info span {
-    display: block;
-
-    margin-top: 3px;
-
-    color: #68727b;
-
-    font-size: 11px;
-}
-
-
-/* =========================================
-   10. MAIN
+   7. MAIN AREA
    ========================================= */
 
 .main {
     min-height: 100vh;
-
-    margin-left: 235px;
-
+    margin-left: 253px;
     background: #0d1013;
 }
 
 
 /* =========================================
-   11. TOP BAR
+   8. TOP BAR (breadcrumb like the student page)
    ========================================= */
 
 .topbar {
-    height: 70px;
+    height: 66px;
 
     display: flex;
     align-items: center;
@@ -535,103 +438,95 @@ body {
     padding: 0 40px;
 
     background: #0d1013;
-
     border-bottom: 1px solid #242a2f;
 }
 
 .topbar-left {
     display: flex;
-
-    flex-direction: column;
-
-    gap: 4px;
+    align-items: center;
 }
 
 .topbar-label {
-    color: #707a83;
-
-    font-size: 10px;
-
-    letter-spacing: 2px;
-
-    text-transform: uppercase;
+    color: #718296;
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: 1.7px;
 }
 
-.topbar-title {
-    color: #dfe3e6;
+.topbar-divider {
+    margin: 0 12px;
 
-    font-family: Georgia, "Times New Roman", serif;
-
-    font-size: 16px;
+    color: #4b545d;
+    font-size: 13px;
 }
 
-
-/* =========================================
-   12. TOPBAR RIGHT
-   ========================================= */
+.topbar-current {
+    color: #c49a4d;
+    font-size: 11px;
+}
 
 .topbar-right {
     display: flex;
     align-items: center;
-
     gap: 20px;
 }
 
+/* notification bell */
+.notification {
+    position: relative;   /* so the number badge can sit on the corner */
 
+    background: transparent;
+    border: none;
 
+    color: #9b7740;
+    font-size: 26px;
+    line-height: 1;
 
-/* =========================================
-   13. TOPBAR USER
-   ========================================= */
+    cursor: pointer;
+}
 
-.topbar-user {
-    width: 32px;
-    height: 32px;
+.notification:hover {
+    color: #d2aa60;
+}
+
+/* the little number on the bell */
+.notification-count {
+    position: absolute;
+    top: -6px;
+    right: -8px;
+
+    min-width: 16px;
+    height: 16px;
+    padding: 0 4px;
 
     display: flex;
     align-items: center;
     justify-content: center;
 
-    background: #252b30;
+    background: #d2aa60;
+    color: #0d1013;
+    border-radius: 8px;
 
-    color: #d2aa60;
-
-    border: 1px solid #343b41;
-
-    border-radius: 50%;
-
-    font-family: Georgia, "Times New Roman", serif;
-
-    font-size: 13px;
-
-    cursor: pointer;
-   
-}
-
-.topbar-user:hover {
-    background: #2b3238;
-    border-color: #d2aa60;
-   
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 10px;
+    font-weight: bold;
 }
 
 
 /* =========================================
-   14. CONTENT
+   9. CONTENT
    ========================================= */
 
 .content {
     width: 100%;
-
     max-width: 1080px;
-
     margin: 0 auto;
-
-    padding: 38px 40px 50px;
+    padding: 48px 40px 50px;
 }
 
 
 /* =========================================
-   15. WELCOME
+   10. WELCOME
    ========================================= */
 
 .welcome {
@@ -639,110 +534,34 @@ body {
 }
 
 .welcome-label {
-    margin-bottom: 8px;
-
-    color: #6e7881;
-
-    font-size: 11px;
-
-    letter-spacing: 2px;
-
+    color: #b68c43;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1.8px;
     text-transform: uppercase;
 }
 
 .welcome-title {
-    color: #e1e4e7;
+    margin-top: 11px;
 
+    color: #e8e2d9;
     font-family: Georgia, "Times New Roman", serif;
-
     font-size: 30px;
-
-    font-weight: normal;
+    font-weight: 400;
+    line-height: 1.2;
 }
 
 .welcome-text {
-    margin-top: 7px;
+    margin-top: 10px;
 
-    color: #6e7780;
-
-    font-size: 13px;
+    color: #718398;
+    font-size: 12px;
+    line-height: 1.5;
 }
 
 
 /* =========================================
-   16. NOTICE
-   ========================================= */
-
-.notice {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    padding: 17px 20px;
-
-    margin-bottom: 30px;
-
-    background: #12171b;
-
-    border: 1px solid #302f29;
-
-    border-left: 2px solid #d2aa60;
-
-    border-radius: 5px;
-}
-
-.notice-left {
-    display: flex;
-    align-items: center;
-
-    gap: 13px;
-}
-
-.notice-icon {
-    color: #d2aa60;
-
-    font-size: 17px;
-}
-
-.notice-title {
-    color: #d6dade;
-
-    font-size: 13px;
-}
-
-.notice-text {
-    margin-top: 4px;
-
-    color: #69737b;
-
-    font-size: 11px;
-}
-
-.notice-button {
-    padding: 7px 13px;
-
-    background: transparent;
-
-    color: #c79d55;
-
-    border: 1px solid #5a4930;
-
-    border-radius: 4px;
-
-    font-size: 11px;
-
-    cursor: pointer;
-}
-
-.notice-button:hover {
-    background: #211d17;
-
-    border-color: #d2aa60;
-}
-
-
-/* =========================================
-   17. SECTION HEADING
+   11. SECTION HEADING
    ========================================= */
 
 .section-heading {
@@ -750,37 +569,31 @@ body {
 }
 
 .section-label {
-    color: #64707a;
-
-    font-size: 10px;
-
-    letter-spacing: 2px;
-
+    color: #b68c43;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1.8px;
     text-transform: uppercase;
 }
 
 .section-title {
-    margin-top: 5px;
+    margin-top: 11px;
 
-    color: #dfe2e5;
-
+    color: #e8e2d9;
     font-family: Georgia, "Times New Roman", serif;
-
-    font-size: 19px;
-
-    font-weight: normal;
+    font-size: 30px;
+    font-weight: 400;
+    line-height: 1.2;
 }
 
 
 /* =========================================
-   18. OVERVIEW GRID
+   12. OVERVIEW CARDS
    ========================================= */
 
 .overview-grid {
     display: grid;
-
     grid-template-columns: repeat(4, 1fr);
-
     gap: 10px;
 
     margin-bottom: 35px;
@@ -790,9 +603,7 @@ body {
     padding: 18px;
 
     background: #11161a;
-
     border: 1px solid #292f34;
-
     border-radius: 5px;
 
     transition:
@@ -802,124 +613,105 @@ body {
 
 .overview-card:hover {
     border-color: #3a4147;
-
     transform: translateY(-2px);
 }
 
 .overview-card-label {
-    color: #68737c;
-
-    font-size: 10px;
-
-    letter-spacing: 1px;
-
+    color: #6e8295;
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: 1.7px;
     text-transform: uppercase;
 }
 
 .overview-card-number {
     margin-top: 10px;
 
-    color: #dfe2e5;
-
+    color: #e3ddd4;
     font-family: Georgia, "Times New Roman", serif;
-
-    font-size: 27px;
+    font-size: 28px;
+    font-weight: 400;
 }
 
 .overview-card-description {
     margin-top: 5px;
 
-    color: #5f6971;
-
-    font-size: 10px;
+    color: #687b8f;
+    font-size: 9px;
 }
 
 
 /* =========================================
-   19. PANEL GRID
+   13. RECENT REPORTS PANEL
    ========================================= */
 
 .panel-grid {
-  width: 80%;
-  
-
+    width: 100%;
+    margin-bottom: 35px;
 }
 
 .panel {
     background: #11161a;
-
     border: 1px solid #292f34;
-
     border-radius: 5px;
 
     overflow: hidden;
 }
 
-
-/* =========================================
-   20. PANEL HEADER
-   ========================================= */
-
 .panel-header {
-    height: 71px;
+    min-height: 80px;
 
     display: flex;
     align-items: center;
     justify-content: space-between;
 
-    padding: 0 18px;
+    padding: 15px 18px;
 
     border-bottom: 1px solid #292f34;
 }
 
 .panel-label {
-    margin-bottom: 5px;
+    margin-bottom: 6px;
 
-    color: #68727b;
-
-    font-size: 10px;
-
-    letter-spacing: 2px;
-
+    color: #6e8295;
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: 1.7px;
     text-transform: uppercase;
 }
 
 .panel-heading {
-    color: #dfe2e5;
-
+    color: #ddd7ce;
     font-family: Georgia, "Times New Roman", serif;
-
     font-size: 17px;
-
-    font-weight: normal;
+    font-weight: 400;
 }
 
 .panel-link {
-    color: #9b7740;
-
-    font-size: 10px;
-
-    text-decoration: none;
+    color: #b88c46;
+    font-size: 8px;
+    text-decoration: underline;
+    text-underline-offset: 3px;
 }
 
 .panel-link:hover {
-    color: #d2aa60;
+    color: #d0a55c;
 }
 
 
 /* =========================================
-   21. LIST ROW
+   14. LIST ROWS
    ========================================= */
 
 .list-row {
-    min-height: 65px;
+    min-height: 67px;
 
     display: flex;
     align-items: center;
 
-    padding: 0 18px;
+    padding: 11px 18px;
 
-    border-bottom: 1px solid #242a2f;
+    border-bottom: 1px solid #252c32;
 
     transition: background 0.2s ease;
 }
@@ -932,14 +724,9 @@ body {
     background: #151a1e;
 }
 
-
-/* =========================================
-   22. LIST AVATAR
-   ========================================= */
-
 .list-avatar {
-    width: 30px;
-    height: 30px;
+    width: 34px;
+    height: 34px;
 
     display: flex;
     align-items: center;
@@ -947,14 +734,13 @@ body {
 
     margin-right: 12px;
 
-    background: #252b30;
+    background: #1a2025;
+    color: #c59a4c;
 
-    color: #d2aa60;
-
+    border: 1px solid #35404a;
     border-radius: 50%;
 
     font-family: Georgia, "Times New Roman", serif;
-
     font-size: 12px;
 
     flex-shrink: 0;
@@ -962,76 +748,63 @@ body {
 
 .list-info {
     flex: 1;
+    min-width: 0;
 }
 
 .list-name {
-    color: #d5d9dc;
-
-    font-size: 12px;
+    color: #d8d2c9;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 13px;
 }
 
 .list-sub {
-    margin-top: 3px;
+    margin-top: 5px;
 
-    color: #606b74;
-
-    font-size: 10px;
+    color: #64778b;
+    font-size: 8px;
+    line-height: 1.5;
 }
 
 
 /* =========================================
-   23. STATUS
+   15. STATUS BADGES
    ========================================= */
 
 .status {
-    padding: 4px 8px;
+    padding: 4px 10px;
 
-    border-radius: 12px;
+    border-radius: 4px;
 
     font-size: 9px;
-
     white-space: nowrap;
 }
 
-.status.pending {
-    color: #c59b57;
-
-    border: 1px solid #56472f;
-}
-
-.status.verified {
-    color: #6d9b85;
-
-    border: 1px solid #31483d;
-}
-
+/* pending / new = gold */
+.status.pending,
 .status.new {
     color: #c59b57;
-
+    background: #241e12;
     border: 1px solid #56472f;
 }
 
+/* verified / done = green */
+.status.verified,
 .status.done {
     color: #6d9b85;
-
+    background: #16231e;
     border: 1px solid #31483d;
 }
 
 
 /* =========================================
-   24. QUICK ACCESS
+   16. QUICK ACCESS
    ========================================= */
 
-.quick-access {
-    margin-top: 5px;
-   
-    
-}
-
+/* 3 cards that share the row equally */
 .quick-grid {
-      display: flex;
-    justify-content: center; /* Horizontal center */
-    
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
 }
 
 .quick-card {
@@ -1043,9 +816,7 @@ body {
     padding: 15px;
 
     background: #11161a;
-
     border: 1px solid #292f34;
-
     border-radius: 5px;
 
     cursor: pointer;
@@ -1058,27 +829,23 @@ body {
 
 .quick-card:hover {
     background: #151a1e;
-
     border-color: #3a4147;
-
     transform: translateY(-2px);
 }
 
 .quick-icon {
-    width: 30px;
-    height: 30px;
+    width: 34px;
+    height: 34px;
 
     display: flex;
     align-items: center;
     justify-content: center;
 
-    margin-right: 10px;
+    margin-right: 11px;
 
-    color: #d2aa60;
-
-    border: 1px solid #3a4147;
-
-    border-radius: 50%;
+    color: #bd9149;
+    border: 1px solid #333c44;
+    border-radius: 5px;
 
     font-size: 13px;
 
@@ -1090,28 +857,26 @@ body {
 }
 
 .quick-title {
-    color: #d6dade;
-
-    font-size: 12px;
+    color: #ded8cf;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 14px;
 }
 
 .quick-description {
-    margin-top: 3px;
+    margin-top: 6px;
 
-    color: #606a73;
-
-    font-size: 10px;
+    color: #687b8f;
+    font-size: 9px;
 }
 
 .quick-arrow {
-    color: #65707a;
-
-    font-size: 13px;
+    color: #66798a;
+    font-size: 14px;
 }
 
 
 /* =========================================
-   25. FOOTER
+   17. FOOTER
    ========================================= */
 
 .footer {
@@ -1120,7 +885,6 @@ body {
     justify-content: space-between;
 
     margin-top: 40px;
-
     padding: 22px 3px 5px;
 
     border-top: 1px solid #292f34;
@@ -1129,77 +893,62 @@ body {
 .footer-left {
     display: flex;
     align-items: center;
-
     gap: 12px;
 }
 
 .footer-chess {
-    color: #d2aa60;
-
+    color: #9b773f;
     font-size: 21px;
 }
 
 .footer-title {
-    color: #9a7946;
-
+    color: #b0a99f;
     font-family: Georgia, "Times New Roman", serif;
-
     font-size: 12px;
-
     letter-spacing: 1px;
 }
 
 .footer-subtitle {
-    margin-top: 4px;
+    margin-top: 5px;
 
-    color: #59636b;
-
-    font-size: 10px;
+    color: #566879;
+    font-size: 8px;
 }
 
 .footer-links {
     display: flex;
-
     gap: 18px;
 }
 
 .footer-links span {
-    color: #59636b;
-
-    font-size: 10px;
+    color: #566879;
+    font-size: 8px;
 }
 
 
 /* =========================================
-   26. TOAST
+   18. TOAST MESSAGE
    ========================================= */
 
 .toast {
     position: fixed;
-
     right: 25px;
     bottom: 25px;
 
     max-width: 300px;
+    padding: 13px 17px;
 
-    padding: 12px 17px;
+    background: #171d22;
+    color: #d8d1c8;
 
-    background: #181d21;
+    border: 1px solid #39444d;
+    border-left: 2px solid #c69a4b;
+    border-radius: 5px;
 
-    color: #d9dde1;
-
-    border: 1px solid #3a4147;
-
-    border-left: 2px solid #d2aa60;
-
-    border-radius: 4px;
-
-    font-size: 12px;
+    font-size: 11px;
 
     opacity: 0;
-
     visibility: hidden;
-
     transform: translateY(10px);
 
     transition:
@@ -1212,15 +961,13 @@ body {
 
 .toast.show {
     opacity: 1;
-
     visibility: visible;
-
     transform: translateY(0);
 }
 
 
 /* =========================================
-   27. TABLET
+   19. TABLET (1050px and smaller)
    ========================================= */
 
 @media (max-width: 1050px) {
@@ -1228,25 +975,21 @@ body {
     .overview-grid {
         grid-template-columns: repeat(2, 1fr);
     }
-
-    .quick-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
 }
 
 
 /* =========================================
-   28. SMALLER SCREEN
+   20. SMALLER SCREEN (900px and smaller)
    ========================================= */
 
 @media (max-width: 900px) {
 
     .sidebar {
-        width: 210px;
+        width: 220px;
     }
 
     .main {
-        margin-left: 210px;
+        margin-left: 220px;
     }
 
     .content {
@@ -1257,24 +1000,24 @@ body {
         padding: 0 25px;
     }
 
-    .panel-grid {
+    .quick-grid {
         grid-template-columns: 1fr;
     }
 }
 
 
 /* =========================================
-   29. MOBILE
+   21. MOBILE (700px and smaller)
    ========================================= */
 
 @media (max-width: 700px) {
 
+    /* TODO: add a real hamburger button later.
+       for now the sidebar just sits on top of the page */
     .sidebar {
-        width: 190px;
-
-        transform: translateX(-100%);
-
-        transition: transform 0.25s ease;
+        position: static;
+        width: 100%;
+        height: auto;
     }
 
     .main {
@@ -1289,34 +1032,15 @@ body {
         padding: 0 18px;
     }
 
-    .overview-grid {
-        grid-template-columns: 1fr 1fr;
-    }
-
-    .quick-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .notice {
-        align-items: flex-start;
-
-        flex-direction: column;
-
-        gap: 15px;
-    }
-
-    .welcome-title {
-        font-size: 27px;
-    }
-
-    .welcome-text {
-        font-size: 12px;
+    .welcome-title,
+    .section-title {
+        font-size: 25px;
     }
 }
 
 
 /* =========================================
-   30. VERY SMALL SCREEN
+   22. VERY SMALL SCREEN (500px and smaller)
    ========================================= */
 
 @media (max-width: 500px) {
@@ -1325,111 +1049,18 @@ body {
         grid-template-columns: 1fr;
     }
 
-    .welcome-title {
+    .welcome-title,
+    .section-title {
         font-size: 23px;
     }
 
-    .topbar-title {
-        font-size: 14px;
+    .topbar-label {
+        display: none;
     }
 
     .footer {
         align-items: flex-start;
-
         flex-direction: column;
-
         gap: 15px;
     }
 }
-
-
-/* =========================================
-   31. FINAL SIDEBAR SAFETY FIX
-   ========================================= */
-
-.sidebar-menu,
-.sidebar-menu ul {
-    margin: 0 !important;
-    padding: 0 !important;
-    list-style: none !important;
-}
-
-.sidebar-menu li {
-    list-style: none !important;
-}
-
-.sidebar-menu li::marker {
-    content: "" !important;
-}
-
-.sidebar-menu a {
-    text-decoration: none !important;
-}
-
-.sidebar-menu a:visited,
-.sidebar-menu a:link {
-    text-decoration: none !important;
-}
-
- /* active sidebar item has a gold outline */
-        .sidebar-menu a.active {
-            background: #1d1a14;
-            border: 1px solid #6b5630;
-            color: #e2e5e8;
-        }
-
-        /* hide the little gold line, the outline replaces it */
-        .sidebar-menu a.active::before {
-            display: none;
-        }
-
-        /* admin account sticks to the bottom of the sidebar */
-        .sidebar-account {
-            position: absolute;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            margin: 0 12px 10px;
-            background: #111519;
-        }
-
-        /* bigger page title in the top bar */
-        .topbar-title {
-            font-size: 22px;
-        }
-
-        /* logout link (was inline style before) */
-        .logout {
-            color: #b08c4d;
-            font-size: 12px;
-            letter-spacing: 1.8px;
-            font-weight: 700;
-            text-decoration: none;
-        }
-
-        .logout:hover {
-            color: #d2aa60;
-        }
-
-        /* status badges: square-ish with a dark tinted background */
-        .status {
-            padding: 4px 10px;
-            border-radius: 4px;
-            font-size: 10px;
-        }
-
-        .status.verified,
-        .status.done {
-            background: #16231e;
-        }
-
-        .status.pending,
-        .status.new {
-            background: #241e12;
-        }
-
-        .notification {
-            font-size: 30px;
-        }
-
-        

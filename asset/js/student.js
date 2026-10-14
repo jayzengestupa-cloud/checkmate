@@ -191,31 +191,13 @@ yearFilter.addEventListener("change", applyFilters);
 applyFilters();
 
 
-// ---------- 4. VIEW AND EDIT BUTTONS ----------
-// the name and student id come from the data-* attributes of the row
-for (var i = 0; i < rows.length; i++) {
-
-    var viewButton = rows[i].querySelector(".view-btn");
-    var editButton = rows[i].querySelector(".edit-btn");
-
-    viewButton.addEventListener("click", function () {
-        var row = this.closest("tr");
-        // TODO: open a real student profile page
-        showToast("Viewing " + row.dataset.name + " (" + row.dataset.studentid + ")");
-    });
-
-    editButton.addEventListener("click", function () {
-        var row = this.closest("tr");
-        // TODO: open an edit form
-        showToast("Editing " + row.dataset.name + "...");
-    });
-}
-
-
-// ---------- 5. NOTIFICATION BUTTON ----------
+// ---------- 4. NOTIFICATION BUTTON ----------
+// (the old "view and edit buttons" part was removed, because the
+// Actions column was deleted from the table. That part crashed the
+// script, which stopped the bell and the 3 dots from working.)
 document.getElementById("notificationButton").addEventListener("click", function () {
 
-    // read the number from the red badge (there is no badge when it is 0)
+    // read the number from the badge (there is no badge when it is 0)
     var badge = document.querySelector(".notification-count");
     var count = "0";
 
@@ -227,7 +209,7 @@ document.getElementById("notificationButton").addEventListener("click", function
 });
 
 
-// ---------- 6. OTHER SIDEBAR LINKS ----------
+// ---------- 5. OTHER SIDEBAR LINKS ----------
 // the pages that don't exist yet just show a message
 var sidebarLinks = document.querySelectorAll(".sidebar-menu a");
 
@@ -241,7 +223,7 @@ for (var j = 0; j < sidebarLinks.length; j++) {
 }
 
 
-// ---------- 7. ACCOUNT MENU (3 dots) ----------
+// ---------- 6. ACCOUNT MENU (3 dots) ----------
 var accountButton = document.getElementById("accountMenuButton");
 var accountMenu = document.getElementById("accountMenu");
 

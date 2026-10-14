@@ -2,7 +2,8 @@
    CHECKMATE STUDENTS PAGE
    student.css
    (loaded AFTER admin_home.css, which already has the
-   sidebar, account menu, topbar, toast and logout styles)
+   sidebar, profile, topbar, bell, toast and active link styles,
+   so those are not repeated here anymore)
    ========================================= */
 
 
@@ -27,7 +28,7 @@
     top: 50%;
     transform: translateY(-50%);
 
-    color: #77818a;
+    color: #7d8d9e;
     font-size: 15px;
     pointer-events: none;
 }
@@ -37,7 +38,7 @@
     height: 38px;
 
     background: #11161a;
-    color: #d9dde1;
+    color: #dcd6cc;
 
     border: 1px solid #292f34;
     border-radius: 5px;
@@ -54,7 +55,7 @@
 }
 
 .search-input::placeholder {
-    color: #68727b;
+    color: #526577;
 }
 
 .filter-select {
@@ -73,12 +74,12 @@
 
 .search-input:focus,
 .filter-select:focus {
-    border-color: #d2aa60;
+    border-color: #46515b;
 }
 
 .filter-select option {
     background: #11161a;
-    color: #d9dde1;
+    color: #dcd6cc;
 }
 
 
@@ -100,26 +101,29 @@
     border-collapse: collapse;
 }
 
+/* column titles use the same small label style as the other pages */
 .students-table th {
-    padding: 14px 16px;
+    padding: 15px 16px;
 
     background: #0f1418;
-    color: #cfd4d8;
+    color: #6e8295;
 
     border-bottom: 1px solid #292f34;
 
-    font-size: 11px;
-    font-weight: normal;
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: 1.7px;
     text-align: left;
+    text-transform: uppercase;
 }
 
 .students-table td {
     padding: 0 16px;
     height: 52px;
 
-    color: #d5d9dc;
+    color: #d8d2c9;
 
-    border-bottom: 1px solid #242a2f;
+    border-bottom: 1px solid #252c32;
 
     font-size: 11px;
 }
@@ -132,6 +136,12 @@
     background: #151a1e;
 }
 
+/* the student's name uses the serif font, like names on the student page */
+.cell-name {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 13px;
+}
+
 .cell-id {
     display: inline-flex;
     align-items: center;
@@ -142,44 +152,24 @@
     padding: 0 4px;
 
     background: #1a2025;
-    color: #9aa3ab;
+    color: #c59a4c;
 
-    border: 1px solid #292f34;
+    border: 1px solid #35404a;
     border-radius: 4px;
 
+    font-family: Georgia, "Times New Roman", serif;
     font-size: 10px;
 }
 
 .cell-muted {
-    color: #7f8992;
-}
-
-.action-btn {
-    padding: 4px 9px;
-    margin-right: 4px;
-
-    background: #171c21;
-    color: #cfd4d8;
-
-    border: 1px solid #343b41;
-    border-radius: 4px;
-
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 10px;
-
-    cursor: pointer;
-}
-
-.action-btn:hover {
-    border-color: #d2aa60;
-    color: #d2aa60;
+    color: #64778b;
 }
 
 .empty-row td {
     height: 80px;
 
     text-align: center;
-    color: #68727b;
+    color: #64778b;
 }
 
 
@@ -194,8 +184,8 @@
 }
 
 .showing-text {
-    color: #68727b;
-    font-size: 11px;
+    color: #64778b;
+    font-size: 9px;
 }
 
 .pagination {
@@ -204,11 +194,11 @@
 }
 
 .page-btn {
-    width: 24px;
-    height: 24px;
+    width: 26px;
+    height: 26px;
 
     background: #11161a;
-    color: #77818a;
+    color: #7d8d9e;
 
     border: 1px solid #292f34;
     border-radius: 4px;
@@ -219,7 +209,7 @@
 }
 
 .page-btn:hover:not(:disabled) {
-    border-color: #d2aa60;
+    border-color: #6b5630;
     color: #d2aa60;
 }
 
@@ -233,59 +223,6 @@
 .page-btn:disabled {
     opacity: 0.35;
     cursor: not-allowed;
-}
-
-
-/* ---------- bell button + red/gold number badge ---------- */
-/* these are also in admin_home.css, but they are repeated here so the bell
-   still looks right on this page even if admin_home.css is old or cached */
-
-.notification {
-    position: relative;
-
-    width: 32px;
-    height: 32px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    background: transparent;
-    color: #8a949d;
-
-    border: none;
-
-    cursor: pointer;
-
-    /* bigger bell on this page (same as before) */
-    font-size: 30px;
-}
-
-.notification:hover {
-    color: #d2aa60;
-}
-
-.notification-count {
-    position: absolute;
-
-    top: 1px;
-    right: 0;
-
-    min-width: 14px;
-    height: 14px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    background: #d2aa60;
-    color: #111519;
-
-    border-radius: 50%;
-
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 9px;
-    font-weight: bold;
 }
 
 

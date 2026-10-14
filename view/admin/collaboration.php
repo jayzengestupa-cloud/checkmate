@@ -8,10 +8,57 @@ $conn->set_charset("utf8mb4");
 
 // only admins can open this page
 // (CHANGE 'role' and the login path if yours are different)
-if (!isset($_SESSION["role"]) || $_SESSION["role"] !== "admin") {
+if (!isset($_SESSION["user_id"]) || !isset($_SESSION["role"]) || $_SESSION["role"] !== "admin") {
     header("Location: ../../authentication/Login/login.php");
     exit;
 }
+
+// the name of this file, like "collaboration.php"
+// the sidebar uses it to know which link is the active one
+$current_page = basename($_SERVER["PHP_SELF"]);
+
+
+// ---------- the admin's own info (for the sidebar profile) ----------
+// the login saves the admin's id in the session
+$admin_id = (int)$_SESSION["user_id"];
+
+// default values, in case the query finds nothing
+$admin_name = "Administrator";
+$admin_student_id = "";
+$admin_initials = "A";
+
+$stmt = $conn->prepare("SELECT first_name, last_name, student_id FROM users WHERE id = ? LIMIT 1");
+$stmt->bind_param("i", $admin_id);
+$stmt->execute();
+$admin = $stmt->get_result()->fetch_assoc();
+$stmt->close();
+
+if ($admin) {
+    // full name = first name + last name
+    $full_name = trim(trim((string)$admin["first_name"]) . " " . trim((string)$admin["last_name"]));
+
+    if ($full_name != "") {
+        $admin_name = $full_name;
+    }
+
+    $admin_student_id = (string)$admin["student_id"];
+
+    // initials = first letter of the first name + first letter of the last name
+    $first_letter = substr(trim((string)$admin["first_name"]), 0, 1);
+    $last_letter = substr(trim((string)$admin["last_name"]), 0, 1);
+    $letters = strtoupper($first_letter . $last_letter);
+
+    if ($letters != "") {
+        $admin_initials = $letters;
+    }
+}
+
+// makes text safe to print inside HTML
+function e($value)
+{
+    return htmlspecialchars((string)$value, ENT_QUOTES, "UTF-8");
+}
+
 
 // ---------- all collaboration requests ----------
 // who asked (requester), who was asked (receiver), and the question they are collaborating on
@@ -60,8 +107,9 @@ $pendingReports = (int) $conn->query("SELECT COUNT(*) AS c FROM reports WHERE st
 
     <title>CHECKMATE - Collaborations</title>
 
-     <link rel="stylesheet" href="../../asset/css/admin_home.css?v=<?= time() ?>">
-<link rel="stylesheet" href="../../asset/css/collaboration.css?v=<?= time() ?>">
+    <!-- filemtime() is the time the file was last saved, so the browser only reloads the CSS when you edit it -->
+    <link rel="stylesheet" href="../../asset/css/admin_home.css?v=<?= filemtime(__DIR__ . '/../../asset/css/admin_home.css') ?>">
+    <link rel="stylesheet" href="../../asset/css/collaboration.css?v=<?= filemtime(__DIR__ . '/../../asset/css/collaboration.css') ?>">
 </head>
 
 <body>
@@ -72,13 +120,14 @@ $pendingReports = (int) $conn->query("SELECT COUNT(*) AS c FROM reports WHERE st
 
     <aside class="sidebar">
 
-        <div class="logo">
-            <span>♞</span>
-            CHECKMATE
-        </div>
+        <!-- Logo (same look as the student page) -->
+        <div class="logo-area">
+            <div class="logo-piece">♞</div>
 
-        <div class="admin-label">
-            ADMINISTRATION
+            <div class="logo-text">
+                <h1>CHECKMATE</h1>
+                <span>ADMINISTRATION</span>
+            </div>
         </div>
 
         <div class="sidebar-section">
@@ -90,14 +139,14 @@ $pendingReports = (int) $conn->query("SELECT COUNT(*) AS c FROM reports WHERE st
             <ul class="sidebar-menu">
 
                 <li>
-                    <a href="admin_home.php" data-page="dashboard">
+                    <a href="admin_home.php" class="<?php if ($current_page == 'admin_home.php') { echo 'active'; } ?>">
                         <span class="menu-icon">⌂</span>
                         <span>Dashboard</span>
                     </a>
                 </li>
 
                 <li>
-                    <a href="student.php" data-page="students">
+                    <a href="student.php" class="<?php if ($current_page == 'student.php') { echo 'active'; } ?>">
                         <span class="menu-icon">♟</span>
                         <span>Students</span>
                         <span class="menu-count"><?= $studentCount ?></span>
@@ -105,14 +154,14 @@ $pendingReports = (int) $conn->query("SELECT COUNT(*) AS c FROM reports WHERE st
                 </li>
 
                 <li>
-                    <a href="question_ad.php" data-page="questions">
+                    <a href="question_ad.php" class="<?php if ($current_page == 'question_ad.php') { echo 'active'; } ?>">
                         <span class="menu-icon">?</span>
                         <span>Questions</span>
                     </a>
                 </li>
 
                 <li>
-                    <a href="collaboration.php" class="active" data-page="collaborations">
+                    <a href="collaboration.php" class="<?php if ($current_page == 'collaboration.php') { echo 'active'; } ?>">
                         <span class="menu-icon">♞</span>
                         <span>Collaborations</span>
                     </a>
@@ -131,21 +180,21 @@ $pendingReports = (int) $conn->query("SELECT COUNT(*) AS c FROM reports WHERE st
             <ul class="sidebar-menu">
 
                 <li>
-                    <a href="subject_course.php" data-page="subjects">
+                    <a href="subject_course.php" class="<?php if ($current_page == 'subject_course.php') { echo 'active'; } ?>">
                         <span class="menu-icon">◇</span>
                         <span>Subjects & Courses</span>
                     </a>
                 </li>
 
                 <li>
-                    <a href="question_type.php" data-page="types">
+                    <a href="question_type.php" class="<?php if ($current_page == 'question_type.php') { echo 'active'; } ?>">
                         <span class="menu-icon">≡</span>
                         <span>Question Types</span>
                     </a>
                 </li>
 
                 <li>
-                    <a href="report.php" data-page="reports">
+                    <a href="report.php" class="<?php if ($current_page == 'report.php') { echo 'active'; } ?>">
                         <span class="menu-icon">▤</span>
                         <span>Reports</span>
                         <?php if ($pendingReports > 0): ?>
@@ -158,25 +207,30 @@ $pendingReports = (int) $conn->query("SELECT COUNT(*) AS c FROM reports WHERE st
 
         </div>
 
-        <!-- ADMIN ACCOUNT (bottom of sidebar) -->
+        <!-- ADMIN PROFILE (bottom of sidebar, same look as the student profile) -->
         <div class="sidebar-account">
 
-            <div class="sidebar-account-user">
+            <div class="sidebar-user">
 
-                <div class="sidebar-account-avatar">
-                    A
+                <!-- circle with the initials -->
+                <div class="user-avatar">
+                    <?= e($admin_initials) ?>
                 </div>
 
-                <div class="sidebar-account-info">
-                    <strong>Administrator</strong>
-                    <span>CHECKMATE Admin</span>
+                <div class="user-information">
+
+                    <!-- the admin's real name from the database -->
+                    <strong><?= e($admin_name) ?></strong>
+
+                    <span>
+                        Administrator <br>
+                        <?= e($admin_student_id) ?>
+                    </span>
+
                 </div>
 
-                <button class="account-menu-btn" id="accountMenuButton" title="Account options" aria-label="Account options">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </button>
+                <!-- three dots, opens the small menu above -->
+                <button class="user-more" id="accountMenuButton" type="button" aria-label="More options">⋮</button>
 
             </div>
 
@@ -202,21 +256,22 @@ $pendingReports = (int) $conn->query("SELECT COUNT(*) AS c FROM reports WHERE st
 
     <main class="main">
 
+        <!-- TOP BAR (breadcrumb like the student page) -->
         <header class="topbar">
 
             <div class="topbar-left">
 
-                <div class="topbar-label">
-                    ADMINISTRATION
-                </div>
+                <span class="topbar-label">
+                    ADMIN WORKSPACE
+                </span>
 
-                <div class="topbar-title">
+                <span class="topbar-divider">
+                    /
+                </span>
+
+                <span class="topbar-current">
                     Collaborations
-                </div>
-
-                <div class="topbar-sub">
-                    Monitor collaboration requests and active student partnerships.
-                </div>
+                </span>
 
             </div>
 
@@ -238,6 +293,11 @@ $pendingReports = (int) $conn->query("SELECT COUNT(*) AS c FROM reports WHERE st
 
 
         <section class="content">
+
+            <!-- the sentence that used to be under the title in the top bar -->
+            <p class="page-intro">
+                Monitor collaboration requests and active student partnerships.
+            </p>
 
             <!-- Summary cards (click one to jump to the matching view) -->
             <div class="stat-row">
