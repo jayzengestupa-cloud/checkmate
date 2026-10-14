@@ -13,6 +13,10 @@ if (!isset($_SESSION["user_id"]) || $_SESSION["role"] != "admin") {
 // connect to the database (gives us the $conn variable)
 require_once "../../config/config.php";
 
+// the name of this file, like "admin_home.php"
+// the sidebar uses it to know which link is the active one
+$current_page = basename($_SERVER["PHP_SELF"]);
+
 
 /* =========================================
    SMALL HELPER FUNCTIONS
@@ -53,6 +57,48 @@ function timeAgo($datetime)
     } else {
         $days = floor($seconds / 86400);
         return $days . ($days == 1 ? " day" : " days") . " ago";
+    }
+}
+
+
+/* =========================================
+   GET THE ADMIN'S OWN INFO (for the sidebar profile)
+   ========================================= */
+
+// the login saves the admin's id in the session
+$admin_id = (int)$_SESSION["user_id"];
+
+// default values, in case the query finds nothing
+$admin_name = "Administrator";
+$admin_student_id = "";
+$admin_initials = "A";
+
+$stmt = $conn->prepare("SELECT first_name, last_name, student_id FROM users WHERE id = ? LIMIT 1");
+
+if ($stmt) {
+    $stmt->bind_param("i", $admin_id);
+    $stmt->execute();
+    $admin = $stmt->get_result()->fetch_assoc();
+    $stmt->close();
+
+    if ($admin) {
+        // full name = first name + last name
+        $full_name = trim(trim((string)$admin["first_name"]) . " " . trim((string)$admin["last_name"]));
+
+        if ($full_name != "") {
+            $admin_name = $full_name;
+        }
+
+        $admin_student_id = (string)$admin["student_id"];
+
+        // initials = first letter of the first name + first letter of the last name
+        $first_letter = substr(trim((string)$admin["first_name"]), 0, 1);
+        $last_letter = substr(trim((string)$admin["last_name"]), 0, 1);
+        $letters = strtoupper($first_letter . $last_letter);
+
+        if ($letters != "") {
+            $admin_initials = $letters;
+        }
     }
 }
 
@@ -115,9 +161,8 @@ $conn->close();
 
     <title>CHECKMATE - Admin Dashboard</title>
 
-    <<!-- filemtime() is the time the file was last saved, so the link changes whenever you edit the CSS -->
-<link rel="stylesheet" href="../../asset/css/admin_home.css?v=<?= filemtime(__DIR__ . '/../../asset/css/admin_home.css') ?>">
-<link rel="stylesheet" href="../../asset/css/student.css?v=<?= filemtime(__DIR__ . '/../../asset/css/student.css') ?>">
+    <!-- filemtime() is the time the file was last saved, so the link changes whenever you edit the CSS -->
+    <link rel="stylesheet" href="../../asset/css/admin_home.css?v=<?= filemtime(__DIR__ . '/../../asset/css/admin_home.css') ?>">
 
 </head>
 
@@ -129,15 +174,14 @@ $conn->close();
 
     <aside class="sidebar">
 
-        <!-- Logo -->
-        <div class="logo">
-            <span>♞</span>
-            CHECKMATE
-        </div>
+        <!-- Logo (same look as the student page) -->
+        <div class="logo-area">
+            <div class="logo-piece">♞</div>
 
-        <!-- Account Type -->
-        <div class="admin-label">
-            ADMINISTRATION
+            <div class="logo-text">
+                <h1>CHECKMATE</h1>
+                <span>ADMINISTRATION</span>
+            </div>
         </div>
 
 
@@ -151,33 +195,32 @@ $conn->close();
                 OVERVIEW
             </div>
 
-           <ul class="sidebar-menu">
+            <ul class="sidebar-menu">
 
                 <li>
-                    <a href="admin_home.php" data-page="dashboard">
+                    <a href="admin_home.php" class="<?php if ($current_page == 'admin_home.php') { echo 'active'; } ?>">
                         <span class="menu-icon">⌂</span>
                         <span>Dashboard</span>
                     </a>
                 </li>
 
                 <li>
-                    <a href="student.php" data-page="students">
+                    <a href="student.php" class="<?php if ($current_page == 'student.php') { echo 'active'; } ?>">
                         <span class="menu-icon">♟</span>
                         <span>Students</span>
-                        <!-- was a fixed 8, now it shows the real number -->
                         <span class="menu-count"><?= $total_students ?></span>
                     </a>
                 </li>
 
                 <li>
-                    <a href="question_ad.php" data-page="questions">
+                    <a href="question_ad.php" class="<?php if ($current_page == 'question_ad.php') { echo 'active'; } ?>">
                         <span class="menu-icon">?</span>
                         <span>Questions</span>
                     </a>
                 </li>
 
                 <li>
-                    <a href="collaboration.php" data-page="collaborations">
+                    <a href="collaboration.php" class="<?php if ($current_page == 'collaboration.php') { echo 'active'; } ?>">
                         <span class="menu-icon">♞</span>
                         <span>Collaborations</span>
                     </a>
@@ -201,21 +244,21 @@ $conn->close();
             <ul class="sidebar-menu">
 
                 <li>
-                    <a href="subject_course.php" data-page="subjects">
+                    <a href="subject_course.php" class="<?php if ($current_page == 'subject_course.php') { echo 'active'; } ?>">
                         <span class="menu-icon">◇</span>
                         <span>Subjects & Courses</span>
                     </a>
                 </li>
 
                 <li>
-                    <a href="question_type.php" data-page="types">
+                    <a href="question_type.php" class="<?php if ($current_page == 'question_type.php') { echo 'active'; } ?>">
                         <span class="menu-icon">≡</span>
                         <span>Question Types</span>
                     </a>
                 </li>
 
                 <li>
-                    <a href="report.php" data-page="reports">
+                    <a href="report.php" class="<?php if ($current_page == 'report.php') { echo 'active'; } ?>">
                         <span class="menu-icon">▤</span>
                         <span>Reports</span>
                         <span class="menu-dot"></span>
@@ -228,28 +271,33 @@ $conn->close();
 
 
         <!-- =====================================
-             ADMIN ACCOUNT (bottom of sidebar)
+             ADMIN PROFILE (bottom of sidebar)
+             same look as the student profile
              ===================================== -->
 
         <div class="sidebar-account">
 
-            <div class="sidebar-account-user">
+            <div class="sidebar-user">
 
-                <div class="sidebar-account-avatar">
-                    A
+                <!-- circle with the initials -->
+                <div class="user-avatar">
+                    <?= e($admin_initials) ?>
                 </div>
 
-                <div class="sidebar-account-info">
-                    <strong>Administrator</strong>
-                    <span>CHECKMATE Admin</span>
+                <div class="user-information">
+
+                    <!-- the admin's real name from the database -->
+                    <strong><?= e($admin_name) ?></strong>
+
+                    <span>
+                        Administrator <br>
+                        <?= e($admin_student_id) ?>
+                    </span>
+
                 </div>
 
-                <!-- three dots (vertical) on the right side of the profile -->
-                <button class="account-menu-btn" id="accountMenuButton" title="Account options" aria-label="Account options">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </button>
+                <!-- three dots, opens the small menu above -->
+                <button class="user-more" id="accountMenuButton" type="button" aria-label="More options">⋮</button>
 
             </div>
 
@@ -278,20 +326,24 @@ $conn->close();
 
 
         <!-- =====================================
-             TOP BAR
+             TOP BAR (breadcrumb like the student page)
              ===================================== -->
 
         <header class="topbar">
 
             <div class="topbar-left">
 
-                <div class="topbar-label">
-                    ADMINISTRATION
-                </div>
+                <span class="topbar-label">
+                    ADMIN WORKSPACE
+                </span>
 
-                <div class="topbar-title">
+                <span class="topbar-divider">
+                    /
+                </span>
+
+                <span class="topbar-current">
                     Dashboard
-                </div>
+                </span>
 
             </div>
 
@@ -443,7 +495,6 @@ $conn->close();
 
             <!-- =================================
                  RECENT REPORTS
-                 (panel-grid centers the panel)
                  ================================= -->
 
             <div class="panel-grid">
@@ -537,9 +588,6 @@ $conn->close();
 
                     <?php endif; ?>
 
-
-                    
-
                 </div>
 
             </div>
@@ -549,7 +597,6 @@ $conn->close();
             <!-- =================================
                  QUICK ACCESS
                  ================================= -->
-         
 
             <div class="quick-access">
 
